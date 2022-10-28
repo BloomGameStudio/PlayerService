@@ -1,5 +1,6 @@
-// The Cartesian coordinate system is used
+// The Cartesian coordinate and the Bearing system is used
 // https://en.wikipedia.org/wiki/Cartesian_coordinate_system
+// https://en.wikipedia.org/wiki/Bearing_(angle)
 
 package models
 
