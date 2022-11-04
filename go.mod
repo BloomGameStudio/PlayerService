@@ -1,4 +1,4 @@
-module github.com/Balugrizzly/playerstate
+module github.com/BloomGameStudio/PlayerService
 
 go 1.19
 

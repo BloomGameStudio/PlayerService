@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/Balugrizzly/playerstate/controllers"
+	"github.com/BloomGameStudio/PlayerService/controllers"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
