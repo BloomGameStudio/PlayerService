@@ -12,6 +12,6 @@ type Player struct {
 	Layer    string   `json:"layer"`
 	Position Position `json:"position"`
 	Rotation Rotation `json:"rotation"`
-	Scale    XYZ      `json:"scale"`
+	Scale    Scale    `json:"scale"`
 	// State    State
 }
