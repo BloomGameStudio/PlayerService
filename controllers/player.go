@@ -18,7 +18,19 @@ type requestPlayer struct {
 
 func (rp requestPlayer) isValid() bool {
 
-	if rp.Position.IsValid() != true {
+	// Validates the requestPlayer
+	// Additional validation and hooks for the reqeurequestPlayer validation can be added here
+	// WARNING: Validation should be scoped to the requestPlayer
+
+	if !rp.Position.IsValid() {
+		return false
+	}
+
+	if !rp.Rotation.IsValid() {
+		return false
+	}
+
+	if !rp.Scale.IsValid() {
 		return false
 	}
 
@@ -38,15 +50,17 @@ func CreatePlayer(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, "bad request")
 	}
 
-	if reqPlayer.isValid() != true {
+	if !reqPlayer.isValid() {
 		return c.JSON(http.StatusBadRequest, "bad request")
 	}
 
 	playerModel := &models.Player{
-		Name: reqPlayer.Placeholder,
+		Position: reqPlayer.Position,
+		Rotation: reqPlayer.Rotation,
+		Scale:    reqPlayer.Scale,
 	}
 
-	if playerModel.isValid() != true {
+	if !playerModel.IsValid() {
 		return c.JSON(http.StatusBadRequest, "bad request")
 	}
 

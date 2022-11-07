@@ -15,3 +15,24 @@ type Player struct {
 	Scale    Scale    `json:"scale"`
 	// State    State
 }
+
+func (p Player) IsValid() bool {
+
+	// Validates the Player
+	// Additional validation and hooks for the Player validation can be added here
+	// WARNING: Validation should be scoped to the Player
+
+	if !p.Position.IsValid() {
+		return false
+	}
+
+	if !p.Rotation.IsValid() {
+		return false
+	}
+
+	if !p.Scale.IsValid() {
+		return false
+	}
+
+	return true
+}
