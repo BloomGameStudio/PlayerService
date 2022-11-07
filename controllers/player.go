@@ -17,6 +17,11 @@ type requestPlayer struct {
 }
 
 func (rp requestPlayer) isValid() bool {
+
+	if rp.Position.IsValid() != true {
+		return false
+	}
+
 	return true
 }
 

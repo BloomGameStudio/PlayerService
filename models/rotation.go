@@ -8,3 +8,8 @@ type Rotation struct {
 	// EulerAngles *XYZ `json:"eulerAngles"`
 	// Perhaps we want to have verbose EulerAngles that point to XYZ
 }
+
+func (r Rotation) IsValid() bool {
+
+	return true
+}
