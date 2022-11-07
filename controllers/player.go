@@ -8,9 +8,16 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-// TODO: implement requestPlayer
+// OPTIMIZE: Staticly link requestPlayer with Model.Player
 type requestPlayer struct {
-	Placeholder string `json:"name"`
+	// COMBAK: Add needed further fields from the Player struct model
+	Position models.Position `json:"position"`
+	Rotation models.Rotation `json:"rotation"`
+	Scale    models.Scale    `json:"scale"`
+}
+
+func (rp requestPlayer) isValid() bool {
+	return true
 }
 
 func CreatePlayer(c echo.Context) error {
@@ -26,7 +33,7 @@ func CreatePlayer(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, "bad request")
 	}
 
-	if requestPlayer.isValid() != true {
+	if reqPlayer.isValid() != true {
 		return c.JSON(http.StatusBadRequest, "bad request")
 	}
 
