@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/BloomGameStudio/PlayerService/database"
@@ -11,6 +12,7 @@ import (
 // OPTIMIZE: Staticly link requestPlayer with Model.Player
 type requestPlayer struct {
 	// COMBAK: Add needed further fields from the Player struct model
+	Name     string          `json:"name"`
 	Position models.Position `json:"position"`
 	Rotation models.Rotation `json:"rotation"`
 	Scale    models.Scale    `json:"scale"`
@@ -49,6 +51,7 @@ func CreatePlayer(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, "bad request")
 	}
+	log.Printf("Bound the reqPlayer: %v", reqPlayer.Name)
 
 	if !reqPlayer.isValid() {
 		return c.JSON(http.StatusBadRequest, "bad request")
@@ -65,6 +68,7 @@ func CreatePlayer(c echo.Context) error {
 	}
 
 	// save to db
+	log.Println("Opening DB and saving playerModel")
 	db := database.Open()
 	db.Create(playerModel)
 

@@ -1,6 +1,9 @@
 package models
 
+import "gorm.io/gorm"
+
 type Rotation struct {
+	gorm.Model
 	// Euler Rotation Annotation
 	// Yaw,Pitch,Roll // TODO: @Lapras Does this order reflect the client and is correct?
 	XYZ

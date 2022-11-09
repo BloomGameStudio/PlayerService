@@ -1,6 +1,9 @@
 package models
 
+import "gorm.io/gorm"
+
 type Position struct {
+	gorm.Model
 	XYZ
 	// Normalized   *Position `json:"normalized,omitempty"`
 	// Magnitude    float64   `json:"magnitude"`
