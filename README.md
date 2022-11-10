@@ -1,5 +1,23 @@
 # PlayerService
 
+## Quickstart Guide:
+
+### **Native Bare Metel**
+
+        // Install Deps/Modules
+        go mod download
+
+        // Run the server on port 1323
+        go run main.go
+
+
+**Optional Live Code Reloading with Air**
+
+Install Air via your preffered installation method: https://github.com/cosmtrek/air
+
+        // Run the server on port 1323 with live code reloading
+        air
+
 
 
 **Rotation ressources**
