@@ -5,11 +5,11 @@ import "gorm.io/gorm"
 type Rotation struct {
 	gorm.Model
 	// Euler Rotation Annotation
-	// Yaw,Pitch,Roll // TODO: @Lapras Does this order reflect the client and is correct?
-	XYZ
+	// Yaw,Pitch,Roll
+	Vector3
 
-	// EulerAngles *XYZ `json:"eulerAngles"`
-	// Perhaps we want to have verbose EulerAngles that point to XYZ
+	// EulerAngles *Vector3 `json:"eulerAngles"`
+	// Perhaps we want to have verbose EulerAngles that point to a Vector3
 }
 
 func (r Rotation) IsValid() bool {

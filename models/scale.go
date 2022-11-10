@@ -4,7 +4,7 @@ import "gorm.io/gorm"
 
 type Scale struct {
 	gorm.Model
-	XYZ
+	Vector3
 }
 
 func (s Scale) IsValid() bool {

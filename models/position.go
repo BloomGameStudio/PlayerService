@@ -4,7 +4,7 @@ import "gorm.io/gorm"
 
 type Position struct {
 	gorm.Model
-	XYZ
+	Vector3
 	// Normalized   *Position `json:"normalized,omitempty"`
 	// Magnitude    float64   `json:"magnitude"`
 	// SqrMagnitude float64   `json:"sqrMagnitude"`
