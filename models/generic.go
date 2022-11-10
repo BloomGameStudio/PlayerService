@@ -2,7 +2,7 @@ package models
 
 import "gorm.io/gorm"
 
-type XYZ struct {
+type Vector3 struct {
 	gorm.Model
 	X float64 `json:"x"`
 	Y float64 `json:"y"`
