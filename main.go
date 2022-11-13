@@ -19,14 +19,25 @@ func main() {
 	// This will Auto Migrate all its nested structs
 	db.AutoMigrate(&models.Player{})
 
-	// Testing routes
+	// HTTP routes
+
+	// HTTP Testing routes
 	e.GET("ping", controllers.Ping)
-	e.File("/", "public/index.html")
-	// ws://localhost:1323/ws
-	e.GET("/ws", controllers.Hello)
-	// End of testing routes
+	// End of HTTP testing routes
 
 	e.POST("player", controllers.CreatePlayer)
+	// End of HTTP routes
+
+	// WebSocket Routes
+	ws := e.Group("/ws/")
+
+	// Web Socket Testing routes
+	ws.File("", "public/index.html") // http://127.0.0.1:1323/ws/
+	// ws://localhost:1323/ws
+	ws.GET("hello", controllers.Hello)
+	// End of Web Socket esting routes
+
+	ws.GET("player", controllers.Player)
 
 	e.Logger.Fatal(e.Start(":1323"))
 
