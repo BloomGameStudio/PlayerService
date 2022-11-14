@@ -1,5 +1,12 @@
 package models
 
 type Coordinate struct {
-	X, Y, Z float64
+	Location Vector3 
+	region int //should this be a Region type instead, or an int mapping to such
+}
+
+func (c Coordinate) IsValid() bool {
+	if c.region.IsValid(Location) {
+		return true
+	}
 }
