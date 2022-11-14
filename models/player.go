@@ -9,9 +9,9 @@ import (
 // Therefore we have to use the "Belongs To" relationship
 type Player struct {
 	gorm.Model
-	UserID uuid.UUID `gorm:"type:uuid;index"`
-	Name 		string `json:"name"`
-	Layer      string `json:"layer"`
+	UserID     uuid.UUID `gorm:"type:uuid;index"`
+	Name       string    `json:"name"`
+	Layer      string    `json:"layer"`
 	PositionID int
 	Position   Position `json:"position" `
 	RotationID int
