@@ -1,8 +1,7 @@
 package controllers
 
 import (
-	"fmt"
-
+	"github.com/BloomGameStudio/PlayerService/handlers"
 	"github.com/gorilla/websocket"
 	"github.com/labstack/echo/v4"
 )
@@ -22,10 +21,20 @@ func Player(c echo.Context) error {
 		}
 
 		// Read
-		_, msg, err := ws.ReadMessage()
-		if err != nil {
-			c.Logger().Error(err)
-		}
-		fmt.Printf("%s\n", msg)
+		func() {
+
+			// Initializer request player to bind into
+			reqPlayer := &RequestPlayer{}
+
+			err := ws.ReadJSON(reqPlayer)
+
+			if err != nil {
+				c.Logger().Error(err)
+			}
+
+			handlers.Player(reqPlayer)
+
+		}()
+
 	}
 }
