@@ -4,6 +4,7 @@ import (
 	"github.com/BloomGameStudio/PlayerService/database"
 	"github.com/BloomGameStudio/PlayerService/handlers"
 	"github.com/BloomGameStudio/PlayerService/models"
+	"github.com/BloomGameStudio/PlayerService/publicModels"
 	"github.com/labstack/echo/v4"
 )
 
@@ -46,7 +47,7 @@ func Player(c echo.Context) error {
 		func() {
 
 			// Initializer request player to bind into
-			reqPlayer := &RequestPlayer{}
+			reqPlayer := &publicModels.Player{}
 
 			err := ws.ReadJSON(reqPlayer)
 
@@ -54,7 +55,7 @@ func Player(c echo.Context) error {
 				c.Logger().Error(err)
 			}
 
-			handlers.Player(reqPlayer)
+			handlers.Player(*reqPlayer)
 
 		}()
 
