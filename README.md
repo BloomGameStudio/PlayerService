@@ -68,3 +68,33 @@ The newer `docker compose`.
 - https://www.youtube.com/watch?v=2Cwa6hfn2K0
 - https://docs.unity3d.com/ScriptReference/Transform-eulerAngles.html
 - https://docs.unity3d.com/ScriptReference/Quaternion.html
+
+
+---
+## How to Interact with the Player WebSocket (In Development)
+
+Assuming standard config and hosting locally.
+
+
+  1. If not present create a player in the players table. The player needs to have a usable UserID 
+  
+        This can be be done either by:
+
+        - Manually creating it in the db
+        - Creating it throug the /player CreatePlayer endpoint
+
+  
+  2.  The Websocket needs to derive a models.Player.UserID from a JWT. That UserID has to match with the UserID of the player in the database That JWT can be created either by:
+   
+        - The Userservice
+        - Manually
+   
+  3.  Connect to the websocket with the JWT in the Header as shown below:
+   
+      
+                // Token has been shortened for readability 
+                Authorization: Bearer eyJ_A 
+
+                ws://localhost:1323/ws/player
+
+  4. Send and receive JSON Player objects from the websocket
