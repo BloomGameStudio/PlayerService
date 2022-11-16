@@ -6,38 +6,9 @@ import (
 
 	"github.com/BloomGameStudio/PlayerService/database"
 	"github.com/BloomGameStudio/PlayerService/models"
+	"github.com/BloomGameStudio/PlayerService/publicModels"
 	"github.com/labstack/echo/v4"
 )
-
-// OPTIMIZE: Staticly link requestPlayer with Model.Player
-type requestPlayer struct {
-	// COMBAK: Add needed further fields from the Player struct model
-	Name     string          `json:"name"`
-	Position models.Position `json:"position"`
-	Rotation models.Rotation `json:"rotation"`
-	Scale    models.Scale    `json:"scale"`
-}
-
-func (rp requestPlayer) isValid() bool {
-
-	// Validates the requestPlayer
-	// Additional validation and hooks for the reqeurequestPlayer validation can be added here
-	// WARNING: Validation should be scoped to the requestPlayer
-
-	if !rp.Position.IsValid() {
-		return false
-	}
-
-	if !rp.Rotation.IsValid() {
-		return false
-	}
-
-	if !rp.Scale.IsValid() {
-		return false
-	}
-
-	return true
-}
 
 func CreatePlayer(c echo.Context) error {
 
@@ -45,7 +16,7 @@ func CreatePlayer(c echo.Context) error {
 	// Expects a requestPlayer or a model.Player object in the body
 
 	// Initializer request player to bind into
-	reqPlayer := requestPlayer{}
+	reqPlayer := publicModels.Player{}
 
 	err := c.Bind(&reqPlayer)
 	if err != nil {
@@ -53,7 +24,7 @@ func CreatePlayer(c echo.Context) error {
 	}
 	log.Printf("Bound the reqPlayer: %v", reqPlayer.Name)
 
-	if !reqPlayer.isValid() {
+	if !reqPlayer.IsValid() {
 		return c.JSON(http.StatusBadRequest, "bad request")
 	}
 
