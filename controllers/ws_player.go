@@ -26,6 +26,7 @@ func Player(c echo.Context) error {
 	// Open DB outside of loopception
 	db := database.Open()
 
+	// OPTIMIZE: Use GetUserIDFromJWT function to avoid db call
 	player, err := helpers.GetPlayerModelFromJWT(c)
 
 	if err != nil {
