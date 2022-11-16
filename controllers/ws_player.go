@@ -3,6 +3,7 @@ package controllers
 import (
 	"github.com/BloomGameStudio/PlayerService/database"
 	"github.com/BloomGameStudio/PlayerService/handlers"
+	"github.com/BloomGameStudio/PlayerService/helpers"
 	"github.com/BloomGameStudio/PlayerService/models"
 	"github.com/BloomGameStudio/PlayerService/publicModels"
 	"github.com/labstack/echo/v4"
@@ -24,6 +25,13 @@ func Player(c echo.Context) error {
 
 	// Open DB outside of loopception
 	db := database.Open()
+
+	player, err := helpers.GetPlayerModelFromJWT(c)
+
+	if err != nil {
+		return err
+	}
+	playerUserID := player.UserID
 
 	for {
 
@@ -55,7 +63,14 @@ func Player(c echo.Context) error {
 				c.Logger().Error(err)
 			}
 
-			handlers.Player(*reqPlayer)
+			playerModel := &models.Player{
+				UserID:   playerUserID,
+				Position: reqPlayer.Position,
+				Rotation: reqPlayer.Rotation,
+				Scale:    reqPlayer.Scale,
+			}
+
+			handlers.Player(*playerModel)
 
 		}()
 
