@@ -7,6 +7,7 @@ import (
 	"github.com/BloomGameStudio/PlayerService/models"
 	"github.com/BloomGameStudio/PlayerService/publicModels"
 	"github.com/labstack/echo/v4"
+	"github.com/spf13/viper"
 )
 
 func Player(c echo.Context) error {
@@ -69,6 +70,11 @@ func Player(c echo.Context) error {
 				Position: reqPlayer.Position,
 				Rotation: reqPlayer.Rotation,
 				Scale:    reqPlayer.Scale,
+			}
+
+			if viper.GetBool("DEBUG") {
+				// Add the Player.Name in DEBUG mode that it can be used as ID in the Player handle to avoid the Userservice dependency
+				playerModel.Name = reqPlayer.Name
 			}
 
 			handlers.Player(*playerModel)
