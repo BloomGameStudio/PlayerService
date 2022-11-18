@@ -6,9 +6,18 @@ import (
 	"github.com/BloomGameStudio/PlayerService/models"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/spf13/viper"
 )
 
 func main() {
+
+	viper.SetConfigName("config")
+	viper.AddConfigPath("config/")
+
+	err := viper.ReadInConfig()
+	if err != nil {
+		panic(err)
+	}
 
 	e := echo.New()
 
@@ -38,6 +47,7 @@ func main() {
 	// End of Web Socket esting routes
 
 	ws.GET("player", controllers.Player)
+	// ws.GET("position", controllers.Position)
 
 	e.Logger.Fatal(e.Start(":1323"))
 
