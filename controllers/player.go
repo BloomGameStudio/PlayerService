@@ -29,6 +29,8 @@ func CreatePlayer(c echo.Context) error {
 	}
 
 	playerModel := &models.Player{
+		// TODO: Set UserID
+		Name:     reqPlayer.Name,
 		Position: reqPlayer.Position,
 		Rotation: reqPlayer.Rotation,
 		Scale:    reqPlayer.Scale,
