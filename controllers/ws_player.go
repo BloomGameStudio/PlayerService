@@ -1,9 +1,11 @@
 package controllers
 
 import (
-	"github.com/BloomGameStudio/PlayerService/database"
+	"bytes"
+	"encoding/json"
+	"log"
+
 	"github.com/BloomGameStudio/PlayerService/handlers"
-	"github.com/BloomGameStudio/PlayerService/helpers"
 	"github.com/BloomGameStudio/PlayerService/models"
 	"github.com/BloomGameStudio/PlayerService/publicModels"
 	"github.com/labstack/echo/v4"
@@ -25,48 +27,57 @@ func Player(c echo.Context) error {
 	defer ws.Close()
 
 	// Open DB outside of loopception
-	db := database.Open()
+	// db := database.Open()
 
 	// OPTIMIZE: Use GetUserIDFromJWT function to avoid db call
-	player, err := helpers.GetPlayerModelFromJWT(c)
+	// TODO: UNCOMNNET
+	// player, err := helpers.GetPlayerModelFromJWT(c)
 
-	if err != nil {
-		return err
-	}
-	playerUserID := player.UserID
+	// if err != nil {
+	// 	return err
+	// }
+	// playerUserID := player.UserID
 
 	for {
 
 		// Write
-		func() {
+		// func() {
 
-			// Get all the players
-			players := &models.Player{}
-			db.Find(players)
+		// 	// Get all the players
+		// 	players := &models.Player{}
+		// 	db.Find(players)
 
-			// Find/Filter the Changes that occured in the players and send them
-			// PlayerChanges(players,players)
+		// 	// Find/Filter the Changes that occured in the players and send them
+		// 	// PlayerChanges(players,players)
 
-			err := ws.WriteJSON(players)
-			if err != nil {
-				c.Logger().Error(err)
-			}
-		}()
+		// 	err := ws.WriteJSON(players)
+		// 	if err != nil {
+		// 		c.Logger().Error(err)
+		// 	}
+		// }()
 
 		// Read
 		func() {
+
+			// TODO: THIS IS VULNARABLE CLIENTS CAN CHANGE OBJECT IDS especially the nested ones!!!
 
 			// Initializer request player to bind into
 			reqPlayer := &publicModels.Player{}
 
 			err := ws.ReadJSON(reqPlayer)
 
+			pretyReqPlayer, _ := PrettyStruct(reqPlayer)
+
+			log.Printf("reqPlayer: %+v", pretyReqPlayer)
+
 			if err != nil {
+
+				log.Printf("We get an error from Reading the JSON reqPlayer")
 				c.Logger().Error(err)
 			}
 
 			playerModel := &models.Player{
-				UserID:   playerUserID,
+				// UserID:   playerUserID,
 				Position: reqPlayer.Position,
 				Rotation: reqPlayer.Rotation,
 				Scale:    reqPlayer.Scale,
@@ -77,9 +88,27 @@ func Player(c echo.Context) error {
 				playerModel.Name = reqPlayer.Name
 			}
 
+			prettyPlayerModel, _ := PrettyStruct(playerModel)
+			log.Printf("playerModel: %+v", prettyPlayerModel)
+
 			handlers.Player(*playerModel)
 
 		}()
 
 	}
+}
+func PrettyStruct(data interface{}) (string, error) {
+	val, err := json.MarshalIndent(data, "", "    ")
+	if err != nil {
+		return "", err
+	}
+	return string(val), nil
+}
+
+func PrettyString(str string) (string, error) {
+	var prettyJSON bytes.Buffer
+	if err := json.Indent(&prettyJSON, []byte(str), "", "    "); err != nil {
+		return "", err
+	}
+	return prettyJSON.String(), nil
 }

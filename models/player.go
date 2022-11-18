@@ -12,7 +12,7 @@ type Player struct {
 	UserID     uuid.UUID `gorm:"type:uuid;index"`
 	Name       string    `json:"name"`
 	Layer      string    `json:"layer"`
-	PositionID int
+	PositionID uint
 	Position   Position `json:"position" `
 	RotationID int
 	Rotation   Rotation `json:"rotation" `
