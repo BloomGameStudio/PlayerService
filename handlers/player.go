@@ -3,6 +3,7 @@ package handlers
 import (
 	"github.com/BloomGameStudio/PlayerService/database"
 	"github.com/BloomGameStudio/PlayerService/models"
+	"github.com/spf13/viper"
 )
 
 func Player(player models.Player) bool {
@@ -14,6 +15,11 @@ func Player(player models.Player) bool {
 
 	// Query db with the UserID from the passed in player model to find correct player
 	result := db.Model(&models.Player{}).Where(&models.Player{UserID: player.UserID}).First(&databasePlayerModel)
+
+	if viper.GetBool("DEBUG") {
+		// Get the player by name in DEBUG mode for easier debugging and avoid the Userservice dependency
+		result = db.Model(&models.Player{}).Where(&models.Player{Name: player.Name}).First(&databasePlayerModel)
+	}
 
 	if result.Error != nil {
 		// TODO: handle error
