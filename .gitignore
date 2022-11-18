@@ -16,3 +16,6 @@
 
 tmp
 database.db
+
+#MacOS ish
+*.DS_Store
