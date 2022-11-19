@@ -1,6 +1,8 @@
 package helpers
 
 import (
+	"encoding/json"
+
 	"github.com/BloomGameStudio/PlayerService/database"
 	"github.com/BloomGameStudio/PlayerService/models"
 	"github.com/golang-jwt/jwt"
@@ -28,4 +30,12 @@ func GetPlayerModelFromJWT(c echo.Context) (playerModel *models.Player, err erro
 	}
 
 	return playerModel, nil
+}
+
+func PrettyStruct(data interface{}) (string, error) {
+	val, err := json.MarshalIndent(data, "", "    ")
+	if err != nil {
+		return "", err
+	}
+	return string(val), nil
 }
