@@ -1,14 +1,17 @@
 package publicModels
 
-import "github.com/BloomGameStudio/PlayerService/models"
-
-// OPTIMIZE: Staticly link requestPlayer with Model.Player
 type Player struct {
+	// publicModels.Player holds public fields for the player model.
+
 	// COMBAK: Add needed further fields from the Player struct model
-	Name     string          `json:"name"`
-	Position models.Position `json:"position"`
-	Rotation models.Rotation `json:"rotation"`
-	Scale    models.Scale    `json:"scale"`
+	Name       string `json:"name" gorm:"uniqueIndex"`
+	Layer      string `json:"layer"`
+	PositionID uint
+	Position   Position `json:"position" `
+	RotationID uint
+	Rotation   Rotation `json:"rotation" `
+	ScaleID    uint
+	Scale      Scale `json:"scale"`
 }
 
 func (rp Player) IsValid() bool {
