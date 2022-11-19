@@ -1,0 +1,75 @@
+{
+	"info": {
+		"_postman_id": "1be254b7-70ff-42ae-8418-81f2c13cacc5",
+		"name": "PlayerService",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Ping",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"Ping\":\"Pong\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:1323/ping",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "1323",
+					"path": [
+						"ping"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreatePlayer",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"UserID\": \"00000000-0000-0000-0000-000000000000\",\n    \"Name\": \"User3\",\n    \"Layer\": \"layer1\",\n    \"Position\": {\n        \"x\": 1,\n        \"y\": 2,\n        \"z\": 3\n    },\n    \"Rotation\": {\n        \"x\": 4,\n        \"y\": 5,\n        \"z\": 6\n    },\n    \"Scale\": {\n        \"x\": 7,\n        \"y\": 8,\n        \"z\": 9\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:1323/player",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "1323",
+					"path": [
+						"player"
+					]
+				},
+				"description": "Create Player"
+			},
+			"response": []
+		}
+	]
+}
