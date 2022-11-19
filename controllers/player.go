@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/BloomGameStudio/PlayerService/database"
@@ -13,7 +12,9 @@ import (
 func CreatePlayer(c echo.Context) error {
 
 	// Creates a new Player in the Service
-	// Expects a requestPlayer or a model.Player object in the body
+	// Expects a publicModel or a model dot Player object in the body
+
+	c.Logger().Debug("In CreatePlayer")
 
 	// Initializer request player to bind into
 	reqPlayer := publicModels.Player{}
@@ -22,28 +23,37 @@ func CreatePlayer(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, "bad request")
 	}
-	log.Printf("Bound the reqPlayer: %v", reqPlayer.Name)
+
+	c.Logger().Debugf("Bound the player struct: %v", reqPlayer)
 
 	if !reqPlayer.IsValid() {
+		c.Logger().Debug("reqPlayer is NOT valid")
 		return c.JSON(http.StatusBadRequest, "bad request")
 	}
 
-	playerModel := &models.Player{
-		// TODO: Set UserID
-		Name:     reqPlayer.Name,
-		Position: reqPlayer.Position,
-		Rotation: reqPlayer.Rotation,
-		Scale:    reqPlayer.Scale,
-	}
+	c.Logger().Debug("reqPlayer is valid")
+
+	c.Logger().Debug("Initializing and populating player model!")
+	// Use dot annotation for promoted aka embedded fields.
+	playerModel := &models.Player{}
+	// TODO: Set UserID
+	playerModel.Name = reqPlayer.Name
+	playerModel.Position = reqPlayer.Position
+	playerModel.Rotation = reqPlayer.Rotation
+	playerModel.Scale = reqPlayer.Scale
 
 	if !playerModel.IsValid() {
+		c.Logger().Debug("playerModel is NOT valid")
 		return c.JSON(http.StatusBadRequest, "bad request")
 	}
+	c.Logger().Debug("playerModel is valid")
 
-	// save to db
-	log.Println("Opening DB and saving playerModel")
+	// Save to db
+	c.Logger().Debug("Opening DB and saving playerModel")
 	db := database.Open()
 	db.Create(playerModel)
+
+	c.Logger().Debug("playerModel is saved. Returning")
 
 	return c.JSON(http.StatusCreated, playerModel)
 }
