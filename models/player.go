@@ -1,6 +1,7 @@
 package models
 
 import (
+	"github.com/BloomGameStudio/PlayerService/publicModels"
 	uuid "github.com/satori/go.uuid"
 	"gorm.io/gorm"
 )
@@ -8,16 +9,12 @@ import (
 // For some reason that is beyond me the Gorm "Has one" relationship does not work
 // Therefore we have to use the "Belongs To" relationship
 type Player struct {
+	// models.Player holds private fields for the player model
+
 	gorm.Model
-	UserID     uuid.UUID `gorm:"type:uuid;index"`
-	Name       string    `json:"name"`
-	Layer      string    `json:"layer"`
-	PositionID uint
-	Position   Position `json:"position" `
-	RotationID int
-	Rotation   Rotation `json:"rotation" `
-	ScaleID    int
-	Scale      Scale `json:"scale"`
+	UserID uuid.UUID `gorm:"type:uuid;uniqueIndex"`
+	publicModels.Player
+
 	// State    State
 }
 
