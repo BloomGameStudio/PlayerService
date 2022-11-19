@@ -98,3 +98,15 @@ Assuming standard config and hosting locally.
                 ws://localhost:1323/ws/player
 
   4. Send and receive JSON Player objects from the websocket
+
+
+---
+## OpenAPI
+The OpenAPI spec: [open_api.yml](docs/open_api.yml)
+
+can be found in docs dir and is generated from the postman collection in the same dir via:
+
+https://joolfe.github.io/postman-to-openapi/ 
+
+        
+        p2o PlayerService.postman_collection.json -f open_api.yml
