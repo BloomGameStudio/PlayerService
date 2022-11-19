@@ -1,10 +1,6 @@
 package controllers
 
 import (
-	"bytes"
-	"encoding/json"
-	"log"
-
 	"github.com/BloomGameStudio/PlayerService/handlers"
 	"github.com/BloomGameStudio/PlayerService/models"
 	"github.com/BloomGameStudio/PlayerService/publicModels"
@@ -58,57 +54,55 @@ func Player(c echo.Context) error {
 
 		// Read
 		func() {
-
 			// TODO: THIS IS VULNARABLE CLIENTS CAN CHANGE OBJECT IDS especially the nested ones!!!
+			// TODO: NO VALIDATION OF INPUT DATA IS PERFORMED!!!
+
+			c.Logger().Debug("Reading from the WebSocket")
 
 			// Initializer request player to bind into
 			reqPlayer := &publicModels.Player{}
-
 			err := ws.ReadJSON(reqPlayer)
 
-			pretyReqPlayer, _ := PrettyStruct(reqPlayer)
-
-			log.Printf("reqPlayer: %+v", pretyReqPlayer)
-
 			if err != nil {
-
-				log.Printf("We get an error from Reading the JSON reqPlayer")
+				c.Logger().Debug("We get an error from Reading the JSON reqPlayer")
 				c.Logger().Error(err)
 			}
 
-			playerModel := &models.Player{
-				// UserID:   playerUserID,
-				Position: reqPlayer.Position,
-				Rotation: reqPlayer.Rotation,
-				Scale:    reqPlayer.Scale,
+			c.Logger().Debugf("reqPlayer from the WebSocket: %+v", reqPlayer)
+
+			c.Logger().Debug("Validating reqPlayer")
+			if !reqPlayer.IsValid() {
+				c.Logger().Debug("reqPlayer is NOT valid returning")
+				return
 			}
+
+			c.Logger().Debug("reqPlayer is valid")
+
+			c.Logger().Debug("Initializing and populating player model!")
+			// Use dot annotation for promoted aka embedded fields.
+			playerModel := &models.Player{}
+			// TODO: Handle UserID and production mode
+			playerModel.Position = reqPlayer.Position
+			playerModel.Rotation = reqPlayer.Rotation
+			playerModel.Scale = reqPlayer.Scale
 
 			if viper.GetBool("DEBUG") {
 				// Add the Player.Name in DEBUG mode that it can be used as ID in the Player handle to avoid the Userservice dependency
 				playerModel.Name = reqPlayer.Name
 			}
 
-			prettyPlayerModel, _ := PrettyStruct(playerModel)
-			log.Printf("playerModel: %+v", prettyPlayerModel)
+			c.Logger().Debugf("playerModel: %+v", playerModel)
 
+			c.Logger().Debug("Validating playerModel")
+			if !playerModel.IsValid() {
+				c.Logger().Debug("playerModel is NOT valid returning")
+				return
+			}
+
+			c.Logger().Debug("playerModel is valid passing it to the Player handler")
 			handlers.Player(*playerModel)
 
 		}()
 
 	}
-}
-func PrettyStruct(data interface{}) (string, error) {
-	val, err := json.MarshalIndent(data, "", "    ")
-	if err != nil {
-		return "", err
-	}
-	return string(val), nil
-}
-
-func PrettyString(str string) (string, error) {
-	var prettyJSON bytes.Buffer
-	if err := json.Indent(&prettyJSON, []byte(str), "", "    "); err != nil {
-		return "", err
-	}
-	return prettyJSON.String(), nil
 }
