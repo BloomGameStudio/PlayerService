@@ -33,9 +33,19 @@ func GetPlayerModelFromJWT(c echo.Context) (playerModel *models.Player, err erro
 }
 
 func PrettyStruct(data interface{}) (string, error) {
+	// Beautifies a struct
 	val, err := json.MarshalIndent(data, "", "    ")
 	if err != nil {
 		return "", err
 	}
 	return string(val), nil
+}
+
+func PrettyStructNoError(data interface{}) string {
+	// Beautifies a struct returns empty string on error
+	val, err := json.MarshalIndent(data, "", "    ")
+	if err != nil {
+		return ""
+	}
+	return string(val)
 }
