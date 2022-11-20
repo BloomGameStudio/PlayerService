@@ -1,11 +1,12 @@
 package controllers
 
 import (
-	"github.com/BloomGameStudio/PlayerService/handlers"
+	"github.com/BloomGameStudio/PlayerService/database"
 	"github.com/BloomGameStudio/PlayerService/models"
 	"github.com/BloomGameStudio/PlayerService/publicModels"
 	"github.com/labstack/echo/v4"
 	"github.com/spf13/viper"
+	"gorm.io/gorm/clause"
 )
 
 func Player(c echo.Context) error {
@@ -23,7 +24,7 @@ func Player(c echo.Context) error {
 	defer ws.Close()
 
 	// Open DB outside of loopception
-	// db := database.Open()
+	db := database.Open()
 
 	// OPTIMIZE: Use GetUserIDFromJWT function to avoid db call
 	// TODO: UNCOMNNET
@@ -36,24 +37,35 @@ func Player(c echo.Context) error {
 
 	for {
 
+		// TODO: Close connection handling
+
 		// Write
-		// func() {
+		func() {
 
-		// 	// Get all the players
-		// 	players := &models.Player{}
-		// 	db.Find(players)
+			c.Logger().Debug("Writing to the WebSocket")
 
-		// 	// Find/Filter the Changes that occured in the players and send them
-		// 	// PlayerChanges(players,players)
+			c.Logger().Debug("Getting all players from the database")
+			// Get all the players
+			players := &models.Player{}
+			db.Preload(clause.Associations).Find(players)
 
-		// 	err := ws.WriteJSON(players)
-		// 	if err != nil {
-		// 		c.Logger().Error(err)
-		// 	}
-		// }()
+			// Find/Filter the Changes that occured in the players and send them
+			// PlayerChanges(players,players)
+
+			c.Logger().Debug("Pushing the player to the WebSocket")
+			err := ws.WriteJSON(players)
+			if err != nil {
+				c.Logger().Error(err)
+			}
+			c.Logger().Debug("Finished writing to the WebSocket")
+
+			// time.Sleep(time.Second * 3)
+
+		}()
 
 		// Read
 		func() {
+
 			// TODO: THIS IS VULNARABLE CLIENTS CAN CHANGE OBJECT IDS especially the nested ones!!!
 			// TODO: NO VALIDATION OF INPUT DATA IS PERFORMED!!!
 
@@ -100,7 +112,7 @@ func Player(c echo.Context) error {
 			}
 
 			c.Logger().Debug("playerModel is valid passing it to the Player handler")
-			handlers.Player(*playerModel)
+			// handlers.Player(*playerModel) //TODO: UNCOMNNET
 
 		}()
 
