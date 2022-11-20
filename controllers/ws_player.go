@@ -72,6 +72,7 @@ func writer(c echo.Context, ws *websocket.Conn, ch chan error) {
 		if err != nil {
 			c.Logger().Error(err)
 			ch <- err
+			close(ch)
 			break
 
 		}
@@ -104,6 +105,7 @@ func reader(c echo.Context, ws *websocket.Conn, ch chan error) {
 			c.Logger().Debug("We get an error from Reading the JSON reqPlayer")
 			c.Logger().Error(err)
 			ch <- err
+			close(ch)
 			break
 		}
 
@@ -113,6 +115,7 @@ func reader(c echo.Context, ws *websocket.Conn, ch chan error) {
 		if !reqPlayer.IsValid() {
 			c.Logger().Debug("reqPlayer is NOT valid returning")
 			ch <- errors.New("reqPlayer Validation failed")
+			close(ch)
 			break
 		}
 
@@ -137,6 +140,7 @@ func reader(c echo.Context, ws *websocket.Conn, ch chan error) {
 		if !playerModel.IsValid() {
 			c.Logger().Debug("playerModel is NOT valid returning")
 			ch <- errors.New("playerModel Validation failed")
+			close(ch)
 			break
 		}
 
