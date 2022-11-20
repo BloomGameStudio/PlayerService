@@ -27,15 +27,6 @@ func Player(c echo.Context) error {
 	}
 	defer ws.Close()
 
-	// OPTIMIZE: Use GetUserIDFromJWT function to avoid db call
-	// TODO: UNCOMNNET
-	// player, err := helpers.GetPlayerModelFromJWT(c)
-
-	// if err != nil {
-	// 	return err
-	// }
-	// playerUserID := player.UserID
-
 	// TODO: Close connection handling
 
 	writerChan := make(chan error)
