@@ -13,6 +13,10 @@ import (
 	"gorm.io/gorm/clause"
 )
 
+// NOTE: We may need to adjust default configuration and values
+// examples:
+// https://github.com/gorilla/websocket/blob/master/examples/command/main.go
+
 func Player(c echo.Context) error {
 
 	// QUESTION: Is this needed?
