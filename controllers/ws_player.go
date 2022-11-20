@@ -27,8 +27,6 @@ func Player(c echo.Context) error {
 	}
 	defer ws.Close()
 
-	// TODO: Close connection handling
-
 	writerChan := make(chan error)
 	readerChan := make(chan error)
 
@@ -54,7 +52,7 @@ func writer(c echo.Context, ws *websocket.Conn, ch chan error) {
 
 	// Open DB outside of the loop
 	db := database.Open()
-
+forloop:
 	for {
 		// TODO: The Entire Player Model is being sent. It may contain information that should not be sent!
 		c.Logger().Debug("Writing to the WebSocket")
@@ -70,11 +68,21 @@ func writer(c echo.Context, ws *websocket.Conn, ch chan error) {
 		c.Logger().Debug("Pushing the player to the WebSocket")
 		err := ws.WriteJSON(players)
 		if err != nil {
-			c.Logger().Error(err)
-			ch <- err
-			close(ch)
-			break
 
+			switch {
+
+			case errors.Is(err, websocket.ErrCloseSent):
+				c.Logger().Debug("WEbsocket ErrCloseSent")
+				ch <- nil
+				close(ch)
+				break forloop
+
+			default:
+				c.Logger().Error(err)
+				ch <- err
+				close(ch)
+				break forloop
+			}
 		}
 		c.Logger().Debug("Finished writing to the WebSocket Sleeping now")
 
@@ -93,7 +101,7 @@ func reader(c echo.Context, ws *websocket.Conn, ch chan error) {
 
 	// TODO: THIS IS VULNARABLE CLIENTS CAN CHANGE OBJECT IDS especially the nested ones!!!
 	// TODO: NO VALIDATION OF INPUT DATA IS PERFORMED!!!
-
+forloop:
 	for {
 		c.Logger().Debug("Reading from the WebSocket")
 
@@ -103,10 +111,21 @@ func reader(c echo.Context, ws *websocket.Conn, ch chan error) {
 
 		if err != nil {
 			c.Logger().Debug("We get an error from Reading the JSON reqPlayer")
-			c.Logger().Error(err)
-			ch <- err
-			close(ch)
-			break
+			switch {
+
+			case websocket.IsCloseError(err, websocket.CloseNoStatusReceived):
+				c.Logger().Debug("Websocket CloseNoStatusReceived")
+				ch <- nil
+				close(ch)
+				break forloop
+
+			default:
+				c.Logger().Error(err)
+				ch <- err
+				close(ch)
+				break forloop
+
+			}
 		}
 
 		c.Logger().Debugf("reqPlayer from the WebSocket: %+v", reqPlayer)
