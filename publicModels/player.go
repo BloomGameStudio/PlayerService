@@ -14,21 +14,21 @@ type Player struct {
 	Scale      Scale `json:"scale"`
 }
 
-func (rp Player) IsValid() bool {
+func (p Player) IsValid() bool {
 
-	// Validates the requestPlayer
-	// Additional validation and hooks for the reqeurequestPlayer validation can be added here
-	// WARNING: Validation should be scoped to the requestPlayer
+	// Validates the public Player
+	// Additional validation and hooks for the public Player validation can be added here
+	// WARNING: Validation should be scoped to the public Player
 
-	if !rp.Position.IsValid() {
+	if !p.Position.IsValid() {
 		return false
 	}
 
-	if !rp.Rotation.IsValid() {
+	if !p.Rotation.IsValid() {
 		return false
 	}
 
-	if !rp.Scale.IsValid() {
+	if !p.Scale.IsValid() {
 		return false
 	}
 
