@@ -1,8 +1,6 @@
 package handlers
 
 import (
-	"encoding/json"
-
 	"github.com/BloomGameStudio/PlayerService/database"
 	"github.com/BloomGameStudio/PlayerService/models"
 	"github.com/labstack/echo/v4"
@@ -68,12 +66,4 @@ func Player(player models.Player, c echo.Context) error {
 
 	return nil
 
-}
-
-func PrettyStruct(data interface{}) (string, error) {
-	val, err := json.MarshalIndent(data, "", "    ")
-	if err != nil {
-		return "", err
-	}
-	return string(val), nil
 }
