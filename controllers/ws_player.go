@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/BloomGameStudio/PlayerService/database"
+	"github.com/BloomGameStudio/PlayerService/handlers"
 	"github.com/BloomGameStudio/PlayerService/models"
 	"github.com/BloomGameStudio/PlayerService/publicModels"
 	"github.com/gorilla/websocket"
@@ -24,6 +25,8 @@ func Player(c echo.Context) error {
 	// Partial player data can be received or full
 	// TODO: Partial Reads
 	// TODO: Partial Writes
+
+	// TODO: Finalize how IDs are expected and handled
 
 	ws, err := upgrader.Upgrade(c.Response(), c.Request(), nil)
 	if err != nil {
@@ -53,6 +56,7 @@ func Player(c echo.Context) error {
 
 // Write
 func writer(c echo.Context, ws *websocket.Conn, ch chan error) {
+	time.Sleep(time.Hour)
 
 	// Open DB outside of the loop
 	db := database.Open()
@@ -168,7 +172,7 @@ forloop:
 		}
 
 		c.Logger().Debug("playerModel is valid passing it to the Player handler")
-		// handlers.Player(*playerModel) //TODO: UNCOMNNET
+		handlers.Player(*playerModel, c) //TODO: UNCOMNNET and handle errors
 	}
 
 }
