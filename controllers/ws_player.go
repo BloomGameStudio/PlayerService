@@ -55,7 +55,6 @@ func Player(c echo.Context) error {
 
 // Write
 func writer(c echo.Context, ws *websocket.Conn, ch chan error) {
-	time.Sleep(time.Hour)
 
 	// Open DB outside of the loop
 	db := database.Open()
