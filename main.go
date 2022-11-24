@@ -52,6 +52,7 @@ func main() {
 	ws.GET("player", controllers.Player)
 	// ws.GET("position", controllers.Position)
 
-	e.Logger.Fatal(e.Start(":1323"))
+	port := viper.GetString("PORT")
+	e.Logger.Fatal(e.Start(":" + port))
 
 }
