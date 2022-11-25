@@ -11,7 +11,8 @@ type Player struct {
 	RotationID uint
 	Rotation   Rotation `json:"rotation" `
 	ScaleID    uint
-	Scale      Scale `json:"scale"`
+	Scale      Scale  `json:"scale"`
+	ENS        string `json:"ens"`
 }
 
 func (p Player) IsValid() bool {
