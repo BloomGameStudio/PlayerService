@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/BloomGameStudio/PlayerService/database"
+	"github.com/BloomGameStudio/PlayerService/handlers"
 	"github.com/BloomGameStudio/PlayerService/models"
 	"github.com/BloomGameStudio/PlayerService/publicModels"
 	"github.com/gorilla/websocket"
@@ -170,7 +171,7 @@ forloop:
 		}
 
 		c.Logger().Debug("playerModel is valid passing it to the Player handler")
-		// handlers.Player(*playerModel, c) //TODO: UNCOMNNET and handle errors
+		handlers.Player(*playerModel, c) //TODO: UNCOMNNET and handle errors
 	}
 
 }
