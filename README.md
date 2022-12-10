@@ -25,7 +25,7 @@ Install Air via your preffered installation method: https://github.com/cosmtrek/
 
         // With build tag/name
 
-        docker build -t playerservice.
+        docker build -t playerservice .
 
         docker run -p 1323:1323 playerservice
 
