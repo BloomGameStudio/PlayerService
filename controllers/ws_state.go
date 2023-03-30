@@ -49,23 +49,23 @@ func State(c echo.Context) error {
 // Write
 func stateWriter(c echo.Context, ws *websocket.Conn, ch chan error) {
 
+	// TODO: Retrivement of data needs to be defined
+	// In Memory storage of the states has been agreed on
 	// Open DB outside of the loop
-	db := database.Open()
+	db := database.Open() // COMBAK: Configure the database
 forloop:
 	for {
-		// TODO: The Entire Player Model is being sent. It may contain information that should not be sent!
+
 		c.Logger().Debug("Writing to the WebSocket")
+		c.Logger().Debug("Getting all States from the database")
+		// Get all the states from the database
+		states := &models.State{} // COMBAK: Data structure TBD
+		db.Preload(clause.Associations).Find(states)
 
-		c.Logger().Debug("Getting all players from the database")
-		// Get all the players
-		players := &models.Player{}
-		db.Preload(clause.Associations).Find(players)
+		// Find/Filter the Changes that occured in the states and send them
 
-		// Find/Filter the Changes that occured in the players and send them
-		// PlayerChanges(players,players)
-
-		c.Logger().Debug("Pushing the player to the WebSocket")
-		err := ws.WriteJSON(players)
+		c.Logger().Debug("Pushing the states to the WebSocket")
+		err := ws.WriteJSON(states)
 		if err != nil {
 
 			switch {
