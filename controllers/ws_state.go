@@ -98,18 +98,17 @@ forloop:
 // Read
 func stateReader(c echo.Context, ws *websocket.Conn, ch chan error) {
 
-	// TODO: THIS IS VULNARABLE CLIENTS CAN CHANGE OBJECT IDS especially the nested ones!!!
 	// TODO: NO VALIDATION OF INPUT DATA IS PERFORMED!!!
 forloop:
 	for {
 		c.Logger().Debug("Reading from the WebSocket")
 
 		// Initializer request player to bind into
-		reqPlayer := &publicModels.Player{}
-		err := ws.ReadJSON(reqPlayer)
+		reqState := &publicModels.State{}
+		err := ws.ReadJSON(reqState)
 
 		if err != nil {
-			c.Logger().Debug("We get an error from Reading the JSON reqPlayer")
+			c.Logger().Debug("We get an error from Reading the JSON reqState")
 			switch {
 
 			case websocket.IsCloseError(err, websocket.CloseNoStatusReceived):
@@ -127,43 +126,40 @@ forloop:
 			}
 		}
 
-		c.Logger().Debugf("reqPlayer from the WebSocket: %+v", reqPlayer)
+		c.Logger().Debugf("reqState from the WebSocket: %+v", reqState)
 
-		c.Logger().Debug("Validating reqPlayer")
-		if !reqPlayer.IsValid() {
-			c.Logger().Debug("reqPlayer is NOT valid returning")
-			ch <- errors.New("reqPlayer Validation failed")
+		c.Logger().Debug("Validating reqState")
+		if !reqState.IsValid() {
+			c.Logger().Debug("reqState is NOT valid returning")
+			ch <- errors.New("reqState Validation failed")
 			close(ch)
 			break
 		}
 
-		c.Logger().Debug("reqPlayer is valid")
+		c.Logger().Debug("reqState is valid")
 
-		c.Logger().Debug("Initializing and populating player model!")
+		c.Logger().Debug("Initializing and populating reqState model!")
 		// Use dot annotation for promoted aka embedded fields.
-		playerModel := &models.Player{}
-		// TODO: Handle UserID and production mode
-		playerModel.Position = reqPlayer.Position
-		playerModel.Rotation = reqPlayer.Rotation
-		playerModel.Scale = reqPlayer.Scale
+		stateModel := &models.State{}
+		stateModel = reqState
 
 		if viper.GetBool("DEBUG") {
 			// Add the Player.Name in DEBUG mode that it can be used as ID in the Player handle to avoid the Userservice dependency
-			playerModel.Name = reqPlayer.Name
+
 		}
 
-		c.Logger().Debugf("playerModel: %+v", playerModel)
+		c.Logger().Debugf("stateModel: %+v", stateModel)
 
-		c.Logger().Debug("Validating playerModel")
-		if !playerModel.IsValid() {
-			c.Logger().Debug("playerModel is NOT valid returning")
-			ch <- errors.New("playerModel Validation failed")
+		c.Logger().Debug("Validating stateModel")
+		if !stateModel.IsValid() {
+			c.Logger().Debug("stateModel is NOT valid returning")
+			ch <- errors.New("stateModel Validation failed")
 			close(ch)
 			break
 		}
 
 		c.Logger().Debug("playerModel is valid passing it to the Player handler")
-		handlers.Player(*playerModel, c) //TODO: UNCOMNNET and handle errors
+		handlers.State(*stateModel, c)
 	}
 
 }
