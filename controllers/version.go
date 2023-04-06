@@ -13,3 +13,7 @@ type VersionResp struct {
 func Version(c echo.Context) error {
 	return c.JSON(http.StatusOK, &VersionResp{"0.0.1"})
 }
+
+func Commit(c echo.Context) error {
+	return c.JSON(http.StatusOK, &VersionResp{"0.0.1"})
+}
