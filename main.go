@@ -50,6 +50,7 @@ func main() {
 	// End of Web Socket esting routes
 
 	ws.GET("player", controllers.Player)
+	ws.GET("state", controllers.State)
 	// ws.GET("position", controllers.Position)
 
 	port := viper.GetString("PORT")
