@@ -141,7 +141,10 @@ forloop:
 		c.Logger().Debug("Initializing and populating reqState model!")
 		// Use dot annotation for promoted aka embedded fields.
 		stateModel := &models.State{}
-		stateModel = reqState
+
+		stateModel.Airborn = reqState.Airborn
+		stateModel.Grounded = reqState.Grounded
+		stateModel.Waterborn = reqState.Waterborn
 
 		if viper.GetBool("DEBUG") {
 			// Add the Player.Name in DEBUG mode that it can be used as ID in the Player handle to avoid the Userservice dependency
