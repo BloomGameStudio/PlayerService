@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/BloomGameStudio/PlayerService/database"
-	"github.com/BloomGameStudio/PlayerService/handlers"
 	"github.com/BloomGameStudio/PlayerService/models"
 	"github.com/BloomGameStudio/PlayerService/publicModels"
 	"github.com/gorilla/websocket"
@@ -141,10 +140,12 @@ forloop:
 		c.Logger().Debug("Initializing and populating reqState model!")
 		// Use dot annotation for promoted aka embedded fields.
 		stateModel := &models.State{}
-		stateModel = reqState
+
+		stateModel.Airborn = reqState.Airborn
+		stateModel.Grounded = reqState.Grounded
+		stateModel.Waterborn = reqState.Waterborn
 
 		if viper.GetBool("DEBUG") {
-			// Add the Player.Name in DEBUG mode that it can be used as ID in the Player handle to avoid the Userservice dependency
 
 		}
 
@@ -159,7 +160,7 @@ forloop:
 		}
 
 		c.Logger().Debug("playerModel is valid passing it to the Player handler")
-		handlers.State(*stateModel, c)
+		// handlers.State(*stateModel, c) TODO: Implement StateHandler
 	}
 
 }
