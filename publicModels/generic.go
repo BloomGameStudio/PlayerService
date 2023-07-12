@@ -8,3 +8,9 @@ type Vector3 struct {
 	Y float64 `json:"y"`
 	Z float64 `json:"z"`
 }
+
+type Attribute struct {
+	Ceiling   int `json:"ceiling"`
+	Current   int `json:"current"`
+	Collected int `json:"collected"`
+}
