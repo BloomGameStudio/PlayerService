@@ -56,15 +56,15 @@ forloop:
 	for {
 
 		c.Logger().Debug("Writing to the WebSocket")
-		c.Logger().Debug("Getting all States from the database")
+		c.Logger().Debug("Getting Health from the database")
 		// Get all the states from the database
-		states := &models.State{} // COMBAK: Data structure TBD
-		db.Preload(clause.Associations).Find(states)
+		health := &models.Health{} // COMBAK: Data structure TBD
+		db.Preload(clause.Associations).Find(health)
 
 		// Find/Filter the Changes that occured in the states and send them
 
 		c.Logger().Debug("Pushing the states to the WebSocket")
-		err := ws.WriteJSON(states)
+		err := ws.WriteJSON(health)
 		if err != nil {
 
 			switch {
