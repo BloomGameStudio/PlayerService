@@ -9,3 +9,8 @@ type Health struct {
 	gorm.Model
 	publicModels.Attribute
 }
+
+func (h Health) IsValid() bool {
+
+	return true
+}
