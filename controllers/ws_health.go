@@ -159,7 +159,7 @@ forloop:
 			break
 		}
 
-		c.Logger().Debug("healthModel is valid passing it to the Player handler")
+		c.Logger().Debug("healthModel is valid passing it to the Health handler")
 		// handlers.Health(*healthModel, c) TODO: Implement healthHandler
 	}
 
