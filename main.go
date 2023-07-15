@@ -31,6 +31,8 @@ func main() {
 	// This will Auto Migrate all its nested structs
 	db.AutoMigrate(&models.Player{})
 
+	database.Migrate()
+
 	// HTTP routes
 
 	// HTTP Testing routes
