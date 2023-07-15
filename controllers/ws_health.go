@@ -142,6 +142,8 @@ forloop:
 		healthModel := &models.Health{}
 
 		healthModel.Attribute.Ceiling = reqHealth.Attribute.Ceiling
+		healthModel.Attribute.Current = reqHealth.Attribute.Current
+		healthModel.Attribute.Collected = reqHealth.Attribute.Collected
 
 		if viper.GetBool("DEBUG") {
 
