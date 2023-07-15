@@ -103,8 +103,8 @@ forloop:
 		c.Logger().Debug("Reading from the WebSocket")
 
 		// Initializer request player to bind into
-		reqState := &publicModels.State{}
-		err := ws.ReadJSON(reqState)
+		reqHealth := &publicModels.Health{}
+		err := ws.ReadJSON(reqHealth)
 
 		if err != nil {
 			c.Logger().Debug("We get an error from Reading the JSON reqState")
@@ -125,42 +125,40 @@ forloop:
 			}
 		}
 
-		c.Logger().Debugf("reqState from the WebSocket: %+v", reqState)
+		c.Logger().Debugf("reqHealth from the WebSocket: %+v", reqHealth)
 
-		c.Logger().Debug("Validating reqState")
-		if !reqState.IsValid() {
-			c.Logger().Debug("reqState is NOT valid returning")
-			ch <- errors.New("reqState Validation failed")
+		c.Logger().Debug("Validating reqHealth")
+		if !reqHealth.IsValid() {
+			c.Logger().Debug("reqHealth is NOT valid returning")
+			ch <- errors.New("reqHealth Validation failed")
 			close(ch)
 			break
 		}
 
-		c.Logger().Debug("reqState is valid")
+		c.Logger().Debug("reqHealth is valid")
 
-		c.Logger().Debug("Initializing and populating reqState model!")
+		c.Logger().Debug("Initializing and populating reqHealth model!")
 		// Use dot annotation for promoted aka embedded fields.
-		stateModel := &models.State{}
+		healthModel := &models.Health{}
 
-		stateModel.Airborn = reqState.Airborn
-		stateModel.Grounded = reqState.Grounded
-		stateModel.Waterborn = reqState.Waterborn
+		healthModel.Attribute.Ceiling = reqHealth.Attribute.Ceiling
 
 		if viper.GetBool("DEBUG") {
 
 		}
 
-		c.Logger().Debugf("stateModel: %+v", stateModel)
+		c.Logger().Debugf("healthModel: %+v", healthModel)
 
 		c.Logger().Debug("Validating stateModel")
-		if !stateModel.IsValid() {
-			c.Logger().Debug("stateModel is NOT valid returning")
-			ch <- errors.New("stateModel Validation failed")
+		if !healthModel.IsValid() {
+			c.Logger().Debug("healthModel is NOT valid returning")
+			ch <- errors.New("healthModel Validation failed")
 			close(ch)
 			break
 		}
 
-		c.Logger().Debug("playerModel is valid passing it to the Player handler")
-		// handlers.State(*stateModel, c) TODO: Implement StateHandler
+		c.Logger().Debug("healthModel is valid passing it to the Player handler")
+		// handlers.Health(*healthModel, c) TODO: Implement healthHandler
 	}
 
 }
