@@ -55,6 +55,7 @@ func main() {
 	ws.GET("player", controllers.Player)
 	ws.GET("state", controllers.State)
 	// ws.GET("position", controllers.Position)
+	ws.GET("health", controllers.Health)
 
 	port := viper.GetString("PORT")
 	e.Logger.Fatal(e.Start(":" + port))
