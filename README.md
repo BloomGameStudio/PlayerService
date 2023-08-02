@@ -110,3 +110,105 @@ https://joolfe.github.io/postman-to-openapi/
 
         
         p2o PlayerService.postman_collection.json -f open_api.yml
+
+
+## Guides
+
+**How to setup private multiplayer**
+
+1. Create a Player in the DB view previous docs for more information
+
+2. Connect to the ws player websocket endpoint. Wss might also work. The following link is for reference and will connect to the remotely hosted staging player service and player endpoint 
+             
+             ws://staging.player.bloomstudio.gg/ws/player
+
+3. You will now receive a list of player objects on that websocket. Example output can be found below.
+   ```json
+
+                
+        [
+                {
+                        "ID": 1,
+                        "CreatedAt": "2022-11-19T16:52:17.036734453+01:00",
+                        "UpdatedAt": "2022-11-22T22:29:57.585125754+01:00",
+                        "DeletedAt": null,
+                        "UserID": "216f02a1-e252-4905-a300-69bc3aeb0cc1",
+                        "name": "User1",
+                        "layer": "",
+                        "PositionID": 1,
+                        "position": {
+                                "ID": 1,
+                                "CreatedAt": "2022-11-19T16:52:17.036154163+01:00",
+                                "UpdatedAt": "2022-11-22T22:29:57.584197333+01:00",
+                                "DeletedAt": null,
+                                "x": 0.8777,
+                                "y": 1.55555,
+                                "z": 3.33333
+                        },
+                        "RotationID": 1,
+                        "rotation": {
+                                "ID": 1,
+                                "CreatedAt": "2022-11-19T16:52:17.036448333+01:00",
+                                "UpdatedAt": "2022-11-22T22:29:57.584519033+01:00",
+                                "DeletedAt": null,
+                                "x": 4,
+                                "y": 5,
+                                "z": 6,
+                                "w": 0
+                        },
+                        "ScaleID": 1,
+                        "scale": {
+                                "ID": 1,
+                                "CreatedAt": "2022-11-19T16:52:17.036644533+01:00",
+                                "UpdatedAt": "2022-11-22T22:29:57.584636463+01:00",
+                                "DeletedAt": null,
+                                "x": 7,
+                                "y": 5.444,
+                                "z": 9.987
+                        },
+                        "ens": ""
+                },
+                {
+                        "ID": 2,
+                        "CreatedAt": "2023-08-01T14:40:44.986472893+02:00",
+                        "UpdatedAt": "2023-08-01T14:40:44.986472893+02:00",
+                        "DeletedAt": null,
+                        "UserID": "735b2924-fa7f-4119-a0f2-8d51750c6e9e",
+                        "name": "User3",
+                        "layer": "",
+                        "PositionID": 2,
+                        "position": {
+                                "ID": 2,
+                                "CreatedAt": "2023-08-01T14:40:44.985785149+02:00",
+                                "UpdatedAt": "2023-08-01T14:40:44.985785149+02:00",
+                                "DeletedAt": null,
+                                "x": 1,
+                                "y": 2,
+                                "z": 3
+                        },
+                        "RotationID": 2,
+                        "rotation": {
+                                "ID": 2,
+                                "CreatedAt": "2023-08-01T14:40:44.986199897+02:00",
+                                "UpdatedAt": "2023-08-01T14:40:44.986199897+02:00",
+                                "DeletedAt": null,
+                                "x": 4,
+                                "y": 5,
+                                "z": 6,
+                                "w": 0
+                        },
+                        "ScaleID": 2,
+                        "scale": {
+                                "ID": 2,
+                                "CreatedAt": "2023-08-01T14:40:44.986350052+02:00",
+                                "UpdatedAt": "2023-08-01T14:40:44.986350052+02:00",
+                                "DeletedAt": null,
+                                "x": 7,
+                                "y": 8,
+                                "z": 9
+                        },
+                        "ens": ""
+                }
+        ]
+
+    ```
