@@ -8,6 +8,10 @@ import (
 )
 
 func Hello(c echo.Context) error {
+	// A Hello World type test websocket controller
+	// reads a message from the websocket and prints it out to the console
+	// writes Hello Client to the websocket
+
 	ws, err := upgrader.Upgrade(c.Response(), c.Request(), nil)
 	if err != nil {
 		return err
