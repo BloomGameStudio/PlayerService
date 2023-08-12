@@ -116,6 +116,10 @@ https://joolfe.github.io/postman-to-openapi/
         p2o PlayerService.postman_collection.json -f open_api.yml
 
 
+## Examples
+
+Examples can be found in the docs dir.
+
 ## Guides
 
 **How to setup private multiplayer**
