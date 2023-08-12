@@ -101,10 +101,14 @@ Assuming standard config and hosting locally.
 
 
 ---
-## OpenAPI
+## API Specifications and Documentation | Postman | OpenAPI
+The Postman Collection: [PlayerService.postman_collection.json](docs/PlayerService.postman_collection.json)
+
 The OpenAPI spec: [open_api.yml](docs/open_api.yml)
 
-can be found in docs dir and is generated from the postman collection in the same dir via:
+Can be found in docs dir.
+
+The OpenAPI spec is generated from the postman collection in the same dir via:
 
 https://joolfe.github.io/postman-to-openapi/ 
 
