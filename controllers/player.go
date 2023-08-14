@@ -46,7 +46,6 @@ func CreatePlayer(c echo.Context) error {
 		playerModel.UserID = uuid.NewV4()
 	}
 
-	playerModel.UserID = uuid.NewV4()
 	playerModel.Name = reqPlayer.Name
 	playerModel.Position = reqPlayer.Position
 	playerModel.Rotation = reqPlayer.Rotation
