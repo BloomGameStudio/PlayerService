@@ -2,6 +2,15 @@
 
 ## Quickstart Guide:
 
+[**How To Create a Player:**](<#### **How To Create a Player:**>)
+
+[**How to Update The Player object/s.**](<#### **How to Update The Player object/s.**>)
+
+*Links Are Symbolic.
+
+
+
+## Installation
 ### **Native Bare Metel**
 
         // Install Deps/Modules
@@ -124,7 +133,37 @@ Examples can be found in the docs dir.
 
 **How to setup private multiplayer**
 
-1. Create a Player in the DB view previous docs for more information
+1. Create a Player in the DB. More Ressources than the below example are availabe either in the docs folder or in this Readme.
+   
+   - #### **How To Create a Player:**
+
+        Send a `POST` request to http://staging.player.bloomstudio.gg/player with a adjusted Player Object.
+
+        Player Object Example:
+
+        Change "UserID" and "Name" 
+        ```json
+        {
+        "UserID": "33b7e1f3-6f8e-40b9-97dc-c54d9162vb05",
+        "Name": "User1",
+        "Layer": "layer1",
+        "Position": {
+                "x": 1,
+                "y": 2,
+                "z": 3
+        },
+        "Rotation": {
+                "x": 4,
+                "y": 5,
+                "z": 6
+        },
+        "Scale": {
+                "x": 7,
+                "y": 8,
+                "z": 9
+        }
+        }
+        ```
 
 2. Connect to the ws player websocket endpoint. Wss might also work. The following link is for reference and will connect to the remotely hosted staging player service and player endpoint 
              
@@ -220,3 +259,14 @@ Examples can be found in the docs dir.
         ]
 
     ```
+
+4. If you want to modify your player or any other players you can modify the list of player objects that you received 
+and send the singel modified (Not the entire list) player object back within the same websocket your received it from to the service you received it from.
+Note: Sending the entire list of player objects back for update will fail and is currently not supported. You have to send a singel player object back.
+
+   - #### **How to Update The Player object/s.**
+    
+        1. Modify and make the desired changes to the list of of Player objects that you have received in the previous step.
+        2. Push a modified single player object(Not a list) to the [ws://staging.player.bloomstudio.gg/ws/player](ws://staging.player.bloomstudio.gg/ws/player) websocket 
+        3. Optional Confirm that the changes took place by looking at the next data push from the websocket.
+
