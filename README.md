@@ -247,11 +247,12 @@ https://joolfe.github.io/postman-to-openapi/
     ```
 
 4. If you want to modify your player or any other players you can modify the list of player objects that you received 
-and send it back within the same websocket your received it from to the service you received it from.
+and send the singel modified (Not the entire list) player object back within the same websocket your received it from to the service you received it from.
+Note: Sending the entire list of player objects back for update will fail and is currently not supported. You have to send a singel player object back.
 
    - **How to Update The Player object/s.**
     
         1. Modify and make the desired changes to the list of of Player objects that you have received in the previous step.
-        2. Push the modifications to the [ws://staging.player.bloomstudio.gg/ws/player](ws://staging.player.bloomstudio.gg/ws/player) websocket 
+        2. Push a modified single player object(Not a list) to the [ws://staging.player.bloomstudio.gg/ws/player](ws://staging.player.bloomstudio.gg/ws/player) websocket 
         3. Optional Confirm that the changes took place by looking at the next data push from the websocket.
 
