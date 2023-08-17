@@ -66,8 +66,12 @@ forloop:
 
 		c.Logger().Debug("Getting all players from the database")
 		// Get all the players
+		queryPlayer := &models.Player{}
+		queryPlayer.Active = true
+
 		players := &[]models.Player{}
-		db.Preload(clause.Associations).Find(players)
+
+		db.Preload(clause.Associations).Where(queryPlayer).Find(players)
 
 		// Find/Filter the Changes that occured in the players and send them
 		// PlayerChanges(players,players)
