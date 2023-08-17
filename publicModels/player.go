@@ -13,6 +13,7 @@ type Player struct {
 	ScaleID    uint
 	Scale      Scale  `json:"scale"`
 	ENS        string `json:"ens"`
+	Active     bool   `json:"active"`
 }
 
 func (p Player) IsValid() bool {
