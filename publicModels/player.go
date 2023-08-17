@@ -13,6 +13,7 @@ type Player struct {
 	ScaleID    uint
 	Scale      Scale  `json:"scale"`
 	ENS        string `json:"ens"`
+	Active     bool   `json:"active" gorm:"default:1"` // default to true only tested on SQLite might behave differently on other databases
 }
 
 func (p Player) IsValid() bool {
