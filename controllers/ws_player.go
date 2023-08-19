@@ -65,7 +65,7 @@ forloop:
 		c.Logger().Debug("Writing to the WebSocket")
 
 		c.Logger().Debug("Getting all players from the database")
-		// Get all the players
+		// Get all active players from the database
 		queryPlayer := &models.Player{}
 		queryPlayer.Active = true
 
@@ -73,7 +73,7 @@ forloop:
 
 		db.Preload(clause.Associations).Where(queryPlayer).Find(players)
 
-		// Find/Filter the Changes that occured in the players and send them
+		// TODO: Find/Filter the Changes that occured in the players and send them
 		// PlayerChanges(players,players)
 
 		c.Logger().Debug("Pushing the player to the WebSocket")
@@ -175,7 +175,7 @@ forloop:
 		}
 
 		c.Logger().Debug("playerModel is valid passing it to the Player handler")
-		handlers.Player(*playerModel, c) //TODO: UNCOMNNET and handle errors
+		handlers.Player(*playerModel, c) //TODO: handle errors
 	}
 
 }
