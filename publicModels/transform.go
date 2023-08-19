@@ -1,9 +1,6 @@
 package publicModels
 
-import "gorm.io/gorm"
-
 type Transform struct {
-	gorm.Model
 	PositionID uint
 	Position   Position `json:"position" `
 	RotationID uint
