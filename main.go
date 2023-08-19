@@ -36,6 +36,7 @@ func main() {
 	// HTTP Testing routes
 	e.GET("ping", controllers.Ping)
 	e.GET("v", controllers.Version)
+	e.GET("getplayer", controllers.GetPlayer)
 	// End of HTTP testing routes
 
 	e.POST("player", controllers.CreatePlayer)

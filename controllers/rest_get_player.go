@@ -1,43 +1,35 @@
-package main
+package controllers
 
 import (
-	"fmt"
 	"log"
 	"net/http"
-	"os"
-	"nhooyr.io/websocket"
+
+	"github.com/BloomGameStudio/PlayerService/database"
+	"github.com/BloomGameStudio/PlayerService/models"
+	"github.com/labstack/echo/v4"
+	"gorm.io/gorm/clause"
 )
 
-func getPlayerHandler(w http.ResponseWriter, r *http.Request) {
-    playerServiceURL := "ws://localhost:1323/ws/player"
-    fmt.Printf("Got a request lets return some data.\n")
-    conn, _, err := websocket.Dial(r.Context(), playerServiceURL, nil)
-    if err != nil {
-        http.Error(w, "Error connecting to WebSocket", http.StatusInternalServerError)
-        return
-    }
-    defer conn.Close(websocket.StatusNormalClosure, "")
-	_, msg, err := conn.Read(r.Context())
-	if err != nil {
-		log.Printf("Error reading message: %v", err)
-		http.Error(w, "Error reading message from WebSocket", http.StatusInternalServerError)
-		return
+//Define a response struct for control over what gets serialized?
+
+func GetPlayer(c echo.Context) error {
+	// Open the database connection
+	db := database.Open()
+	//defer db.Close()
+	if db == nil {
+		log.Println("Failed to connect to the database")
+		return c.JSON(http.StatusInternalServerError, "Failed to connect to the database")
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	_, err = w.Write(msg)
-	if err != nil {
-		log.Printf("Error forwarding response data: %v", err)
-	}
-}
+	queryPlayer := &models.Player{}
+	queryPlayer.Active = true
 
-func main() {
-	http.HandleFunc("/player", getPlayerHandler)
-	port := "8080"
-	fmt.Printf("REST API server is listening on port %s...\n", port)
-	err := http.ListenAndServe(":"+port, nil)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error starting server: %v\n", err)
+	players := &[]models.Player{}
+	if err := db.Preload(clause.Associations).Where(queryPlayer).Find(players).Error; err != nil {
+		log.Println("Failed to retrieve players from the database")
+		return c.JSON(http.StatusInternalServerError, "Failed to retrieve players from the database")
 	}
+
+	// Return the list of players as a JSON response
+	return c.JSON(http.StatusOK, players)
 }
