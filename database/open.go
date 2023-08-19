@@ -8,7 +8,7 @@ import (
 func Open() *gorm.DB {
 
 	// memoryDB := "file::memory:?cache=shared"
-	fileDB := "database.db"
+	fileDB := "database/database.db"
 
 	db, err := gorm.Open(sqlite.Open(fileDB), &gorm.Config{
 		SkipDefaultTransaction: true,
