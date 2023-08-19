@@ -1,0 +1,84 @@
+[
+    {
+        "ID": 1,
+        "CreatedAt": "2023-08-04T16:42:41.052019133Z",
+        "UpdatedAt": "2023-08-04T16:42:41.052019133Z",
+        "DeletedAt": null,
+        "UserID": "7b1f53d3-5a39-4741-b05e-236614338286",
+        "name": "User1",
+        "layer": "",
+        "PositionID": 1,
+        "position": {
+            "ID": 1,
+            "CreatedAt": "2023-08-04T16:42:41.050011442Z",
+            "UpdatedAt": "2023-08-04T16:42:41.050011442Z",
+            "DeletedAt": null,
+            "x": 1,
+            "y": 2,
+            "z": 3
+        },
+        "RotationID": 1,
+        "rotation": {
+            "ID": 1,
+            "CreatedAt": "2023-08-04T16:42:41.051554505Z",
+            "UpdatedAt": "2023-08-04T16:42:41.051554505Z",
+            "DeletedAt": null,
+            "x": 4,
+            "y": 5,
+            "z": 6,
+            "w": 0
+        },
+        "ScaleID": 1,
+        "scale": {
+            "ID": 1,
+            "CreatedAt": "2023-08-04T16:42:41.051844546Z",
+            "UpdatedAt": "2023-08-04T16:42:41.051844546Z",
+            "DeletedAt": null,
+            "x": 7,
+            "y": 8,
+            "z": 9
+        },
+        "ens": ""
+    },
+    {
+        "ID": 2,
+        "CreatedAt": "2023-08-04T16:42:50.719506507Z",
+        "UpdatedAt": "2023-08-04T16:42:50.719506507Z",
+        "DeletedAt": null,
+        "UserID": "2f01f00f-4c11-4ab2-a2aa-690212584d60",
+        "name": "User2",
+        "layer": "",
+        "PositionID": 2,
+        "position": {
+            "ID": 2,
+            "CreatedAt": "2023-08-04T16:42:50.71818233Z",
+            "UpdatedAt": "2023-08-04T16:42:50.71818233Z",
+            "DeletedAt": null,
+            "x": 1,
+            "y": 2,
+            "z": 3
+        },
+        "RotationID": 2,
+        "rotation": {
+            "ID": 2,
+            "CreatedAt": "2023-08-04T16:42:50.719057471Z",
+            "UpdatedAt": "2023-08-04T16:42:50.719057471Z",
+            "DeletedAt": null,
+            "x": 4,
+            "y": 5,
+            "z": 6,
+            "w": 0
+        },
+        "ScaleID": 2,
+        "scale": {
+            "ID": 2,
+            "CreatedAt": "2023-08-04T16:42:50.719341543Z",
+            "UpdatedAt": "2023-08-04T16:42:50.719341543Z",
+            "DeletedAt": null,
+            "x": 7,
+            "y": 8,
+            "z": 9
+        },
+        "ens": ""
+    }
+]

@@ -1,3 +1,4 @@
+// Package controllers contains all the controller functions used by the application.
 package controllers
 
 import (
@@ -7,11 +8,14 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-var (
-	upgrader = websocket.Upgrader{}
-)
-
+// Hello handles GET requests on the "ws/hello" endpoint.
+// It connects to the websocket and sends a message to the client.
 func Hello(c echo.Context) error {
+	// A Hello World type test websocket controller
+	// reads a message from the websocket and prints it out to the console
+	// writes Hello Client to the websocket
+
+	// Upgrade the connection to a WebSocket
 	ws, err := upgrader.Upgrade(c.Response(), c.Request(), nil)
 	if err != nil {
 		return err
@@ -30,6 +34,8 @@ func Hello(c echo.Context) error {
 		if err != nil {
 			c.Logger().Error(err)
 		}
+
+		// Print the received message
 		fmt.Printf("%s\n", msg)
 	}
 }

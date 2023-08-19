@@ -7,6 +7,8 @@ import (
 	"github.com/BloomGameStudio/PlayerService/models"
 	"github.com/BloomGameStudio/PlayerService/publicModels"
 	"github.com/labstack/echo/v4"
+	uuid "github.com/satori/go.uuid"
+	"github.com/spf13/viper"
 )
 
 func CreatePlayer(c echo.Context) error {
@@ -36,7 +38,14 @@ func CreatePlayer(c echo.Context) error {
 	c.Logger().Debug("Initializing and populating player model!")
 	// Use dot annotation for promoted aka embedded fields.
 	playerModel := &models.Player{}
+
 	// TODO: Set UserID
+	// Note: TMP HOTFIX To create users in staging env without having to enter server or container
+	if viper.GetBool("DEBUG") {
+		// Sleep for 1 second in DEBUG mode to not get fludded with data
+		playerModel.UserID = uuid.NewV4()
+	}
+
 	playerModel.Name = reqPlayer.Name
 	playerModel.Position = reqPlayer.Position
 	playerModel.Rotation = reqPlayer.Rotation
