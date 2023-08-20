@@ -37,8 +37,8 @@ func Player(c echo.Context) error {
 	writerChan := make(chan error)
 	readerChan := make(chan error)
 
-	go writer(c, ws, writerChan)
-	go reader(c, ws, readerChan)
+	go playerWriter(c, ws, writerChan)
+	go playerReader(c, ws, readerChan)
 
 	// QUESTION: Do we want to wait on both routines to error out?
 	// Return the error if either the reader or the writer encounters a error
@@ -55,7 +55,7 @@ func Player(c echo.Context) error {
 }
 
 // Write
-func writer(c echo.Context, ws *websocket.Conn, ch chan error) {
+func playerWriter(c echo.Context, ws *websocket.Conn, ch chan error) {
 
 	// Open DB outside of the loop
 	db := database.Open()
@@ -108,7 +108,7 @@ forloop:
 }
 
 // Read
-func reader(c echo.Context, ws *websocket.Conn, ch chan error) {
+func playerReader(c echo.Context, ws *websocket.Conn, ch chan error) {
 
 	// TODO: THIS IS VULNARABLE CLIENTS CAN CHANGE OBJECT IDS especially the nested ones!!!
 	// TODO: NO VALIDATION OF INPUT DATA IS PERFORMED!!!
