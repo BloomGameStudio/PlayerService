@@ -12,7 +12,9 @@ func Open() *gorm.DB {
 
 	db, err := gorm.Open(sqlite.Open(fileDB), &gorm.Config{
 		SkipDefaultTransaction: true,
-		PrepareStmt:            true})
+		PrepareStmt:            true,
+		// Logger:                 logger.Default.LogMode(logger.Info), // Show Gorm SQL Queries
+	})
 	if err != nil {
 		panic("failed to connect database")
 	}
