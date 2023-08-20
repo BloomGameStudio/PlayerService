@@ -108,7 +108,6 @@ forloop:
 		if viper.GetBool("DEBUG") {
 			// Sleep for x second in DEBUG mode to not get fludded with data
 			time.Sleep(time.Second / 20)
-			time.Sleep(time.Second * 1)
 		}
 	}
 }
