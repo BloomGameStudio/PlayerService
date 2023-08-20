@@ -61,6 +61,8 @@ func playerWriter(c echo.Context, ws *websocket.Conn, ch chan error) {
 
 	// Open DB outside of the loop
 	db := database.Open()
+	lastUpdateAt := time.Date(1900, 1, 1, 0, 0, 0, 0, time.UTC) // Use some ver old date for first update to get all players in the initial push
+
 forloop:
 	for {
 		// TODO: The Entire Player Model is being sent. It may contain information that should not be sent!
@@ -73,9 +75,10 @@ forloop:
 
 		players := &[]models.Player{}
 
-		db.Preload(clause.Associations).Where(queryPlayer).Find(players)
+		db.Preload(clause.Associations).Where("updated_at > ?", lastUpdateAt).Where(queryPlayer).Find(players)
+		lastUpdateAt = time.Now() // update last update time to now only included players that have been updated
 
-		// TODO: Find/Filter the Changes that occured in the players and send them
+		// TODO: Find/Filter the Changes that occured in the players and send them NOTE: The above filters for changes pretty well but we may want to filter for specific changes
 		// PlayerChanges(players,players)
 
 		c.Logger().Debug("Pushing the player to the WebSocket")
@@ -105,6 +108,7 @@ forloop:
 		if viper.GetBool("DEBUG") {
 			// Sleep for x second in DEBUG mode to not get fludded with data
 			time.Sleep(time.Second / 20)
+			time.Sleep(time.Second * 1)
 		}
 	}
 }
