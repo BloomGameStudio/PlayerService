@@ -78,13 +78,35 @@ func playerWriter(c echo.Context, ws *websocket.Conn, ch chan error) {
 		db.Preload(clause.Associations).Where("updated_at > ?", lastUpdateAt).Where(queryPlayer).Find(players)
 		lastUpdateAt = time.Now() // update last update time to now only included players that have been updated
 
-		// TODO: Find/Filter the Changes that occured in the players and send them NOTE: The above filters for changes pretty well but we may want to filter for specific changes
-		// PlayerChanges(players,players)
+		if len(*players) > 0 {
 
-		c.Logger().Debug("Pushing the player to the WebSocket")
-		err := ws.WriteJSON(players)
-		if err != nil {
+			// TODO: Find/Filter the Changes that occured in the players and send them NOTE: The above filters for changes pretty well but we may want to filter for specific changes
+			// PlayerChanges(players,players)
 
+			c.Logger().Debug("Pushing the player to the WebSocket")
+			err := ws.WriteJSON(players)
+
+			if err != nil {
+				switch {
+
+				case errors.Is(err, websocket.ErrCloseSent):
+					c.Logger().Debug("WEbsocket ErrCloseSent")
+					ch <- nil
+					// close(ch)
+					c.Logger().Debug("Returning Now From Go Routine")
+					return
+
+				default:
+					c.Logger().Error(err)
+					ch <- err
+					// close(ch)
+					c.Logger().Debug("Returning Now From Go Routine")
+					return
+				}
+			}
+
+			// Run Ping Check if there are no results to send and last ping check was older than 1 second ago
+		} else if lastPingCheck.Add(time.Second * 1).Before(time.Now()) {
 			switch {
 
 			case errors.Is(err, websocket.ErrCloseSent):
