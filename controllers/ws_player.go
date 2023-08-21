@@ -64,7 +64,6 @@ func playerWriter(c echo.Context, ws *websocket.Conn, ch chan error) {
 	db := database.Open()
 	lastUpdateAt := time.Date(1900, 1, 1, 0, 0, 0, 0, time.UTC) // Use some ver old date for first update to get all players in the initial push
 
-forloop:
 	for {
 		// TODO: The Entire Player Model is being sent. It may contain information that should not be sent!
 		c.Logger().Debug("Writing to the WebSocket")
