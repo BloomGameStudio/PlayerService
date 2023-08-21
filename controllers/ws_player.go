@@ -142,6 +142,7 @@ func playerWriter(c echo.Context, ws *websocket.Conn, ch chan error) {
 			time.Sleep(time.Second / 20)
 		}
 	}
+
 }
 
 // Read
@@ -164,15 +165,16 @@ func playerReader(c echo.Context, ws *websocket.Conn, ch chan error) {
 			case websocket.IsCloseError(err, websocket.CloseNoStatusReceived):
 				c.Logger().Debug("Websocket CloseNoStatusReceived")
 				ch <- nil
-				close(ch)
-				break forloop
+				// close(ch)
+				c.Logger().Debug("Returning Now From Reader Go Routine")
+				return
 
 			default:
 				c.Logger().Error(err)
 				ch <- err
-				close(ch)
-				break forloop
-
+				// close(ch)
+				c.Logger().Debug("Returning Now From Reader Go Routine")
+				return
 			}
 		}
 
@@ -182,8 +184,9 @@ func playerReader(c echo.Context, ws *websocket.Conn, ch chan error) {
 		if !reqPlayer.IsValid() {
 			c.Logger().Debug("reqPlayer is NOT valid returning")
 			ch <- errors.New("reqPlayer Validation failed")
-			close(ch)
-			break
+			// close(ch)
+			c.Logger().Debug("Returning Now From Reader Go Routine")
+			return
 		}
 
 		c.Logger().Debug("reqPlayer is valid")
@@ -207,8 +210,9 @@ func playerReader(c echo.Context, ws *websocket.Conn, ch chan error) {
 		if !playerModel.IsValid() {
 			c.Logger().Debug("playerModel is NOT valid returning")
 			ch <- errors.New("playerModel Validation failed")
-			close(ch)
-			break
+			// close(ch)
+			c.Logger().Debug("Returning Now From Reader Go Routine")
+			return
 		}
 
 		c.Logger().Debug("playerModel is valid passing it to the Player handler")
