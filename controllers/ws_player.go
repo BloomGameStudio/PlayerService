@@ -118,7 +118,7 @@ func playerReader(c echo.Context, ws *websocket.Conn, ch chan error) {
 
 	// TODO: THIS IS VULNARABLE CLIENTS CAN CHANGE OBJECT IDS especially the nested ones!!!
 	// TODO: NO VALIDATION OF INPUT DATA IS PERFORMED!!!
-forloop:
+
 	for {
 		c.Logger().Debug("Reading from the WebSocket")
 
