@@ -63,6 +63,7 @@ func playerWriter(c echo.Context, ws *websocket.Conn, ch chan error) {
 	// Open DB outside of the loop
 	db := database.Open()
 	lastUpdateAt := time.Date(1900, 1, 1, 0, 0, 0, 0, time.UTC) // Use some ver old date for first update to get all players in the initial push
+	lastPingCheck := time.Now()
 
 	for {
 		// TODO: The Entire Player Model is being sent. It may contain information that should not be sent!
@@ -107,21 +108,30 @@ func playerWriter(c echo.Context, ws *websocket.Conn, ch chan error) {
 
 			// Run Ping Check if there are no results to send and last ping check was older than 1 second ago
 		} else if lastPingCheck.Add(time.Second * 1).Before(time.Now()) {
-			switch {
+			c.Logger().Debug("Running Ping Check")
 
-			case errors.Is(err, websocket.ErrCloseSent):
-				c.Logger().Debug("WEbsocket ErrCloseSent")
-				ch <- nil
-				close(ch)
-				break forloop
+			err := ws.WriteControl(websocket.PingMessage, []byte{}, time.Now().Add(time.Second*2))
 
-			default:
-				c.Logger().Error(err)
-				ch <- err
-				close(ch)
-				break forloop
+			if err != nil {
+				switch {
+
+				case errors.Is(err, websocket.ErrCloseSent):
+					c.Logger().Debug("WEbsocket ErrCloseSent")
+					ch <- nil
+					// close(ch)
+					c.Logger().Debug("Returning Now From Go Routine")
+					return
+
+				default:
+					c.Logger().Error(err)
+					ch <- err
+					// close(ch)
+					c.Logger().Debug("Returning Now From Go Routine")
+					return
+				}
 			}
 		}
+
 		c.Logger().Debug("Finished writing to the WebSocket Sleeping now")
 
 		// Update Interval NOTE: setting depending on the server and its performance either increase or decrease it.
