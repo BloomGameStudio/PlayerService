@@ -43,16 +43,17 @@ func Player(c echo.Context) error {
 	// QUESTION: Do we want to wait on both routines to error out?
 	// Return nil if either the reader or the writer encounters a error
 	// Do NOT return the error this will cause the error "the connection is hijacked"
-	for {
-		select {
-		case r := <-readerChan:
-			c.Logger().Debugf("Recieved readerChan error: %v", r)
-			return nil
 
-		case w := <-writerChan:
-			c.Logger().Debugf("Recieved writerChan error: %v", w)
-			return nil
-		}
+	select {
+
+	case w := <-writerChan:
+		c.Logger().Debugf("Recieved writerChan error: %v", w)
+		return nil
+
+	case r := <-readerChan:
+		c.Logger().Debugf("Recieved readerChan error: %v", r)
+		return nil
+
 	}
 }
 
