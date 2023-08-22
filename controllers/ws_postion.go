@@ -171,6 +171,12 @@ func positionReader(c echo.Context, ws *websocket.Conn, ch chan error) {
 		// Use dot annotation for promoted aka embedded fields.
 		positionModel := &models.Position{}
 		// TODO: Handle ID and production mode
+
+		if viper.GetBool("DEBUG") {
+			// Accept client provided ID in DEBUG mode
+			positionModel.ID = reqPosition.ID
+		}
+
 		positionModel.Vector3 = reqPosition.Vector3
 
 		c.Logger().Debugf("positionModel: %+v", positionModel)
