@@ -1,10 +1,13 @@
 package models
 
-import "gorm.io/gorm"
+import (
+	"github.com/BloomGameStudio/PlayerService/publicModels"
+	"gorm.io/gorm"
+)
 
 type Position struct {
 	gorm.Model
-	Vector3
+	publicModels.Position
 	// Normalized   *Position `json:"normalized,omitempty"`
 	// Magnitude    float64   `json:"magnitude"`
 	// SqrMagnitude float64   `json:"sqrMagnitude"`
