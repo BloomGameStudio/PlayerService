@@ -11,7 +11,6 @@ import (
 	"github.com/gorilla/websocket"
 	"github.com/labstack/echo/v4"
 	"github.com/spf13/viper"
-	"gorm.io/gorm/clause"
 )
 
 // NOTE: We may need to adjust default configuration and values
@@ -64,26 +63,19 @@ func positionWriter(c echo.Context, ws *websocket.Conn, ch chan error) {
 	lastPingCheck := time.Now()
 
 	for {
-		// TODO: The Entire Player Model is being sent. It may contain information that should not be sent!
-		c.Logger().Debug("Writing to the WebSocket")
+		// TODO: The Entire Position Model is being sent. It may contain information that should not be sent!
 
-		c.Logger().Debug("Getting all players from the database")
-		// Get all active players from the database
-		queryPlayer := &models.Player{}
-		queryPlayer.Active = true
+		c.Logger().Debug("Getting positions from the database")
 
-		players := &[]models.Player{}
+		positions := &[]models.Position{}
 
-		db.Preload(clause.Associations).Where("updated_at > ?", lastUpdateAt).Where(queryPlayer).Find(players)
-		lastUpdateAt = time.Now() // update last update time to now only included players that have been updated
+		db.Where("updated_at > ?", lastUpdateAt).Find(positions)
+		lastUpdateAt = time.Now() // update last update time to now only included positions that have been updated
 
-		if len(*players) > 0 {
+		if len(*positions) > 0 {
 
-			// TODO: Find/Filter the Changes that occured in the players and send them NOTE: The above filters for changes pretty well but we may want to filter for specific changes
-			// PlayerChanges(players,players)
-
-			c.Logger().Debug("Pushing the player to the WebSocket")
-			err := ws.WriteJSON(players)
+			c.Logger().Debug("Pushing the positions to the WebSocket")
+			err := ws.WriteJSON(positions)
 
 			if err != nil {
 				switch {
@@ -91,15 +83,11 @@ func positionWriter(c echo.Context, ws *websocket.Conn, ch chan error) {
 				case errors.Is(err, websocket.ErrCloseSent):
 					c.Logger().Debug("WEbsocket ErrCloseSent")
 					ch <- nil
-					// close(ch)
-					c.Logger().Debug("Returning Now From Go Routine")
 					return
 
 				default:
 					c.Logger().Error(err)
 					ch <- err
-					// close(ch)
-					c.Logger().Debug("Returning Now From Go Routine")
 					return
 				}
 			}
@@ -116,15 +104,11 @@ func positionWriter(c echo.Context, ws *websocket.Conn, ch chan error) {
 				case errors.Is(err, websocket.ErrCloseSent):
 					c.Logger().Debug("WEbsocket ErrCloseSent")
 					ch <- nil
-					// close(ch)
-					c.Logger().Debug("Returning Now From Go Routine")
 					return
 
 				default:
 					c.Logger().Error(err)
 					ch <- err
-					// close(ch)
-					c.Logger().Debug("Returning Now From Go Routine")
 					return
 				}
 			}
