@@ -134,71 +134,56 @@ func positionReader(c echo.Context, ws *websocket.Conn, ch chan error) {
 	// TODO: NO VALIDATION OF INPUT DATA IS PERFORMED!!!
 
 	for {
-		c.Logger().Debug("Reading from the WebSocket")
+		c.Logger().Debug("Reading from the Position WebSocket")
 
 		// Initializer request player to bind into
-		reqPlayer := &publicModels.Player{}
-		err := ws.ReadJSON(reqPlayer)
+		reqPosition := &publicModels.Position{}
+		err := ws.ReadJSON(reqPosition)
 
 		if err != nil {
-			c.Logger().Debug("We get an error from Reading the JSON reqPlayer")
+			c.Logger().Debug("We get an error from Reading the JSON reqPosition")
 			switch {
 
 			case websocket.IsCloseError(err, websocket.CloseNoStatusReceived):
 				c.Logger().Debug("Websocket CloseNoStatusReceived")
 				ch <- nil
-				// close(ch)
-				c.Logger().Debug("Returning Now From Reader Go Routine")
 				return
 
 			default:
 				c.Logger().Error(err)
 				ch <- err
-				// close(ch)
-				c.Logger().Debug("Returning Now From Reader Go Routine")
 				return
 			}
 		}
 
-		c.Logger().Debugf("reqPlayer from the WebSocket: %+v", reqPlayer)
+		c.Logger().Debugf("reqPosition from the WebSocket: %+v", reqPosition)
 
-		c.Logger().Debug("Validating reqPlayer")
-		if !reqPlayer.IsValid() {
-			c.Logger().Debug("reqPlayer is NOT valid returning")
-			ch <- errors.New("reqPlayer Validation failed")
-			// close(ch)
-			c.Logger().Debug("Returning Now From Reader Go Routine")
+		c.Logger().Debug("Validating reqPosition")
+		if !reqPosition.IsValid() {
+			c.Logger().Debug("reqPosition is NOT valid returning")
+			ch <- errors.New("reqPosition Validation failed")
 			return
 		}
 
-		c.Logger().Debug("reqPlayer is valid")
+		c.Logger().Debug("reqPosition is valid")
 
-		c.Logger().Debug("Initializing and populating player model!")
+		c.Logger().Debug("Initializing and populating position model!")
 		// Use dot annotation for promoted aka embedded fields.
-		playerModel := &models.Player{}
-		// TODO: Handle UserID and production mode
-		playerModel.Position = reqPlayer.Position
-		playerModel.Rotation = reqPlayer.Rotation
-		playerModel.Scale = reqPlayer.Scale
+		positionModel := &models.Position{}
+		// TODO: Handle ID and production mode
+		positionModel.Vector3 = reqPosition.Vector3
 
-		if viper.GetBool("DEBUG") {
-			// Add the Player.Name in DEBUG mode that it can be used as ID in the Player handle to avoid the Userservice dependency
-			playerModel.Name = reqPlayer.Name
-		}
+		c.Logger().Debugf("positionModel: %+v", positionModel)
 
-		c.Logger().Debugf("playerModel: %+v", playerModel)
-
-		c.Logger().Debug("Validating playerModel")
-		if !playerModel.IsValid() {
-			c.Logger().Debug("playerModel is NOT valid returning")
-			ch <- errors.New("playerModel Validation failed")
-			// close(ch)
-			c.Logger().Debug("Returning Now From Reader Go Routine")
+		c.Logger().Debug("Validating positionModel")
+		if !positionModel.IsValid() {
+			c.Logger().Debug("positionModel is NOT valid returning")
+			ch <- errors.New("positionModel Validation failed")
 			return
 		}
 
-		c.Logger().Debug("playerModel is valid passing it to the Player handler")
-		handlers.Player(*playerModel, c) //TODO: handle errors
+		c.Logger().Debug("positionModel is valid passing it to the Poisition handler")
+		handlers.Position(*positionModel, c)
 	}
 
 }
