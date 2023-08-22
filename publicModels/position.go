@@ -3,7 +3,7 @@ package publicModels
 import "gorm.io/gorm"
 
 type Position struct {
-	gorm.Model // TODO: Remove DB fields from public Model there might already be a branch for this
+	gorm.Model
 	Vector3
 	// Normalized   *Position `json:"normalized,omitempty"`
 	// Magnitude    float64   `json:"magnitude"`

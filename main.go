@@ -48,11 +48,11 @@ func main() {
 	ws.File("", "public/index.html") // http://127.0.0.1:1323/ws/
 	// ws://localhost:1323/ws
 	ws.GET("hello", controllers.Hello)
-	// End of Web Socket testing routes
+	// End of Web Socket esting routes
 
 	ws.GET("player", controllers.Player)
 	ws.GET("state", controllers.State)
-	ws.GET("position", controllers.Position)
+	// ws.GET("position", controllers.Position)
 
 	port := viper.GetString("PORT")
 	e.Logger.Fatal(e.Start(":" + port))
