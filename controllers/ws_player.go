@@ -67,9 +67,9 @@ func playerWriter(c echo.Context, ws *websocket.Conn, ch chan error) {
 
 	for {
 		// TODO: The Entire Player Model is being sent. It may contain information that should not be sent!
-		c.Logger().Debug("Writing to the WebSocket")
+		// c.Logger().Debug("Writing to the WebSocket")
 
-		c.Logger().Debug("Getting all players from the database")
+		// c.Logger().Debug("Getting all players from the database")
 		// Get all active players from the database
 		queryPlayer := &models.Player{}
 		queryPlayer.Active = true
@@ -84,7 +84,7 @@ func playerWriter(c echo.Context, ws *websocket.Conn, ch chan error) {
 			// TODO: Find/Filter the Changes that occured in the players and send them NOTE: The above filters for changes pretty well but we may want to filter for specific changes
 			// PlayerChanges(players,players)
 
-			c.Logger().Debug("Pushing the player to the WebSocket")
+			// c.Logger().Debug("Pushing the player to the WebSocket")
 			err := ws.WriteJSON(players)
 
 			if err != nil {
@@ -94,21 +94,21 @@ func playerWriter(c echo.Context, ws *websocket.Conn, ch chan error) {
 					c.Logger().Debug("WEbsocket ErrCloseSent")
 					ch <- nil
 					// close(ch)
-					c.Logger().Debug("Returning Now From Go Routine")
+					c.Logger().Debug("Returning Now From Writer Go Routine")
 					return
 
 				default:
 					c.Logger().Error(err)
 					ch <- err
 					// close(ch)
-					c.Logger().Debug("Returning Now From Go Routine")
+					c.Logger().Debug("Returning Now From Writer Go Routine")
 					return
 				}
 			}
 
 			// Run Ping Check if there are no results to send and last ping check was older than 1 second ago
 		} else if lastPingCheck.Add(time.Second * 1).Before(time.Now()) {
-			c.Logger().Debug("Running Ping Check")
+			// c.Logger().Debug("Running Ping Check")
 
 			err := ws.WriteControl(websocket.PingMessage, []byte{}, time.Now().Add(time.Second*2))
 
@@ -119,20 +119,20 @@ func playerWriter(c echo.Context, ws *websocket.Conn, ch chan error) {
 					c.Logger().Debug("WEbsocket ErrCloseSent")
 					ch <- nil
 					// close(ch)
-					c.Logger().Debug("Returning Now From Go Routine")
+					c.Logger().Debug("Returning Now From Writer Go Routine")
 					return
 
 				default:
 					c.Logger().Error(err)
 					ch <- err
 					// close(ch)
-					c.Logger().Debug("Returning Now From Go Routine")
+					c.Logger().Debug("Returning Now From Writer Go Routine")
 					return
 				}
 			}
 		}
 
-		c.Logger().Debug("Finished writing to the WebSocket Sleeping now")
+		// c.Logger().Debug("Finished writing to the WebSocket Sleeping now")
 
 		// Update Interval NOTE: setting depending on the server and its performance either increase or decrease it.
 		time.Sleep(time.Millisecond * 1)
@@ -152,7 +152,7 @@ func playerReader(c echo.Context, ws *websocket.Conn, ch chan error) {
 	// TODO: NO VALIDATION OF INPUT DATA IS PERFORMED!!!
 
 	for {
-		c.Logger().Debug("Reading from the WebSocket")
+		// c.Logger().Debug("Reading from the WebSocket")
 
 		// Initializer request player to bind into
 		reqPlayer := &publicModels.Player{}
@@ -178,9 +178,9 @@ func playerReader(c echo.Context, ws *websocket.Conn, ch chan error) {
 			}
 		}
 
-		c.Logger().Debugf("reqPlayer from the WebSocket: %+v", reqPlayer)
+		// c.Logger().Debugf("reqPlayer from the WebSocket: %+v", reqPlayer)
 
-		c.Logger().Debug("Validating reqPlayer")
+		// c.Logger().Debug("Validating reqPlayer")
 		if !reqPlayer.IsValid() {
 			c.Logger().Debug("reqPlayer is NOT valid returning")
 			ch <- errors.New("reqPlayer Validation failed")
@@ -189,9 +189,9 @@ func playerReader(c echo.Context, ws *websocket.Conn, ch chan error) {
 			return
 		}
 
-		c.Logger().Debug("reqPlayer is valid")
+		// c.Logger().Debug("reqPlayer is valid")
 
-		c.Logger().Debug("Initializing and populating player model!")
+		// c.Logger().Debug("Initializing and populating player model!")
 		// Use dot annotation for promoted aka embedded fields.
 		playerModel := &models.Player{}
 		// TODO: Handle UserID and production mode
@@ -204,9 +204,9 @@ func playerReader(c echo.Context, ws *websocket.Conn, ch chan error) {
 			playerModel.Name = reqPlayer.Name
 		}
 
-		c.Logger().Debugf("playerModel: %+v", playerModel)
+		// c.Logger().Debugf("playerModel: %+v", playerModel)
 
-		c.Logger().Debug("Validating playerModel")
+		// c.Logger().Debug("Validating playerModel")
 		if !playerModel.IsValid() {
 			c.Logger().Debug("playerModel is NOT valid returning")
 			ch <- errors.New("playerModel Validation failed")
@@ -215,7 +215,7 @@ func playerReader(c echo.Context, ws *websocket.Conn, ch chan error) {
 			return
 		}
 
-		c.Logger().Debug("playerModel is valid passing it to the Player handler")
+		// c.Logger().Debug("playerModel is valid passing it to the Player handler")
 		handlers.Player(*playerModel, c) //TODO: handle errors
 	}
 
