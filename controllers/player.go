@@ -59,7 +59,7 @@ func CreatePlayer(c echo.Context) error {
 
 	// Save to db
 	c.Logger().Debug("Opening DB and saving playerModel")
-	db := database.Open()
+	db := database.GetDB()
 	db.Create(playerModel)
 
 	c.Logger().Debug("playerModel is saved. Returning")

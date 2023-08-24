@@ -70,7 +70,7 @@ func Player(c echo.Context) error {
 func playerWriter(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX context.Context) {
 
 	// Open DB outside of the loop
-	db := database.Open()
+	db := database.GetDB()
 	lastUpdateAt := time.Date(1900, 1, 1, 0, 0, 0, 0, time.UTC) // Use some ver old date for first update to get all players in the initial push
 	lastPingCheck := time.Now()
 
