@@ -23,7 +23,7 @@ func GetPlayerModelFromJWT(c echo.Context) (playerModel *models.Player, err erro
 		panic(err)
 	}
 
-	db := database.Open()
+	db := database.GetDB()
 	result := db.Model(&models.Player{}).Where(&models.Player{UserID: userID}).First(&playerModel)
 
 	if result.Error != nil {

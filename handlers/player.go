@@ -17,7 +17,7 @@ func Player(player models.Player, c echo.Context) error {
 	logger.Debug("We are in Player Handler")
 	logger.Debug("player Arg: %v", player)
 
-	db := database.Open()
+	db := database.GetDB()
 
 	// Initialize empty database player model to bind into from db query
 	databasePlayerModel := &models.Player{}
