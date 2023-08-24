@@ -5,7 +5,9 @@ import (
 	"gorm.io/gorm"
 )
 
-func Open() *gorm.DB {
+var DB *gorm.DB
+
+func open() *gorm.DB {
 
 	// memoryDB := "file::memory:?cache=shared"
 	fileDB := "database/database.db"
@@ -21,4 +23,12 @@ func Open() *gorm.DB {
 
 	return db
 
+}
+
+func Init() {
+	DB = open()
+}
+
+func GetDB() *gorm.DB {
+	return DB
 }
