@@ -2,8 +2,6 @@ package main
 
 import (
 	"github.com/BloomGameStudio/PlayerService/controllers"
-	"github.com/BloomGameStudio/PlayerService/database"
-	"github.com/BloomGameStudio/PlayerService/models"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/spf13/viper"
@@ -26,10 +24,6 @@ func main() {
 
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
-
-	db := database.Open()
-	// This will Auto Migrate all its nested structs
-	db.AutoMigrate(&models.Player{})
 
 	// HTTP routes
 
