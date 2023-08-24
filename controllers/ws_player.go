@@ -73,6 +73,8 @@ func playerWriter(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX 
 		select {
 		case <-timeoutCTX.Done():
 			c.Logger().Debug("PlayerWriter Timeout Context Done")
+			return
+
 		default:
 
 			// TODO: The Entire Player Model is being sent. It may contain information that should not be sent!
