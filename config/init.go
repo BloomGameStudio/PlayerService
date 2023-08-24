@@ -1,9 +1,20 @@
 package config
 
-import "github.com/spf13/viper"
+import (
+	"github.com/BloomGameStudio/PlayerService/database"
+	"github.com/BloomGameStudio/PlayerService/models"
+	"github.com/spf13/viper"
+)
 
 func Init() {
 	ViperInit()
+	// Initialize Database
+	database.Init()
+
+	// TODO: Cleanup Migration
+	db := database.GetDB()
+	// This will Auto Migrate all its nested structs
+	db.AutoMigrate(&models.Player{})
 
 }
 
