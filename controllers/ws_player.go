@@ -61,10 +61,8 @@ func Player(c echo.Context) error {
 	}
 }
 
-// Write
 func playerWriter(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX context.Context) {
 
-	// Open DB outside of the loop
 	db := database.GetDB()
 	lastUpdateAt := time.Date(1900, 1, 1, 0, 0, 0, 0, time.UTC) // Use some ver old date for first update to get all players in the initial push
 	lastPingCheck := time.Now()
@@ -282,6 +280,7 @@ func playerReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX 
 			c.Logger().Debug("Validating playerModel")
 			if !playerModel.IsValid() {
 				c.Logger().Debug("playerModel is NOT valid returning")
+				// NOTE: No Timeout used here
 				ch <- errors.New("playerModel Validation failed")
 				// close(ch)
 				c.Logger().Debug("Returning Now From Reader Go Routine")
