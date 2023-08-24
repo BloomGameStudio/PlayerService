@@ -51,7 +51,7 @@ func stateWriter(c echo.Context, ws *websocket.Conn, ch chan error) {
 	// TODO: Retrivement of data needs to be defined
 	// In Memory storage of the states has been agreed on
 	// Open DB outside of the loop
-	db := database.Open() // COMBAK: Configure the database
+	db := database.GetDB()
 forloop:
 	for {
 
