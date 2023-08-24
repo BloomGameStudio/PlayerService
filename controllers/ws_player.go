@@ -39,7 +39,7 @@ func Player(c echo.Context) error {
 	readerChan := make(chan error)
 
 	timeoutCTX, timeoutCTXCancel := context.WithCancel(context.Background())
-	defer timeoutCTXCancel() // cancel when we are finished consuming integers
+	defer timeoutCTXCancel()
 
 	go playerWriter(c, ws, writerChan, timeoutCTX)
 	go playerReader(c, ws, readerChan, timeoutCTX)
@@ -48,22 +48,17 @@ func Player(c echo.Context) error {
 	// Return nil if either the reader or the writer encounters a error
 	// Do NOT return the error this will cause the error "the connection is hijacked"
 
-	// select {
+	select {
 
-	// case w := <-writerChan:
-	// 	c.Logger().Debugf("Recieved writerChan error: %v", w)
-	// 	return nil
+	case w := <-writerChan:
+		c.Logger().Debugf("Recieved writerChan error: %v", w)
+		return nil
 
-	// case r := <-readerChan:
-	// 	c.Logger().Debugf("Recieved readerChan error: %v", r)
-	// 	return nil
+	case r := <-readerChan:
+		c.Logger().Debugf("Recieved readerChan error: %v", r)
+		return nil
 
-	// }
-	_ = <-writerChan
-	_ = <-readerChan
-	timeoutCTXCancel()
-	c.Logger().Debug("Returning Now Player Websocket Endpoint")
-	return nil
+	}
 }
 
 // Write
