@@ -15,7 +15,7 @@ func Position(position models.Position, c echo.Context) error {
 	logger.Debug("We are in Position Handler")
 	logger.Debug("position Arg: %v", position)
 
-	db := database.Open()
+	db := database.GetDB()
 
 	// Initialize empty database position model to bind into from db query
 	databasePositionModel := &models.Position{}
