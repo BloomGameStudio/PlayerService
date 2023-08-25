@@ -1,9 +1,6 @@
 package publicModels
 
-import "gorm.io/gorm"
-
 type Rotation struct {
-	gorm.Model
 	// Euler Rotation Annotation
 	// Yaw,Pitch,Roll
 	Vector3
