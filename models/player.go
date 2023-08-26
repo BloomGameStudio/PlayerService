@@ -14,6 +14,7 @@ type Player struct {
 	gorm.Model
 	UserID uuid.UUID `gorm:"type:uuid;uniqueIndex"`
 	publicModels.Player
+	Transform `json:"transform"`
 
 	// State    State
 }

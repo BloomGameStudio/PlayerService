@@ -1,10 +1,11 @@
 package models
 
-import "gorm.io/gorm"
+import (
+	"github.com/BloomGameStudio/PlayerService/publicModels"
+	"gorm.io/gorm"
+)
 
 type Vector3 struct {
 	gorm.Model
-	X float64 `json:"x"`
-	Y float64 `json:"y"`
-	Z float64 `json:"z"`
+	publicModels.Vector3
 }
