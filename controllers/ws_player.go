@@ -266,9 +266,9 @@ func playerReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX 
 			// Use dot annotation for promoted aka embedded fields.
 			playerModel := &models.Player{}
 			// TODO: Handle UserID and production mode
-			playerModel.Position = reqPlayer.Position
-			playerModel.Rotation = reqPlayer.Rotation
-			playerModel.Scale = reqPlayer.Scale
+			playerModel.Position.Position = reqPlayer.Position
+			playerModel.Rotation.Rotation = reqPlayer.Rotation
+			playerModel.Scale.Scale = reqPlayer.Scale
 
 			if viper.GetBool("DEBUG") {
 				// Add the Player.Name in DEBUG mode that it can be used as ID in the Player handle to avoid the Userservice dependency
