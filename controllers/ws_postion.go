@@ -174,7 +174,7 @@ func positionReader(c echo.Context, ws *websocket.Conn, ch chan error) {
 
 		if viper.GetBool("DEBUG") {
 			// Accept client provided ID in DEBUG mode
-			positionModel.ID = reqPosition.ID
+			// positionModel.ID = reqPosition.ID
 		}
 
 		positionModel.Vector3 = reqPosition.Vector3
