@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"context"
 	"errors"
 	"time"
 
@@ -34,8 +35,11 @@ func Position(c echo.Context) error {
 	writerChan := make(chan error)
 	readerChan := make(chan error)
 
-	go positionWriter(c, ws, writerChan)
-	go positionReader(c, ws, readerChan)
+	timeoutCTX, timeoutCTXCancel := context.WithCancel(context.Background())
+	defer timeoutCTXCancel()
+
+	go positionWriter(c, ws, writerChan, timeoutCTX)
+	go positionReader(c, ws, readerChan, timeoutCTX)
 
 	// QUESTION: Do we want to wait on both routines to error out?
 	// Return nil if either the reader or the writer encounters a error
@@ -55,7 +59,7 @@ func Position(c echo.Context) error {
 }
 
 // Write
-func positionWriter(c echo.Context, ws *websocket.Conn, ch chan error) {
+func positionWriter(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX context.Context) {
 
 	// Open DB outside of the loop
 	db := database.GetDB()
@@ -128,7 +132,7 @@ func positionWriter(c echo.Context, ws *websocket.Conn, ch chan error) {
 }
 
 // Read
-func positionReader(c echo.Context, ws *websocket.Conn, ch chan error) {
+func positionReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX context.Context) {
 
 	// TODO: THIS IS VULNARABLE CLIENTS CAN CHANGE OBJECT IDS especially the nested ones!!!
 	// TODO: NO VALIDATION OF INPUT DATA IS PERFORMED!!!
