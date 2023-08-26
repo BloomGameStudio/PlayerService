@@ -47,9 +47,9 @@ func CreatePlayer(c echo.Context) error {
 	}
 
 	playerModel.Name = reqPlayer.Name
-	playerModel.Position = reqPlayer.Position
-	playerModel.Rotation = reqPlayer.Rotation
-	playerModel.Scale = reqPlayer.Scale
+	playerModel.Position.Position = reqPlayer.Position
+	playerModel.Rotation.Rotation = reqPlayer.Rotation
+	playerModel.Scale.Scale = reqPlayer.Scale
 
 	if !playerModel.IsValid() {
 		c.Logger().Debug("playerModel is NOT valid")
@@ -58,7 +58,6 @@ func CreatePlayer(c echo.Context) error {
 	c.Logger().Debug("playerModel is valid")
 
 	// Save to db
-	c.Logger().Debug("Opening DB and saving playerModel")
 	db := database.GetDB()
 	db.Create(playerModel)
 
