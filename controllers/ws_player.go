@@ -269,6 +269,7 @@ func playerReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX 
 			playerModel.Position = reqPlayer.Position
 			playerModel.Rotation = reqPlayer.Rotation
 			playerModel.Scale = reqPlayer.Scale
+			playerModel.States = reqPlayer.States
 
 			if viper.GetBool("DEBUG") {
 				// Add the Player.Name in DEBUG mode that it can be used as ID in the Player handle to avoid the Userservice dependency
