@@ -58,7 +58,6 @@ func Position(c echo.Context) error {
 	}
 }
 
-// Write
 func positionWriter(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX context.Context) {
 
 	// Open DB outside of the loop
@@ -67,65 +66,73 @@ func positionWriter(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCT
 	lastPingCheck := time.Now()
 
 	for {
-		// TODO: The Entire Position Model is being sent. It may contain information that should not be sent!
+		select {
 
-		c.Logger().Debug("Getting positions from the database")
+		case <-timeoutCTX.Done():
+			c.Logger().Debug("PositionWriter Timeout Context Done")
+			return
 
-		positions := &[]models.Position{}
+		default:
+			// TODO: The Entire Position Model is being sent. It may contain information that should not be sent!
 
-		db.Where("updated_at > ?", lastUpdateAt).Find(positions)
-		lastUpdateAt = time.Now() // update last update time to now only included positions that have been updated
+			c.Logger().Debug("Getting positions from the database")
 
-		if len(*positions) > 0 {
+			positions := &[]models.Position{}
 
-			c.Logger().Debug("Pushing the positions to the WebSocket")
-			err := ws.WriteJSON(positions)
+			db.Where("updated_at > ?", lastUpdateAt).Find(positions)
+			lastUpdateAt = time.Now() // update last update time to now only included positions that have been updated
 
-			if err != nil {
-				switch {
+			if len(*positions) > 0 {
 
-				case errors.Is(err, websocket.ErrCloseSent):
-					c.Logger().Debug("WEbsocket ErrCloseSent")
-					ch <- nil
-					return
+				c.Logger().Debug("Pushing the positions to the WebSocket")
+				err := ws.WriteJSON(positions)
 
-				default:
-					c.Logger().Error(err)
-					ch <- err
-					return
+				if err != nil {
+					switch {
+
+					case errors.Is(err, websocket.ErrCloseSent):
+						c.Logger().Debug("WEbsocket ErrCloseSent")
+						ch <- nil
+						return
+
+					default:
+						c.Logger().Error(err)
+						ch <- err
+						return
+					}
+				}
+
+				// Run Ping Check if there are no results to send and last ping check was older than 1 second ago
+			} else if lastPingCheck.Add(time.Second * 1).Before(time.Now()) {
+				c.Logger().Debug("Running Ping Check")
+
+				err := ws.WriteControl(websocket.PingMessage, []byte{}, time.Now().Add(time.Second*2))
+
+				if err != nil {
+					switch {
+
+					case errors.Is(err, websocket.ErrCloseSent):
+						c.Logger().Debug("WEbsocket ErrCloseSent")
+						ch <- nil
+						return
+
+					default:
+						c.Logger().Error(err)
+						ch <- err
+						return
+					}
 				}
 			}
 
-			// Run Ping Check if there are no results to send and last ping check was older than 1 second ago
-		} else if lastPingCheck.Add(time.Second * 1).Before(time.Now()) {
-			c.Logger().Debug("Running Ping Check")
+			c.Logger().Debug("Finished writing to the WebSocket Sleeping now")
 
-			err := ws.WriteControl(websocket.PingMessage, []byte{}, time.Now().Add(time.Second*2))
+			// Update Interval NOTE: setting depending on the server and its performance either increase or decrease it.
+			time.Sleep(time.Millisecond * 1)
 
-			if err != nil {
-				switch {
-
-				case errors.Is(err, websocket.ErrCloseSent):
-					c.Logger().Debug("WEbsocket ErrCloseSent")
-					ch <- nil
-					return
-
-				default:
-					c.Logger().Error(err)
-					ch <- err
-					return
-				}
+			if viper.GetBool("DEBUG") {
+				// Sleep for x second in DEBUG mode to not get fludded with data
+				time.Sleep(time.Second / 20)
 			}
-		}
-
-		c.Logger().Debug("Finished writing to the WebSocket Sleeping now")
-
-		// Update Interval NOTE: setting depending on the server and its performance either increase or decrease it.
-		time.Sleep(time.Millisecond * 1)
-
-		if viper.GetBool("DEBUG") {
-			// Sleep for x second in DEBUG mode to not get fludded with data
-			time.Sleep(time.Second / 20)
 		}
 	}
 
