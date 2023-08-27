@@ -1,5 +1,9 @@
 package publicModels
 
+type States struct {
+	IDS string `json:"ids"`
+}
+
 type Player struct {
 	// publicModels.Player holds public fields for the player model.
 
@@ -9,6 +13,8 @@ type Player struct {
 	ENS       string `json:"ens"`
 	Active    bool   `json:"active" gorm:"default:1"` // default to true only tested on SQLite might behave differently on other databases
 	Transform `json:"transform"`
+
+	States `json:"states"`
 }
 
 func (p Player) IsValid() bool {
