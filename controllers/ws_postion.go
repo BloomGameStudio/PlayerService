@@ -8,7 +8,6 @@ import (
 	"github.com/BloomGameStudio/PlayerService/database"
 	"github.com/BloomGameStudio/PlayerService/handlers"
 	"github.com/BloomGameStudio/PlayerService/models"
-	"github.com/BloomGameStudio/PlayerService/publicModels"
 	"github.com/gorilla/websocket"
 	"github.com/labstack/echo/v4"
 	"github.com/spf13/viper"
@@ -163,6 +162,7 @@ func positionWriter(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCT
 			if viper.GetBool("DEBUG") {
 				// Sleep for x second in DEBUG mode to not get fludded with data
 				time.Sleep(time.Second / 20)
+				time.Sleep(time.Second * 5)
 			}
 		}
 	}
@@ -186,7 +186,9 @@ func positionReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCT
 			c.Logger().Debug("Reading from the Position WebSocket")
 
 			// Initializer request player to bind into
-			reqPosition := &publicModels.Position{}
+			// NOTE: We are using a private model here TODO: Change to public model in production or handle this case
+			reqPosition := &models.Position{}
+
 			err := ws.ReadJSON(reqPosition)
 
 			if err != nil {
@@ -237,7 +239,7 @@ func positionReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCT
 
 			if viper.GetBool("DEBUG") {
 				// Accept client provided ID in DEBUG mode
-				// positionModel.ID = reqPosition.ID
+				positionModel.ID = reqPosition.ID
 			}
 
 			positionModel.Vector3 = reqPosition.Vector3
