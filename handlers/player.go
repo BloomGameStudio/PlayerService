@@ -62,7 +62,7 @@ func Player(player models.Player, c echo.Context) error {
 	logger.Debugf("Updated databasePlayerModel: %v", databasePlayerModel)
 	logger.Debug("Saving database player")
 
-	db.Session(&gorm.Session{FullSaveAssociations: true}).Model(&databasePlayerModel).Select("*").Updates(&databasePlayerModel)
+	db.Session(&gorm.Session{FullSaveAssociations: true}).Updates(&databasePlayerModel)
 	// NOTE: it might be advantages to explicitly Save the updated fields like below to avoid accidental implicit updates:
 	// db.Save(databasePlayerModel)
 	// db.Save(databasePlayerModel.Position)
