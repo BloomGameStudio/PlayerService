@@ -176,62 +176,69 @@ func positionReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCT
 	// TODO: NO VALIDATION OF INPUT DATA IS PERFORMED!!!
 
 	for {
-		c.Logger().Debug("Reading from the Position WebSocket")
+		select {
 
-		// Initializer request player to bind into
-		reqPosition := &publicModels.Position{}
-		err := ws.ReadJSON(reqPosition)
+		case <-timeoutCTX.Done():
+			c.Logger().Debug("TimeoutCTX Done")
+			return
 
-		if err != nil {
-			c.Logger().Debug("We get an error from Reading the JSON reqPosition")
-			switch {
+		default:
+			c.Logger().Debug("Reading from the Position WebSocket")
 
-			case websocket.IsCloseError(err, websocket.CloseNoStatusReceived):
-				c.Logger().Debug("Websocket CloseNoStatusReceived")
-				ch <- nil
-				return
+			// Initializer request player to bind into
+			reqPosition := &publicModels.Position{}
+			err := ws.ReadJSON(reqPosition)
 
-			default:
-				c.Logger().Error(err)
-				ch <- err
+			if err != nil {
+				c.Logger().Debug("We get an error from Reading the JSON reqPosition")
+				switch {
+
+				case websocket.IsCloseError(err, websocket.CloseNoStatusReceived):
+					c.Logger().Debug("Websocket CloseNoStatusReceived")
+					ch <- nil
+					return
+
+				default:
+					c.Logger().Error(err)
+					ch <- err
+					return
+				}
+			}
+
+			c.Logger().Debugf("reqPosition from the WebSocket: %+v", reqPosition)
+
+			c.Logger().Debug("Validating reqPosition")
+			if !reqPosition.IsValid() {
+				c.Logger().Debug("reqPosition is NOT valid returning")
+				ch <- errors.New("reqPosition Validation failed")
 				return
 			}
+
+			c.Logger().Debug("reqPosition is valid")
+
+			c.Logger().Debug("Initializing and populating position model!")
+			// Use dot annotation for promoted aka embedded fields.
+			positionModel := &models.Position{}
+			// TODO: Handle ID and production mode
+
+			if viper.GetBool("DEBUG") {
+				// Accept client provided ID in DEBUG mode
+				// positionModel.ID = reqPosition.ID
+			}
+
+			positionModel.Vector3 = reqPosition.Vector3
+
+			c.Logger().Debugf("positionModel: %+v", positionModel)
+
+			c.Logger().Debug("Validating positionModel")
+			if !positionModel.IsValid() {
+				c.Logger().Debug("positionModel is NOT valid returning")
+				ch <- errors.New("positionModel Validation failed")
+				return
+			}
+
+			c.Logger().Debug("positionModel is valid passing it to the Poisition handler")
+			handlers.Position(*positionModel, c)
 		}
-
-		c.Logger().Debugf("reqPosition from the WebSocket: %+v", reqPosition)
-
-		c.Logger().Debug("Validating reqPosition")
-		if !reqPosition.IsValid() {
-			c.Logger().Debug("reqPosition is NOT valid returning")
-			ch <- errors.New("reqPosition Validation failed")
-			return
-		}
-
-		c.Logger().Debug("reqPosition is valid")
-
-		c.Logger().Debug("Initializing and populating position model!")
-		// Use dot annotation for promoted aka embedded fields.
-		positionModel := &models.Position{}
-		// TODO: Handle ID and production mode
-
-		if viper.GetBool("DEBUG") {
-			// Accept client provided ID in DEBUG mode
-			// positionModel.ID = reqPosition.ID
-		}
-
-		positionModel.Vector3 = reqPosition.Vector3
-
-		c.Logger().Debugf("positionModel: %+v", positionModel)
-
-		c.Logger().Debug("Validating positionModel")
-		if !positionModel.IsValid() {
-			c.Logger().Debug("positionModel is NOT valid returning")
-			ch <- errors.New("positionModel Validation failed")
-			return
-		}
-
-		c.Logger().Debug("positionModel is valid passing it to the Poisition handler")
-		handlers.Position(*positionModel, c)
 	}
-
 }
