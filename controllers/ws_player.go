@@ -184,7 +184,6 @@ func playerWriter(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX 
 			if viper.GetBool("DEBUG") {
 				// Sleep for x second in DEBUG mode to not get fludded with data
 				time.Sleep(time.Second / 20)
-				time.Sleep(time.Second * 5)
 			}
 		}
 	}
