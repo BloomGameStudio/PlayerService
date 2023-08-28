@@ -194,14 +194,27 @@ func positionReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCT
 				switch {
 
 				case websocket.IsCloseError(err, websocket.CloseNoStatusReceived):
-					c.Logger().Debug("Websocket CloseNoStatusReceived")
-					ch <- nil
-					return
+					select {
+
+					case ch <- nil:
+						c.Logger().Debug("Sent nil to Reader channel")
+						return
+
+					case <-time.After(time.Second * 10):
+						c.Logger().Debug("Timed out sending nil to Reader channel")
+						return
+					}
 
 				default:
 					c.Logger().Error(err)
-					ch <- err
-					return
+					select {
+					case ch <- err:
+						c.Logger().Debug("Sent error to Reader channel")
+						return
+					case <-time.After(time.Second * 10):
+						c.Logger().Debug("Timed out sending error to Reader channel")
+						return
+					}
 				}
 			}
 
@@ -210,6 +223,7 @@ func positionReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCT
 			c.Logger().Debug("Validating reqPosition")
 			if !reqPosition.IsValid() {
 				c.Logger().Debug("reqPosition is NOT valid returning")
+				// NOTE: no Chan Timeout used
 				ch <- errors.New("reqPosition Validation failed")
 				return
 			}
@@ -233,6 +247,7 @@ func positionReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCT
 			c.Logger().Debug("Validating positionModel")
 			if !positionModel.IsValid() {
 				c.Logger().Debug("positionModel is NOT valid returning")
+				// NOTE: no Chan Timeout used
 				ch <- errors.New("positionModel Validation failed")
 				return
 			}
