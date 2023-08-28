@@ -91,14 +91,29 @@ func positionWriter(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCT
 					switch {
 
 					case errors.Is(err, websocket.ErrCloseSent):
-						c.Logger().Debug("WEbsocket ErrCloseSent")
-						ch <- nil
-						return
+
+						select {
+
+						case ch <- nil:
+							c.Logger().Debug("Sent nil to Writer channel")
+							return
+
+						case <-time.After(time.Second * 10):
+							c.Logger().Debug("Timed out sending nil to Writer channel")
+							return
+						}
 
 					default:
 						c.Logger().Error(err)
-						ch <- err
-						return
+						select {
+						case ch <- err:
+							c.Logger().Debug("Sent error to Writer channel")
+							return
+
+						case <-time.After(time.Second * 10):
+							c.Logger().Debug("Timed out sending error to Writer channel")
+							return
+						}
 					}
 				}
 
@@ -113,13 +128,29 @@ func positionWriter(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCT
 
 					case errors.Is(err, websocket.ErrCloseSent):
 						c.Logger().Debug("WEbsocket ErrCloseSent")
-						ch <- nil
-						return
+
+						select {
+
+						case ch <- nil:
+							c.Logger().Debug("Sent nil to Writer channel")
+							return
+						case <-time.After(time.Second * 10):
+							c.Logger().Debug("Timed out sending nil to Writer channel")
+							return
+						}
 
 					default:
 						c.Logger().Error(err)
-						ch <- err
-						return
+
+						select {
+
+						case ch <- err:
+							c.Logger().Debug("Sent error to Writer channel")
+							return
+						case <-time.After(time.Second * 10):
+							c.Logger().Debug("Timed out sending error to Writer channel")
+							return
+						}
 					}
 				}
 			}
