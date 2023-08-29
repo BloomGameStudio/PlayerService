@@ -108,6 +108,13 @@ Assuming standard config and hosting locally.
 
   4. Send and receive JSON Player objects from the websocket
 
+## How to Interact with the Position WebSocket
+
+1. Connect to ws://staging.player.bloomstudio.gg/ws/position
+2. You will now recive a array of Positions
+3. To update any position you can send a single position object back in its entirety 
+This websocket is very similair to the player websocket 
+
 
 ---
 ## API Specifications and Documentation | Postman | OpenAPI
