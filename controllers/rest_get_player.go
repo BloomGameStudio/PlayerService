@@ -9,11 +9,11 @@ import (
 	"gorm.io/gorm/clause"
 )
 
-//Define a response struct for control over what gets serialized?
+//Define a response struct for contfffrol over what gets serialized?
 
 func GetPlayer(c echo.Context) error {
 	// Open the database connection
-	db := database.Open()
+	db := database.GetDB()
 
 	queryPlayer := &models.Player{}
 	queryPlayer.Active = true
