@@ -55,6 +55,10 @@ func Player(player models.Player, c echo.Context) error {
 	databasePlayerModel.Scale = player.Scale
 	databasePlayerModel.Scale.ID = databasePlayerModel.ScaleID
 
+	databasePlayerModel.States = player.States
+
+	databasePlayerModel.Active = player.Active
+
 	logger.Debugf("Updated databasePlayerModel: %v", databasePlayerModel)
 	logger.Debug("Saving database player")
 
