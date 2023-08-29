@@ -1,13 +1,15 @@
 package models
 
-import "gorm.io/gorm"
+import (
+	"github.com/BloomGameStudio/PlayerService/publicModels"
+	"gorm.io/gorm"
+)
 
 type Rotation struct {
 	gorm.Model
 	// Euler Rotation Annotation
 	// Yaw,Pitch,Roll
-	Vector3
-	W float64 `json:"w"`
+	publicModels.Rotation
 
 	// EulerAngles *Vector3 `json:"eulerAngles"`
 	// Perhaps we want to have verbose EulerAngles that point to a Vector3

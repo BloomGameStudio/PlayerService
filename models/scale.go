@@ -1,10 +1,13 @@
 package models
 
-import "gorm.io/gorm"
+import (
+	"github.com/BloomGameStudio/PlayerService/publicModels"
+	"gorm.io/gorm"
+)
 
 type Scale struct {
 	gorm.Model
-	Vector3
+	publicModels.Scale
 }
 
 func (s Scale) IsValid() bool {

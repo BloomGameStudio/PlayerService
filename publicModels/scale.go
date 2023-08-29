@@ -1,9 +1,6 @@
 package publicModels
 
-import "gorm.io/gorm"
-
 type Scale struct {
-	gorm.Model
 	Vector3
 }
 
