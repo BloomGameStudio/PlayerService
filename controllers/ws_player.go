@@ -248,7 +248,11 @@ func playerReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX 
 			playerModel.Position.Position = reqPlayer.Position
 			playerModel.Rotation.Rotation = reqPlayer.Rotation
 			playerModel.Scale.Scale = reqPlayer.Scale
-			playerModel.States = reqPlayer.States
+			// playerModel.States = reqPlayer.States
+			for _, state := range reqPlayer.States {
+				playerModel.States = append(playerModel.States, models.State{State: state})
+			}
+
 			playerModel.Layer = reqPlayer.Layer
 			playerModel.Active = reqPlayer.Active
 
