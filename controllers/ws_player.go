@@ -103,6 +103,7 @@ func playerWriter(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX 
 						c.Logger().Debug("WEbsocket ErrCloseSent")
 
 						select {
+
 						case ch <- nil:
 							c.Logger().Debug("Sent nil to Writer channel")
 							return
@@ -111,9 +112,6 @@ func playerWriter(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX 
 							c.Logger().Debug("Timed out sending nil to Writer channel")
 							return
 						}
-						// close(ch)
-						// c.Logger().Debug("Returning Now From Go Routine")
-						// return
 
 					default:
 						c.Logger().Error(err)
@@ -126,11 +124,6 @@ func playerWriter(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX 
 							c.Logger().Debug("Timed out sending error to Writer channel")
 							return
 						}
-
-						// ch <- err
-						// // close(ch)
-						// c.Logger().Debug("Returning Now From Go Routine")
-						// return
 					}
 				}
 
@@ -146,6 +139,7 @@ func playerWriter(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX 
 					case errors.Is(err, websocket.ErrCloseSent):
 						c.Logger().Debug("WEbsocket ErrCloseSent")
 						select {
+
 						case ch <- nil:
 							c.Logger().Debug("Sent nil to Writer channel")
 							return
@@ -153,10 +147,6 @@ func playerWriter(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX 
 							c.Logger().Debug("Timed out sending nil to Writer channel")
 							return
 						}
-						// ch <- nil
-						// // close(ch)
-						// c.Logger().Debug("Returning Now From Go Routine")
-						// return
 
 					default:
 						c.Logger().Error(err)
@@ -168,10 +158,6 @@ func playerWriter(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX 
 							c.Logger().Debug("Timed out sending error to Writer channel")
 							return
 						}
-						// ch <- err
-						// // close(ch)
-						// c.Logger().Debug("Returning Now From Go Routine")
-						// return
 					}
 				}
 			}
@@ -218,6 +204,7 @@ func playerReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX 
 				case websocket.IsCloseError(err, websocket.CloseNoStatusReceived):
 					c.Logger().Debug("Websocket CloseNoStatusReceived")
 					select {
+
 					case ch <- nil:
 						c.Logger().Debug("Sent nil to Reader channel")
 						return
@@ -226,10 +213,6 @@ func playerReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX 
 						c.Logger().Debug("Timed out sending nil to Reader channel")
 						return
 					}
-					// ch <- nil
-					// // close(ch)
-					// c.Logger().Debug("Returning Now From Reader Go Routine")
-					// return
 
 				default:
 					c.Logger().Error(err)
@@ -241,10 +224,6 @@ func playerReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX 
 						c.Logger().Debug("Timed out sending error to Reader channel")
 						return
 					}
-					// ch <- err
-					// // close(ch)
-					// c.Logger().Debug("Returning Now From Reader Go Routine")
-					// return
 				}
 			}
 
@@ -282,7 +261,6 @@ func playerReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX 
 				c.Logger().Debug("playerModel is NOT valid returning")
 				// NOTE: No Timeout used here
 				ch <- errors.New("playerModel Validation failed")
-				// close(ch)
 				c.Logger().Debug("Returning Now From Reader Go Routine")
 				return
 			}
