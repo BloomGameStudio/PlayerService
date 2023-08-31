@@ -59,6 +59,8 @@ func Player(player models.Player, c echo.Context) error {
 
 	databasePlayerModel.Active = player.Active
 
+	databasePlayerModel.Layer = player.Layer
+
 	logger.Debugf("Updated databasePlayerModel: %v", databasePlayerModel)
 	logger.Debug("Saving database player")
 
