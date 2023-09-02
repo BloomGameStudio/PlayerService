@@ -170,6 +170,7 @@ func playerWriter(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX 
 			if viper.GetBool("DEBUG") {
 				// Sleep for x second in DEBUG mode to not get fludded with data
 				time.Sleep(time.Second / 20)
+				time.Sleep(time.Second * 1)
 			}
 		}
 	}
@@ -248,6 +249,7 @@ func playerReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX 
 			playerModel.Rotation.Rotation = reqPlayer.Rotation
 			playerModel.Scale.Scale = reqPlayer.Scale
 			playerModel.States = reqPlayer.States
+			playerModel.Layer = reqPlayer.Layer
 			playerModel.Active = reqPlayer.Active
 
 			if viper.GetBool("DEBUG") {
