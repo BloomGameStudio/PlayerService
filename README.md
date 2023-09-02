@@ -2,14 +2,6 @@
 
 ## Quickstart Guide:
 
-[**How To Create a Player:**](<#### **How To Create a Player:**>)
-
-[**How to Update The Player object/s.**](<#### **How to Update The Player object/s.**>)
-
-*Links Are Symbolic.
-
-
-
 ## Installation
 ### **Native Bare Metel**
 
