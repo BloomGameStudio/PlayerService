@@ -13,17 +13,11 @@ type State struct {
 	// Grounded, Airborn, Waterborn bool
 }
 
-// type States []State
+func (p State) IsValid() bool {
 
-// type States struct {
-// 	States []State `json:"states"`
-// }
+	// Validates the State
+	// Additional validation and hooks for the State validation can be added here
+	// WARNING: Validation should be scoped to the State
 
-// func (p State) IsValid() bool {
-
-// 	// Validates the State
-// 	// Additional validation and hooks for the State validation can be added here
-// 	// WARNING: Validation should be scoped to the State
-
-// 	return true
-// }
+	return true
+}
