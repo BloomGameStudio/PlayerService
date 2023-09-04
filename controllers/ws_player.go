@@ -69,6 +69,7 @@ func playerWriter(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX 
 
 	for {
 		select {
+
 		case <-timeoutCTX.Done():
 			c.Logger().Debug("PlayerWriter Timeout Context Done")
 			return
@@ -150,7 +151,9 @@ func playerWriter(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX 
 
 					default:
 						c.Logger().Error(err)
+
 						select {
+
 						case ch <- err:
 							c.Logger().Debug("Sent error to Writer channel")
 							return
@@ -170,7 +173,6 @@ func playerWriter(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX 
 			if viper.GetBool("DEBUG") {
 				// Sleep for x second in DEBUG mode to not get fludded with data
 				time.Sleep(time.Second / 20)
-				time.Sleep(time.Second * 1)
 			}
 		}
 	}
@@ -216,8 +218,11 @@ func playerReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX 
 					}
 
 				default:
+
 					c.Logger().Error(err)
+
 					select {
+
 					case ch <- err:
 						c.Logger().Debug("Sent error to Reader channel")
 						return
@@ -232,9 +237,9 @@ func playerReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX 
 
 			c.Logger().Debug("Validating reqPlayer")
 			if !reqPlayer.IsValid() {
+
 				c.Logger().Debug("reqPlayer is NOT valid returning")
 				ch <- errors.New("reqPlayer Validation failed")
-				// close(ch)
 				c.Logger().Debug("Returning Now From Reader Go Routine")
 				return
 			}
@@ -264,6 +269,7 @@ func playerReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX 
 
 			c.Logger().Debug("Validating playerModel")
 			if !playerModel.IsValid() {
+
 				c.Logger().Debug("playerModel is NOT valid returning")
 				// NOTE: No Timeout used here
 				ch <- errors.New("playerModel Validation failed")
