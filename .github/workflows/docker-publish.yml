@@ -11,7 +11,7 @@ on:
   push:
     branches:
       - main
-      - dev
+      - dev-stg-auto-docker-build
       - staging
     # Publish semver tags as releases.
     tags: [ 'v*.*.*' ]
