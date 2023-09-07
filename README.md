@@ -163,21 +163,33 @@ Examples can be found in the docs dir.
         "UserID": "33b7e1f3-6f8e-40b9-97dc-c54d9162vb05",
         "Name": "User1",
         "Layer": "layer1",
-        "Position": {
+        "Transform":{
+                "Position": {
                 "x": 1,
                 "y": 2,
                 "z": 3
-        },
-        "Rotation": {
+                },
+                "Rotation": {
                 "x": 4,
                 "y": 5,
                 "z": 6
-        },
-        "Scale": {
+                },
+                "Scale": {
                 "x": 7,
                 "y": 8,
                 "z": 9
-        }
+                }
+        },
+        "states": [
+                {
+                "id": 1,
+                "value": 0.4
+                },
+                {
+                "id": 2,
+                "value": 0.1
+                }
+        ]
         }
         ```
 
