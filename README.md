@@ -89,12 +89,12 @@ Note: This will build a image and run and build a container which probably is a 
         docker run -p 1323:1323 <Containername>
 ---
 
-## How to Interact with the Player WebSocket (In Development)
+## How to Interact with the Player WebSocket
 
 Assuming standard config and hosting locally.
 
 
-  1. If not present create a player in the players table. The player needs to have a usable UserID 
+  1. If not present create a player in the players table. The player needs to have a usable UserID(In Production) and or a Usable Name(In Debug/Dev) 
   
         This can be be done either by:
 
@@ -102,7 +102,7 @@ Assuming standard config and hosting locally.
         - Creating it throug the /player CreatePlayer endpoint
 
   
-  2.  The Websocket needs to derive a models.Player.UserID from a JWT. That UserID has to match with the UserID of the player in the database That JWT can be created either by:
+  2.  The Websocket in production needs to derive a models.Player.UserID from a JWT. That UserID has to match with the UserID of the player in the database. In debug mode this is replaced by using the name of the player. That JWT can be created either by:
    
         - The Userservice
         - Manually
