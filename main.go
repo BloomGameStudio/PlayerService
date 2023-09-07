@@ -30,6 +30,7 @@ func main() {
 	// HTTP Testing routes
 	e.GET("ping", controllers.Ping)
 	e.GET("v", controllers.Version)
+	e.DELETE("deleteplayer", controllers.DeletePlayer)
 	// End of HTTP testing routes
 
 	e.POST("player", controllers.CreatePlayer)
