@@ -136,6 +136,126 @@ Contributing half finished and untested things is not ideal.
 
 
 ---
+
+## Endpoints
+
+### Rest Endpoints
+
+##### CreatePlayer
+`POST /player`
+
+Creates a Player.
+
+The primairy concern of the CreatePlayer endpoint is to handle the top level fields of the player.
+
+E.g Name,UserID. 
+Not associated fields like Transform or States.
+Use dedicated endpoints for associations and non top level fields if possible.
+
+**Headers:** None
+
+**Request Body:**
+
+Expects a JSON serilized Player [publicModel](./publicModels/player.go) or a [model](./models/player.go) object in the body.
+
+Name | Type   | Mandatory | Info
+-----|--------|-----------|------------------
+Name | STRING | YES       | Has to be unique.
+
+
+**Request Body Example With all Accepted Fields:**
+```json
+{
+    "UserID": "33b7e1f3-6f8e-40b9-97dc-c54d9162vb05",
+    "Name": "User1",
+    "Layer": "layer1",
+    "Ens": "",
+    "Active": true,
+    "Transform":{
+        "Position": {
+            "x": 1,
+            "y": 2,
+            "z": 3
+        },
+        "Rotation": {
+            "x": 4,
+            "y": 5,
+            "z": 6
+        },
+        "Scale": {
+            "x": 7,
+            "y": 8,
+            "z": 9
+        }
+    },
+    "states": [
+        {
+             "id": 1,
+             "value": 0.4
+        },
+        {
+             "id": 2,
+             "value": 0.1
+        }
+    ]
+}
+```
+*States are Unimplemented
+
+
+**Response:**
+```json
+{
+    "ID": 5,
+    "CreatedAt": "2023-09-09T23:13:10.74373182+02:00",
+    "UpdatedAt": "2023-09-09T23:13:10.74373182+02:00",
+    "DeletedAt": null,
+    "UserID": "65ceceb3-611a-4c5a-843d-cd4f060590e2",
+    "name": "User1",
+    "layer": "",
+    "ens": "",
+    "active": true,
+    "transform": {
+        "RotationID": 6,
+        "ScaleID": 6,
+        "PositionID": 6,
+        "position": {
+            "ID": 6,
+            "CreatedAt": "2023-09-09T23:13:10.740599415+02:00",
+            "UpdatedAt": "2023-09-09T23:13:10.740599415+02:00",
+            "DeletedAt": null,
+            "x": 1,
+            "y": 2,
+            "z": 3
+        },
+        "rotation": {
+            "ID": 6,
+            "CreatedAt": "2023-09-09T23:13:10.742062057+02:00",
+            "UpdatedAt": "2023-09-09T23:13:10.742062057+02:00",
+            "DeletedAt": null,
+            "x": 4,
+            "y": 5,
+            "z": 6,
+            "w": 0
+        },
+        "scale": {
+            "ID": 6,
+            "CreatedAt": "2023-09-09T23:13:10.742933738+02:00",
+            "UpdatedAt": "2023-09-09T23:13:10.742933738+02:00",
+            "DeletedAt": null,
+            "x": 7,
+            "y": 8,
+            "z": 9
+        }
+    },
+    "states": null
+}
+```
+
+### Websocket Endpoints
+
+---
+
 ## How to Interact with the Player WebSocket
 
 Assuming standard config and hosting locally.
