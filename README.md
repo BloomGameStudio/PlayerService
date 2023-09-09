@@ -100,6 +100,21 @@ Note: This will build a image and run and build a container which probably is a 
                 docker run -p 1323:1323 -v playerservicevolume:/database <Containername>
 ---
 
+## Contributors Guide
+
+1. Assign a Issue*(Github Issue) to yourself and or clearly indicate to at least Balu if not everyone else involved that that you are now working on this task. If you lack permissions to assign a issue to yourself contact Balu or any other person with the needed permissions to assign the issue to you.
+2. Continuesly Push your work to Github so that other people can follow the progress passivly. Ask for Help if you are stuck Notify Balu if you cant complete it. Ghosting is 0/10.
+3. Test everything and make sure everything works as intended 
+4. Open a Pull Request. Ask Balu if you lack permissions.
+5. Address comments on the PR if there are any.
+6. Shake hands firmly.
+
+Contributors shall work on delivering a complete contribution from start to end.
+
+Contributing half finished and untested things is not ideal.
+
+
+---
 ## How to Interact with the Player WebSocket
 
 Assuming standard config and hosting locally.
