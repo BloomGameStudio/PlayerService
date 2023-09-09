@@ -30,10 +30,13 @@ func main() {
 	// HTTP Testing routes
 	e.GET("ping", controllers.Ping)
 	e.GET("v", controllers.Version)
-	e.GET("getplayer", controllers.GetPlayer)
 	// End of HTTP testing routes
 
+	// Player routes
+	e.GET("player", controllers.GetPlayer)
 	e.POST("player", controllers.CreatePlayer)
+	// End Player routes
+
 	// End of HTTP routes
 
 	// WebSocket Routes
