@@ -30,6 +30,7 @@ func main() {
 	// HTTP Testing routes
 	e.GET("ping", controllers.Ping)
 	e.GET("v", controllers.Version)
+	e.GET("getplayer", controllers.GetPlayer)
 	// End of HTTP testing routes
 
 	e.POST("player", controllers.CreatePlayer)
@@ -45,8 +46,9 @@ func main() {
 	// End of Web Socket testing routes
 
 	ws.GET("player", controllers.Player)
-	ws.GET("state", controllers.State)
+	// ws.GET("state", controllers.State)
 	ws.GET("position", controllers.Position)
+	ws.GET("rotation", controllers.Rotation)
 
 	port := viper.GetString("PORT")
 	e.Logger.Fatal(e.Start(":" + port))

@@ -1,7 +1,16 @@
 package models
 
+import (
+	"github.com/BloomGameStudio/PlayerService/publicModels"
+	"gorm.io/gorm"
+)
+
 type State struct {
-	Grounded, Airborn, Waterborn bool
+	gorm.Model
+	PlayerID uint
+	publicModels.State
+
+	// Grounded, Airborn, Waterborn bool
 }
 
 func (p State) IsValid() bool {
