@@ -73,20 +73,31 @@ Note: This will build a image and run and build a container which probably is a 
         // This will recreate everything and might take longer.
 
 ---
-### **OUTDATED Docker**
+### **Docker**
 
-        // With build tag/name
+1. Create a The docker volume for the database
+   
+        docker volume create playerservicevolume
+        
+2. Run The Container
+   
+        // From Github Container Registry via Image
+        // You can Replace the tag <main> at the end with whatever tag you want
 
-        docker build -t playerservice .
+                docker run --rm -p 1323:1323 -v playerservicevolume:/database ghcr.io/bloomgamestudio/playerservice:main 
 
-        docker run -p 1323:1323 playerservice
+        // Build it yourself locally with build tag/name then run it
+
+                docker build -t playerservice .
+
+                docker run -p 1323:1323 -v playerservicevolume:/database playerservice
 
 
-        // Without tag/name
+        // Build it yourself locally without tag/name then run it
 
-        docker build .
+                docker build .
 
-        docker run -p 1323:1323 <Containername>
+                docker run -p 1323:1323 -v playerservicevolume:/database <Containername>
 ---
 
 ## How to Interact with the Player WebSocket
