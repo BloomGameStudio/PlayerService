@@ -17,7 +17,7 @@ import (
 // examples:
 // https://github.com/gorilla/websocket/blob/master/examples/command/main.go
 
-func Position(c echo.Context) error {
+func Rotation(c echo.Context) error {
 
 	// QUESTION: Is this needed?
 	// Only changes will be sent the only exception to this is the opening/first request where the full state will be sent
@@ -37,8 +37,8 @@ func Position(c echo.Context) error {
 	timeoutCTX, timeoutCTXCancel := context.WithCancel(context.Background())
 	defer timeoutCTXCancel()
 
-	go positionWriter(c, ws, writerChan, timeoutCTX)
-	go positionReader(c, ws, readerChan, timeoutCTX)
+	go rotationWriter(c, ws, writerChan, timeoutCTX)
+	go rotationReader(c, ws, readerChan, timeoutCTX)
 
 	// QUESTION: Do we want to wait on both routines to error out?
 	// Return nil if either the reader or the writer encounters a error
@@ -57,7 +57,7 @@ func Position(c echo.Context) error {
 	}
 }
 
-func positionWriter(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX context.Context) {
+func rotationWriter(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX context.Context) {
 
 	// Open DB outside of the loop
 	db := database.GetDB()
@@ -68,23 +68,23 @@ func positionWriter(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCT
 		select {
 
 		case <-timeoutCTX.Done():
-			c.Logger().Debug("PositionWriter Timeout Context Done")
+			c.Logger().Debug("RotationWriter Timeout Context Done")
 			return
 
 		default:
-			// TODO: The Entire Position Model is being sent. It may contain information that should not be sent!
+			// TODO: The Entire Rotation Model is being sent. It may contain information that should not be sent!
 
-			c.Logger().Debug("Getting positions from the database")
+			c.Logger().Debug("Getting rotations from the database")
 
-			positions := &[]models.Position{}
+			rotations := &[]models.Rotation{}
 
-			db.Where("updated_at > ?", lastUpdateAt).Find(positions)
-			lastUpdateAt = time.Now() // update last update time to now only included positions that have been updated
+			db.Where("updated_at > ?", lastUpdateAt).Find(rotations)
+			lastUpdateAt = time.Now() // update last update time to now only included rotations that have been updated
 
-			if len(*positions) > 0 {
+			if len(*rotations) > 0 {
 
-				c.Logger().Debug("Pushing the positions to the WebSocket")
-				err := ws.WriteJSON(positions)
+				c.Logger().Debug("Pushing the rotations to the WebSocket")
+				err := ws.WriteJSON(rotations)
 
 				if err != nil {
 					switch {
@@ -169,7 +169,7 @@ func positionWriter(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCT
 }
 
 // Read
-func positionReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX context.Context) {
+func rotationReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX context.Context) {
 
 	// TODO: THIS IS VULNARABLE CLIENTS CAN CHANGE OBJECT IDS especially the nested ones!!!
 	// TODO: NO VALIDATION OF INPUT DATA IS PERFORMED!!!
@@ -182,16 +182,16 @@ func positionReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCT
 			return
 
 		default:
-			c.Logger().Debug("Reading from the Position WebSocket")
+			c.Logger().Debug("Reading from the Rotation WebSocket")
 
 			// Initializer request player to bind into
 			// NOTE: We are using a private model here TODO: Change to public model in production or handle this case
-			reqPosition := &models.Position{}
+			reqRotation := &models.Rotation{}
 
-			err := ws.ReadJSON(reqPosition)
+			err := ws.ReadJSON(reqRotation)
 
 			if err != nil {
-				c.Logger().Debug("We get an error from Reading the JSON reqPosition")
+				c.Logger().Debug("We get an error from Reading the JSON reqRotation")
 				switch {
 
 				case websocket.IsCloseError(err, websocket.CloseNoStatusReceived):
@@ -219,42 +219,43 @@ func positionReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCT
 				}
 			}
 
-			c.Logger().Debugf("reqPosition from the WebSocket: %+v", reqPosition)
+			c.Logger().Debugf("reqRotation from the WebSocket: %+v", reqRotation)
 
-			c.Logger().Debug("Validating reqPosition")
-			if !reqPosition.IsValid() {
-				c.Logger().Debug("reqPosition is NOT valid returning")
+			c.Logger().Debug("Validating reqRotation")
+			if !reqRotation.IsValid() {
+				c.Logger().Debug("reqRotation is NOT valid returning")
 				// NOTE: no Chan Timeout used
-				ch <- errors.New("reqPosition Validation failed")
+				ch <- errors.New("reqRotation Validation failed")
 				return
 			}
 
-			c.Logger().Debug("reqPosition is valid")
+			c.Logger().Debug("reqRotation is valid")
 
-			c.Logger().Debug("Initializing and populating position model!")
+			c.Logger().Debug("Initializing and populating rotation model!")
 			// Use dot annotation for promoted aka embedded fields.
-			positionModel := &models.Position{}
+			rotationModel := &models.Rotation{}
 			// TODO: Handle ID and production mode
 
 			if viper.GetBool("DEBUG") {
 				// Accept client provided ID in DEBUG mode
-				positionModel.ID = reqPosition.ID
+				rotationModel.ID = reqRotation.ID
 			}
 
-			positionModel.Vector3 = reqPosition.Vector3
+			rotationModel.Vector3 = reqRotation.Vector3
+			rotationModel.W = reqRotation.W
 
-			c.Logger().Debugf("positionModel: %+v", positionModel)
+			c.Logger().Debugf("rotationModel: %+v", rotationModel)
 
-			c.Logger().Debug("Validating positionModel")
-			if !positionModel.IsValid() {
-				c.Logger().Debug("positionModel is NOT valid returning")
+			c.Logger().Debug("Validating rotationModel")
+			if !rotationModel.IsValid() {
+				c.Logger().Debug("rotationModel is NOT valid returning")
 				// NOTE: no Chan Timeout used
-				ch <- errors.New("positionModel Validation failed")
+				ch <- errors.New("rotationModel Validation failed")
 				return
 			}
 
-			c.Logger().Debug("positionModel is valid passing it to the Poisition handler")
-			handlers.Position(*positionModel, c)
+			c.Logger().Debug("rotationModel is valid passing it to the Poisition handler")
+			handlers.Rotation(*rotationModel, c)
 		}
 	}
 }

@@ -69,6 +69,7 @@ func playerWriter(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX 
 
 	for {
 		select {
+
 		case <-timeoutCTX.Done():
 			c.Logger().Debug("PlayerWriter Timeout Context Done")
 			return
@@ -103,6 +104,7 @@ func playerWriter(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX 
 						c.Logger().Debug("WEbsocket ErrCloseSent")
 
 						select {
+
 						case ch <- nil:
 							c.Logger().Debug("Sent nil to Writer channel")
 							return
@@ -111,9 +113,6 @@ func playerWriter(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX 
 							c.Logger().Debug("Timed out sending nil to Writer channel")
 							return
 						}
-						// close(ch)
-						// c.Logger().Debug("Returning Now From Go Routine")
-						// return
 
 					default:
 						c.Logger().Error(err)
@@ -126,11 +125,6 @@ func playerWriter(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX 
 							c.Logger().Debug("Timed out sending error to Writer channel")
 							return
 						}
-
-						// ch <- err
-						// // close(ch)
-						// c.Logger().Debug("Returning Now From Go Routine")
-						// return
 					}
 				}
 
@@ -146,6 +140,7 @@ func playerWriter(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX 
 					case errors.Is(err, websocket.ErrCloseSent):
 						c.Logger().Debug("WEbsocket ErrCloseSent")
 						select {
+
 						case ch <- nil:
 							c.Logger().Debug("Sent nil to Writer channel")
 							return
@@ -153,14 +148,12 @@ func playerWriter(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX 
 							c.Logger().Debug("Timed out sending nil to Writer channel")
 							return
 						}
-						// ch <- nil
-						// // close(ch)
-						// c.Logger().Debug("Returning Now From Go Routine")
-						// return
 
 					default:
 						c.Logger().Error(err)
+
 						select {
+
 						case ch <- err:
 							c.Logger().Debug("Sent error to Writer channel")
 							return
@@ -168,10 +161,6 @@ func playerWriter(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX 
 							c.Logger().Debug("Timed out sending error to Writer channel")
 							return
 						}
-						// ch <- err
-						// // close(ch)
-						// c.Logger().Debug("Returning Now From Go Routine")
-						// return
 					}
 				}
 			}
@@ -218,6 +207,7 @@ func playerReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX 
 				case websocket.IsCloseError(err, websocket.CloseNoStatusReceived):
 					c.Logger().Debug("Websocket CloseNoStatusReceived")
 					select {
+
 					case ch <- nil:
 						c.Logger().Debug("Sent nil to Reader channel")
 						return
@@ -226,14 +216,13 @@ func playerReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX 
 						c.Logger().Debug("Timed out sending nil to Reader channel")
 						return
 					}
-					// ch <- nil
-					// // close(ch)
-					// c.Logger().Debug("Returning Now From Reader Go Routine")
-					// return
 
 				default:
+
 					c.Logger().Error(err)
+
 					select {
+
 					case ch <- err:
 						c.Logger().Debug("Sent error to Reader channel")
 						return
@@ -241,10 +230,6 @@ func playerReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX 
 						c.Logger().Debug("Timed out sending error to Reader channel")
 						return
 					}
-					// ch <- err
-					// // close(ch)
-					// c.Logger().Debug("Returning Now From Reader Go Routine")
-					// return
 				}
 			}
 
@@ -252,9 +237,9 @@ func playerReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX 
 
 			c.Logger().Debug("Validating reqPlayer")
 			if !reqPlayer.IsValid() {
+
 				c.Logger().Debug("reqPlayer is NOT valid returning")
 				ch <- errors.New("reqPlayer Validation failed")
-				// close(ch)
 				c.Logger().Debug("Returning Now From Reader Go Routine")
 				return
 			}
@@ -268,7 +253,13 @@ func playerReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX 
 			playerModel.Position.Position = reqPlayer.Position
 			playerModel.Rotation.Rotation = reqPlayer.Rotation
 			playerModel.Scale.Scale = reqPlayer.Scale
-			playerModel.States = reqPlayer.States
+
+			for _, state := range reqPlayer.States {
+				playerModel.States = append(playerModel.States, models.State{State: state})
+			}
+
+			playerModel.Layer = reqPlayer.Layer
+			playerModel.Active = reqPlayer.Active
 
 			if viper.GetBool("DEBUG") {
 				// Add the Player.Name in DEBUG mode that it can be used as ID in the Player handle to avoid the Userservice dependency
@@ -279,10 +270,10 @@ func playerReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX 
 
 			c.Logger().Debug("Validating playerModel")
 			if !playerModel.IsValid() {
+
 				c.Logger().Debug("playerModel is NOT valid returning")
 				// NOTE: No Timeout used here
 				ch <- errors.New("playerModel Validation failed")
-				// close(ch)
 				c.Logger().Debug("Returning Now From Reader Go Routine")
 				return
 			}

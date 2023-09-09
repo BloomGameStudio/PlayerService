@@ -2,14 +2,6 @@
 
 ## Quickstart Guide:
 
-[**How To Create a Player:**](<#### **How To Create a Player:**>)
-
-[**How to Update The Player object/s.**](<#### **How to Update The Player object/s.**>)
-
-*Links Are Symbolic.
-
-
-
 ## Installation
 ### **Native Bare Metel**
 
@@ -17,7 +9,7 @@
         go mod download
 
         // Run the server on port 1323
-        go run main.go
+        go run .
 
 
 **Optional Live Code Reloading with Air**
@@ -30,21 +22,7 @@ Install Air via your preffered installation method: https://github.com/cosmtrek/
 
 ### **Using Docker && DockerCompose**
 ---
-### **Docker**
 
-        // With build tag/name
-
-        docker build -t playerservice .
-
-        docker run -p 1323:1323 playerservice
-
-
-        // Without tag/name
-
-        docker build .
-
-        docker run -p 1323:1323 <Containername>
----
 ###  **Docker-Compose**
 Chose your docker compose cli 
 Depending on what version you have or how you installed docker compose.
@@ -64,28 +42,59 @@ The newer `docker compose`.
         docker compose <command>
          
 
-**Start the App and listen on port 1323**
-   
+### **Start the App and listen on port 1323**
+
+Note: Depending on your system and context you may have to configure your image & container versions
+view the official Docker Compose documentation on how Docker determines what and how it runs images & containers and how <docker-compose up> behaves.
+
+TLDR: Docker and by extension Docker Compose will chose the latest container and if that does not exist the latest image to run your application.
+
+
+
+**Run the latest version that was build from the branch main.**
+
+Note: If you have build a later version or somehow else have a later version on your system a version that docker thinks is later than what was build from main it will most likely use that.
+Which resulst in you not runing the version from main and not runing the intended version.
+This will automatically be resolved for you if a new push to main happens.
+
+
         docker-compose up
         // CTRL + C to stop 
-        
+
+**Run & Build the current state of the currently checkout out branch.**
+
+Note: This will build a image and run and build a container which probably is a later version than the prebuild image built from the main branch.
+
+        docker-compose up --build
+        // CTRL + C to stop
+
+        // If there are caching issues or some other problems or you want to be 100% sure that you run and have build the latest version of the current branch you can run:
+        docker-compose up --build --force-recreate
+        // This will recreate everything and might take longer.
 
 ---
+### **OUTDATED Docker**
 
-**Rotation ressources**
-- https://compsci290-s2016.github.io/CoursePage/Materials/EulerAnglesViz/index.html
-- https://www.youtube.com/watch?v=2Cwa6hfn2K0
-- https://docs.unity3d.com/ScriptReference/Transform-eulerAngles.html
-- https://docs.unity3d.com/ScriptReference/Quaternion.html
+        // With build tag/name
+
+        docker build -t playerservice .
+
+        docker run -p 1323:1323 playerservice
 
 
+        // Without tag/name
+
+        docker build .
+
+        docker run -p 1323:1323 <Containername>
 ---
-## How to Interact with the Player WebSocket (In Development)
+
+## How to Interact with the Player WebSocket
 
 Assuming standard config and hosting locally.
 
 
-  1. If not present create a player in the players table. The player needs to have a usable UserID 
+  1. If not present create a player in the players table. The player needs to have a usable UserID(In Production) and or a Usable Name(In Debug/Dev) 
   
         This can be be done either by:
 
@@ -93,7 +102,7 @@ Assuming standard config and hosting locally.
         - Creating it throug the /player CreatePlayer endpoint
 
   
-  2.  The Websocket needs to derive a models.Player.UserID from a JWT. That UserID has to match with the UserID of the player in the database That JWT can be created either by:
+  2.  The Websocket in production needs to derive a models.Player.UserID from a JWT. That UserID has to match with the UserID of the player in the database. In debug mode this is replaced by using the name of the player. That JWT can be created either by:
    
         - The Userservice
         - Manually
@@ -154,21 +163,33 @@ Examples can be found in the docs dir.
         "UserID": "33b7e1f3-6f8e-40b9-97dc-c54d9162vb05",
         "Name": "User1",
         "Layer": "layer1",
-        "Position": {
+        "Transform":{
+                "Position": {
                 "x": 1,
                 "y": 2,
                 "z": 3
-        },
-        "Rotation": {
+                },
+                "Rotation": {
                 "x": 4,
                 "y": 5,
                 "z": 6
-        },
-        "Scale": {
+                },
+                "Scale": {
                 "x": 7,
                 "y": 8,
                 "z": 9
-        }
+                }
+        },
+        "states": [
+                {
+                "id": 1,
+                "value": 0.4
+                },
+                {
+                "id": 2,
+                "value": 0.1
+                }
+        ]
         }
         ```
 
@@ -277,3 +298,10 @@ Note: Sending the entire list of player objects back for update will fail and is
         2. Push a modified single player object(Not a list) to the [ws://staging.player.bloomstudio.gg/ws/player](ws://staging.player.bloomstudio.gg/ws/player) websocket 
         3. Optional Confirm that the changes took place by looking at the next data push from the websocket.
 
+
+
+**Rotation ressources**
+- https://compsci290-s2016.github.io/CoursePage/Materials/EulerAnglesViz/index.html
+- https://www.youtube.com/watch?v=2Cwa6hfn2K0
+- https://docs.unity3d.com/ScriptReference/Transform-eulerAngles.html
+- https://docs.unity3d.com/ScriptReference/Quaternion.html
