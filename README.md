@@ -1,5 +1,26 @@
 # PlayerService
 
+
+- [PlayerService](#playerservice)
+  - [Quickstart Guide:](#quickstart-guide)
+  - [Installation](#installation)
+    - [**Native Bare Metel**](#native-bare-metel)
+    - [**Using Docker \&\& DockerCompose**](#using-docker--dockercompose)
+    - [**Docker-Compose**](#docker-compose)
+    - [**Start the App and listen on port 1323**](#start-the-app-and-listen-on-port-1323)
+    - [**Docker**](#docker)
+  - [Contributors Guide](#contributors-guide)
+  - [Endpoints](#endpoints)
+    - [Rest Endpoints](#rest-endpoints)
+        - [CreatePlayer](#createplayer)
+    - [Websocket Endpoints](#websocket-endpoints)
+  - [How to Interact with the Player WebSocket](#how-to-interact-with-the-player-websocket)
+  - [How to Interact with the Position WebSocket](#how-to-interact-with-the-position-websocket)
+  - [API Specifications and Documentation | Postman | OpenAPI](#api-specifications-and-documentation--postman--openapi)
+  - [Examples](#examples)
+  - [Guides](#guides)
+
+
 ## Quickstart Guide:
 
 ## Installation
