@@ -283,8 +283,6 @@ Name | STRING | YES       | Has to be unique.
 
 ### Websocket Endpoints
 
-All Websocket endpoints have to be prefixed with `ws/`
-E.g 
 
 ---
 
