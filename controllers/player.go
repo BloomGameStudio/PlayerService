@@ -74,7 +74,7 @@ func GetPlayer(c echo.Context) error {
 	db := database.GetDB()
 
 	// Read the "active" query parameter from the URL
-	activeParam := c.QueryParam("include_active")
+	activeParam := c.QueryParam("active")
 
 	// Initialize a variable to store the filter value
 	var active bool
