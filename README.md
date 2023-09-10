@@ -142,6 +142,11 @@ Contributing half finished and untested things is not ideal.
 
 ## Endpoints
 
+Sending partial Data is Accepted and works on most Endpoints. 
+Indications will be made if partial Data is not supported for certain objects or Endpoints.
+
+Sending Incorrect or Malformed JSON will always result in failure for the entire request.
+
 ### Rest Base Endpoints
 Local Base Endpoint with Default Config: 
 
