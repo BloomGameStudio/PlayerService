@@ -292,7 +292,7 @@ Name | STRING | YES       | Has to be unique.
 Websocket Endpoints on first connect will send all relevant data*¹.
 After the first transmition it will only send objects that have changes since the last transmition.
 
-*¹Except Data that has to be activly included and would not be included normally.
+*¹Except Data that has to be activly included and would not be included normally by default.
 E.g If by default inactive or soft deleted data|objects|rows wont be included 
 it also wont be included in the initial transfer unless queried|asked for by the client.
 
