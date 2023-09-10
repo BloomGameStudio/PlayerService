@@ -16,6 +16,7 @@
     - [Rest Endpoints](#rest-endpoints)
         - [CreatePlayer](#createplayer)
         - [GetPlayer](#getplayer)
+        - [DeletePlayer](#deleteplayer)
     - [Websocket Endpoints](#websocket-endpoints)
         - [Rotation](#rotation)
   - [How to Interact with the Player WebSocket](#how-to-interact-with-the-player-websocket)
@@ -377,6 +378,32 @@ http://127.0.0.1:1323/player?active=true
 ]
 ```
 
+
+##### DeletePlayer
+`DELETE /player`
+
+Soft Deletes a Player.
+
+**Headers:** None
+
+**Path Parameters:**
+
+Name | Type | Mandatory
+-----|------|----------
+ID   | INT  | YES 
+
+
+**Request URL Example With all Accepted Path Params:**
+```html
+http://127.0.0.1:1323/player/<ID>
+```
+
+**Response:**
+```html
+Status: 200 OK
+```
+
+---
 
 ### Websocket Endpoints
 
