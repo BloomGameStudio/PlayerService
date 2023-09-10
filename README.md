@@ -11,6 +11,8 @@
     - [**Docker**](#docker)
   - [Contributors Guide](#contributors-guide)
   - [Endpoints](#endpoints)
+    - [Rest Base Endpoints](#rest-base-endpoints)
+    - [WebSocket Base Endpoints](#websocket-base-endpoints)
     - [Rest Endpoints](#rest-endpoints)
         - [CreatePlayer](#createplayer)
     - [Websocket Endpoints](#websocket-endpoints)
@@ -139,6 +141,33 @@ Contributing half finished and untested things is not ideal.
 
 ## Endpoints
 
+### Rest Base Endpoints
+Local Base Endpoint with Default Config: 
+
+- http://127.0.0.1:1323
+
+Staging Base Endpoint:
+
+- http://staging.player.bloomstudio.gg
+
+Full Example:
+
+- http://127.0.0.1:1323/player
+
+### WebSocket Base Endpoints
+Local Base Endpoint with Default Config:
+
+- ws://localhost:1323/ws
+
+Staging Base Endpoint: 
+
+- ws://staging.player.bloomstudio.gg/ws
+
+Full Example:
+
+- ws://staging.player.bloomstudio.gg/ws/position
+
+
 ### Rest Endpoints
 
 ##### CreatePlayer
@@ -253,6 +282,9 @@ Name | STRING | YES       | Has to be unique.
 ```
 
 ### Websocket Endpoints
+
+All Websocket endpoints have to be prefixed with `ws/`
+E.g 
 
 ---
 
