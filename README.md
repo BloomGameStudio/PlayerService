@@ -16,6 +16,7 @@
     - [Rest Endpoints](#rest-endpoints)
         - [CreatePlayer](#createplayer)
     - [Websocket Endpoints](#websocket-endpoints)
+        - [Rotation](#rotation)
   - [How to Interact with the Player WebSocket](#how-to-interact-with-the-player-websocket)
   - [How to Interact with the Position WebSocket](#how-to-interact-with-the-position-websocket)
   - [API Specifications and Documentation | Postman | OpenAPI](#api-specifications-and-documentation--postman--openapi)
@@ -282,6 +283,83 @@ Name | STRING | YES       | Has to be unique.
 ```
 
 ### Websocket Endpoints
+
+
+##### Rotation
+`/rotation`
+
+Handles Rotation Data. Send and Receive Rotation Data.
+
+If no `ID` is sent it will act on and take the first Position object.
+
+**Headers:** None
+
+**Request Body:**
+
+Expects a JSON serilized Rotation [publicModel](./publicModels/rotation.go) or a [model](./models/rotation.go) object in the body.
+
+Name | Type | Mandatory | Info
+-----|------|-----------|------------------
+ID   | INT  | YES       | Has to be unique.
+
+
+**Request Body Example With all Accepted Fields:**
+```json
+{
+        "ID": 2,
+        "x": 444,
+        "y": 555,
+        "z": 666,
+        "w": 8
+}
+```
+
+
+**Response:**
+```json
+[
+	{
+		"ID": 1,
+		"CreatedAt": "2023-08-31T17:45:01.725541515+02:00",
+		"UpdatedAt": "2023-09-10T11:51:08.996298719+02:00",
+		"DeletedAt": null,
+		"x": 444,
+		"y": 555,
+		"z": 666,
+		"w": 8
+	},
+	{
+		"ID": 2,
+		"CreatedAt": "2023-08-31T17:46:17.438476376+02:00",
+		"UpdatedAt": "2023-09-10T11:52:54.218716343+02:00",
+		"DeletedAt": null,
+		"x": 444,
+		"y": 555,
+		"z": 666,
+		"w": 8
+	},
+	{
+		"ID": 3,
+		"CreatedAt": "2023-09-02T20:34:10.206732079+02:00",
+		"UpdatedAt": "2023-09-02T20:34:10.206732079+02:00",
+		"DeletedAt": null,
+		"x": 4,
+		"y": 5,
+		"z": 6,
+		"w": 0
+	},
+	{
+		"ID": 4,
+		"CreatedAt": "2023-09-02T20:34:25.338551329+02:00",
+		"UpdatedAt": "2023-09-02T20:34:25.338551329+02:00",
+		"DeletedAt": null,
+		"x": 4,
+		"y": 5,
+		"z": 6,
+		"w": 0
+	},
+]
+```
 
 
 ---
