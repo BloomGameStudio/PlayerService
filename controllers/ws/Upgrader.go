@@ -1,9 +1,9 @@
-package controllers
+package ws
 
 import (
 	"github.com/gorilla/websocket"
 )
 
 var (
-	upgrader = websocket.Upgrader{}
+	Upgrader = websocket.Upgrader{}
 )

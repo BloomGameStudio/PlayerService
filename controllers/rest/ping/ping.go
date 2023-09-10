@@ -1,5 +1,4 @@
-// Package controllers contains all the controller functions used by the application.
-package controllers
+package ping
 
 import (
 	"net/http"
