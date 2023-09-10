@@ -15,6 +15,7 @@
     - [WebSocket Base Endpoints](#websocket-base-endpoints)
     - [Rest Endpoints](#rest-endpoints)
         - [CreatePlayer](#createplayer)
+        - [GetPlayer](#getplayer)
     - [Websocket Endpoints](#websocket-endpoints)
         - [Rotation](#rotation)
   - [How to Interact with the Player WebSocket](#how-to-interact-with-the-player-websocket)
@@ -286,6 +287,96 @@ Name | STRING | YES       | Has to be unique.
     "states": null
 }
 ```
+
+##### GetPlayer
+`GET /player`
+
+Get a list of Players.
+
+**Headers:** None
+
+**Query Parameters:**
+
+Name   | Type | Mandatory | Default | Info
+-------|------|-----------|---------|------------------------------------------------------------------------------------------------------------------
+Active | BOOL | NO        | True    | Whether or not to include Inactive Players. Include Inactive Players with False. Does not exclude Active Players!
+
+
+**Request URL Example With all Accepted Query Params:**
+```html
+http://127.0.0.1:1323/player?active=true
+```
+
+**Response:**
+```json
+[
+    {
+        "ID": 1,
+        "CreatedAt": "2023-08-31T17:45:01.727297847+02:00",
+        "UpdatedAt": "2023-09-03T13:29:14.59514667+02:00",
+        "DeletedAt": null,
+        "UserID": "d6ce83e8-afa8-4fcc-af13-ab1f2e26f9e3",
+        "name": "User5",
+        "layer": "",
+        "ens": "",
+        "active": true,
+        "transform": {
+            "RotationID": 1,
+            "ScaleID": 1,
+            "PositionID": 1,
+            "position": {
+                "ID": 1,
+                "CreatedAt": "2023-08-31T17:45:01.724252373+02:00",
+                "UpdatedAt": "2023-09-03T13:29:14.592187627+02:00",
+                "DeletedAt": null,
+                "x": 1,
+                "y": 2,
+                "z": 3
+            },
+            "rotation": {
+                "ID": 1,
+                "CreatedAt": "2023-08-31T17:45:01.725541515+02:00",
+                "UpdatedAt": "2023-09-10T11:51:08.996298719+02:00",
+                "DeletedAt": null,
+                "x": 444,
+                "y": 555,
+                "z": 666,
+                "w": 8
+            },
+            "scale": {
+                "ID": 1,
+                "CreatedAt": "2023-08-31T17:45:01.726407856+02:00",
+                "UpdatedAt": "2023-09-03T13:29:14.594360829+02:00",
+                "DeletedAt": null,
+                "x": 7,
+                "y": 8,
+                "z": 9
+            }
+        },
+        "states": [
+            {
+                "ID": 3,
+                "CreatedAt": "2023-08-31T17:49:59.858256533+02:00",
+                "UpdatedAt": "2023-08-31T17:49:59.858256533+02:00",
+                "DeletedAt": null,
+                "PlayerID": 1,
+                "stateID": 0,
+                "value": 0.4
+            },
+            {
+                "ID": 12,
+                "CreatedAt": "2023-09-03T13:29:14.596106641+02:00",
+                "UpdatedAt": "2023-09-03T13:29:14.596106641+02:00",
+                "DeletedAt": null,
+                "PlayerID": 1,
+                "stateID": 333,
+                "value": 123456.991123123
+            }
+        ]
+    }
+]
+```
+
 
 ### Websocket Endpoints
 
