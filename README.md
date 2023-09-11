@@ -586,11 +586,6 @@ ID   | INT  | YES       | Has to be unique.
 ---
 
 
-
-
----
-
-
 ## Guides
 
 ## How to Interact with the Player WebSocket
