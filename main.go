@@ -32,7 +32,7 @@ func main() {
 	e.Use(middleware.Recover())
 
 	// HTTP routes
-	e.DELETE("/players/:id", controllers.Delete)
+	e.DELETE("/players/:id", player.DeletePlayer)
 	// HTTP Testing routes
 	e.GET("ping", ping.Ping)
 	e.GET("v", version.Version)
