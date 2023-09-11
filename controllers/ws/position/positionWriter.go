@@ -3,6 +3,8 @@ package position
 import (
 	"context"
 	"errors"
+	"math"
+	"strconv"
 	"time"
 
 	"github.com/BloomGameStudio/PlayerService/database"
@@ -11,6 +13,11 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/spf13/viper"
 )
+
+func Distance(x1, y1, x2, y2 float64) float64 {
+	distance := math.Sqrt(math.Pow(x2-x1, 2) + math.Pow(y2-y1, 2))
+	return distance
+}
 
 func positionWriter(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX context.Context) {
 
@@ -33,8 +40,32 @@ func positionWriter(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCT
 
 			positions := &[]models.Position{}
 
+			params := c.Request().URL.Query()
+			radiusStr := params.Get("radius")
+			radius, err := strconv.ParseFloat(radiusStr, 32)
+			if err != nil {
+				// error handling, set radius to 1.0 as default value
+				radius = 1.0
+			}
+
+			var startingPoint_X float64 = 0
+			var startingPoint_Y float64 = 0
+
+			filter := func(pos *[]models.Position) *[]models.Position {
+				var out []models.Position
+				for i := 0; i < len(*pos); i++ {
+					if Distance(startingPoint_X, startingPoint_Y, (*pos)[i].X, (*pos)[i].Y) >= radius {
+						out = append(out, (*pos)[i])
+					}
+				}
+				return &out
+			}
+			positions = filter(positions)
+
 			db.Where("updated_at > ?", lastUpdateAt).Find(positions)
 			lastUpdateAt = time.Now() // update last update time to now only included positions that have been updated
+
+			// filteredPositions = filter(positions)
 
 			if len(*positions) > 0 {
 
