@@ -1,4 +1,4 @@
-package controllers
+package player
 
 import (
 	"net/http"
@@ -8,7 +8,7 @@ import (
 	"gorm.io/gorm/clause"
 )
 
-func Delete(c echo.Context) error {
+func DeletePlayer(c echo.Context) error {
 	//Open the database connection
 	db := database.GetDB()
 
