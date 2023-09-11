@@ -12,11 +12,13 @@ type Player struct {
 	// models.Player holds private fields for the player model
 
 	gorm.Model
-	UserID uuid.UUID `gorm:"type:uuid;uniqueIndex"`
-	publicModels.Player
-	Transform `json:"transform"`
 
-	// State    State
+	UserID uuid.UUID `gorm:"type:uuid;uniqueIndex"`
+
+	publicModels.Player
+
+	Transform `json:"transform"`
+	States    []State `json:"states"`
 }
 
 func (p Player) IsValid() bool {

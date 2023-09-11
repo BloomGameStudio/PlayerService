@@ -1,4 +1,4 @@
-package controllers
+package player
 
 import (
 	"net/http"

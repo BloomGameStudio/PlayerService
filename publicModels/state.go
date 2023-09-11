@@ -1,9 +1,14 @@
 package publicModels
 
+import "gorm.io/gorm"
+
 type State struct {
 	// publicModels.State holds public fields for the State model.
 
-	Grounded, Airborn, Waterborn bool
+	gorm.Model         // NOTE: COMEBACK: Accepting ID from Client Should only be for debug mode
+	StateID    uint    `json:"stateID"`
+	Value      float64 `json:"value"`
+	// Grounded, Airborn, Waterborn bool
 }
 
 func (p State) IsValid() bool {

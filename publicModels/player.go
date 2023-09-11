@@ -1,20 +1,20 @@
 package publicModels
 
-type States struct {
-	IDS string `json:"ids"`
-}
+// type States struct {
+// 	IDS string `json:"ids"`
+// }
 
 type Player struct {
 	// publicModels.Player holds public fields for the player model.
 
 	// COMBAK: Add needed further fields from the Player struct model
-	Name      string `json:"name" gorm:"uniqueIndex"`
-	Layer     string `json:"layer"`
-	ENS       string `json:"ens"`
-	Active    bool   `json:"active" gorm:"default:1"` // default to true only tested on SQLite might behave differently on other databases
-	Transform `json:"transform" gorm:"-:all"`
+	Name   string `json:"name" gorm:"uniqueIndex"`
+	Layer  string `json:"layer"`
+	ENS    string `json:"ens"`
+	Active bool   `json:"active" gorm:"default:1"` // default to true only tested on SQLite might behave differently on other databases
 
-	States `json:"states"`
+	Transform `json:"transform" gorm:"-:all"`
+	States    []State `json:"states" gorm:"-:all"`
 }
 
 func (p Player) IsValid() bool {
