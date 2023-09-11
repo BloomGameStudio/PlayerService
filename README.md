@@ -18,6 +18,7 @@
         - [GetPlayer](#getplayer)
         - [DeletePlayer](#deleteplayer)
     - [Websocket Endpoints](#websocket-endpoints)
+        - [Player](#player)
         - [Position](#position)
         - [Rotation](#rotation)
   - [Guides](#guides)
@@ -416,6 +417,381 @@ After the first transmition it will only send objects that have changes since th
 
 E.g If by default inactive or soft deleted data|objects|rows wont be included 
 it also wont be included in the initial transfer unless queried|asked for by the client.
+
+
+##### Player
+`/player`
+
+Handles Player Data. 
+Which encompases all Data Available. This can be thought of as the Base Layer of Information
+Send and Receive Player Data.
+
+**Headers:** None
+
+**Request Body:**
+
+Expects a JSON serilized Player [publicModel](./publicModels/player.go) or a [model](./models/player.go) object in the body.
+
+Name | Type   | Mandatory | Info
+-----|--------|-----------|------------------
+Name | STRING | YES       | Has to be unique.
+
+
+**Request Body Example With all Accepted Fields:**
+```json
+{
+		"ID": 4,
+		"CreatedAt": "2023-09-09T22:12:18.668123608+02:00",
+		"UpdatedAt": "2023-09-09T22:12:18.668123608+02:00",
+		"DeletedAt": null,
+		"UserID": "18a8bfd7-0f28-49be-aba6-13186fca7ec3",
+		"name": "User12",
+		"layer": "",
+		"ens": "",
+		"active": true,
+		"transform": {
+			"RotationID": 5,
+			"ScaleID": 5,
+			"PositionID": 5,
+			"position": {
+				"ID": 5,
+				"CreatedAt": "2023-09-09T22:12:18.66237607+02:00",
+				"UpdatedAt": "2023-09-09T22:12:18.66237607+02:00",
+				"DeletedAt": null,
+				"x": 1,
+				"y": 2,
+				"z": 3
+			},
+			"rotation": {
+				"ID": 5,
+				"CreatedAt": "2023-09-09T22:12:18.664758593+02:00",
+				"UpdatedAt": "2023-09-09T22:12:18.664758593+02:00",
+				"DeletedAt": null,
+				"x": 4,
+				"y": 5,
+				"z": 6,
+				"w": 0
+			},
+			"scale": {
+				"ID": 5,
+				"CreatedAt": "2023-09-09T22:12:18.666777896+02:00",
+				"UpdatedAt": "2023-09-09T22:12:18.666777896+02:00",
+				"DeletedAt": null,
+				"x": 7,
+				"y": 8,
+				"z": 9
+			}
+		},
+		"states": [
+                        {
+                                "id": 1,
+                                "value": 0.4
+                        },
+                        {
+                                "id": 2,
+                                "value": 0.1
+                        }
+                ]
+}
+```
+
+
+**Response:**
+```json
+[
+	{
+		"ID": 1,
+		"CreatedAt": "2023-08-31T17:45:01.727297847+02:00",
+		"UpdatedAt": "2023-09-03T13:29:14.59514667+02:00",
+		"DeletedAt": null,
+		"UserID": "d6ce83e8-afa8-4fcc-af13-ab1f2e26f9e3",
+		"name": "User5",
+		"layer": "",
+		"ens": "",
+		"active": true,
+		"transform": {
+			"RotationID": 1,
+			"ScaleID": 1,
+			"PositionID": 1,
+			"position": {
+				"ID": 1,
+				"CreatedAt": "2023-08-31T17:45:01.724252373+02:00",
+				"UpdatedAt": "2023-09-10T22:28:41.658189968+02:00",
+				"DeletedAt": null,
+				"x": 11111,
+				"y": 2,
+				"z": 23
+			},
+			"rotation": {
+				"ID": 1,
+				"CreatedAt": "2023-08-31T17:45:01.725541515+02:00",
+				"UpdatedAt": "2023-09-10T11:51:08.996298719+02:00",
+				"DeletedAt": null,
+				"x": 444,
+				"y": 555,
+				"z": 666,
+				"w": 8
+			},
+			"scale": {
+				"ID": 1,
+				"CreatedAt": "2023-08-31T17:45:01.726407856+02:00",
+				"UpdatedAt": "2023-09-03T13:29:14.594360829+02:00",
+				"DeletedAt": null,
+				"x": 7,
+				"y": 8,
+				"z": 9
+			}
+		},
+		"states": [
+			{
+				"ID": 3,
+				"CreatedAt": "2023-08-31T17:49:59.858256533+02:00",
+				"UpdatedAt": "2023-08-31T17:49:59.858256533+02:00",
+				"DeletedAt": null,
+				"PlayerID": 1,
+				"stateID": 0,
+				"value": 0.4
+			},
+			{
+				"ID": 4,
+				"CreatedAt": "2023-08-31T17:49:59.858256533+02:00",
+				"UpdatedAt": "2023-08-31T17:49:59.858256533+02:00",
+				"DeletedAt": null,
+				"PlayerID": 1,
+				"stateID": 0,
+				"value": 0.1
+			},
+			{
+				"ID": 12,
+				"CreatedAt": "2023-09-03T13:29:14.596106641+02:00",
+				"UpdatedAt": "2023-09-03T13:29:14.596106641+02:00",
+				"DeletedAt": null,
+				"PlayerID": 1,
+				"stateID": 333,
+				"value": 123456.991123123
+			}
+		]
+	},
+	{
+		"ID": 2,
+		"CreatedAt": "2023-08-31T17:46:17.440900559+02:00",
+		"UpdatedAt": "2023-09-05T14:02:16.433866911+02:00",
+		"DeletedAt": null,
+		"UserID": "ea5f4920-c472-4cfb-ba34-ff504a4a19bb",
+		"name": "User2",
+		"layer": "",
+		"ens": "",
+		"active": true,
+		"transform": {
+			"RotationID": 2,
+			"ScaleID": 2,
+			"PositionID": 2,
+			"position": {
+				"ID": 2,
+				"CreatedAt": "2023-08-31T17:46:17.436231232+02:00",
+				"UpdatedAt": "2023-09-05T14:02:16.429573435+02:00",
+				"DeletedAt": null,
+				"x": 1123,
+				"y": 2,
+				"z": 345
+			},
+			"rotation": {
+				"ID": 2,
+				"CreatedAt": "2023-08-31T17:46:17.438476376+02:00",
+				"UpdatedAt": "2023-09-10T11:52:54.218716343+02:00",
+				"DeletedAt": null,
+				"x": 444,
+				"y": 555,
+				"z": 666,
+				"w": 8
+			},
+			"scale": {
+				"ID": 2,
+				"CreatedAt": "2023-08-31T17:46:17.439661988+02:00",
+				"UpdatedAt": "2023-09-05T14:02:16.432585839+02:00",
+				"DeletedAt": null,
+				"x": 7,
+				"y": 8,
+				"z": 9
+			}
+		},
+		"states": [
+			{
+				"ID": 13,
+				"CreatedAt": "2023-09-03T13:33:28.807118497+02:00",
+				"UpdatedAt": "2023-09-03T13:34:57.979531378+02:00",
+				"DeletedAt": null,
+				"PlayerID": 2,
+				"stateID": 31,
+				"value": 41.4435345
+			},
+			{
+				"ID": 14,
+				"CreatedAt": "2023-09-03T13:33:28.807118497+02:00",
+				"UpdatedAt": "2023-09-03T13:34:57.979531378+02:00",
+				"DeletedAt": null,
+				"PlayerID": 2,
+				"stateID": 41,
+				"value": 51.991123123
+			}
+		]
+	},
+	{
+		"ID": 3,
+		"CreatedAt": "2023-09-02T20:34:25.340807392+02:00",
+		"UpdatedAt": "2023-09-02T20:34:25.340807392+02:00",
+		"DeletedAt": null,
+		"UserID": "5de16ba0-eaf1-466e-93cd-91ee2206852a",
+		"name": "User2RUNDOT",
+		"layer": "",
+		"ens": "",
+		"active": true,
+		"transform": {
+			"RotationID": 4,
+			"ScaleID": 4,
+			"PositionID": 4,
+			"position": {
+				"ID": 4,
+				"CreatedAt": "2023-09-02T20:34:25.337078128+02:00",
+				"UpdatedAt": "2023-09-02T20:34:25.337078128+02:00",
+				"DeletedAt": null,
+				"x": 1,
+				"y": 2,
+				"z": 3
+			},
+			"rotation": {
+				"ID": 4,
+				"CreatedAt": "2023-09-02T20:34:25.338551329+02:00",
+				"UpdatedAt": "2023-09-02T20:34:25.338551329+02:00",
+				"DeletedAt": null,
+				"x": 4,
+				"y": 5,
+				"z": 6,
+				"w": 0
+			},
+			"scale": {
+				"ID": 4,
+				"CreatedAt": "2023-09-02T20:34:25.339655251+02:00",
+				"UpdatedAt": "2023-09-02T20:34:25.339655251+02:00",
+				"DeletedAt": null,
+				"x": 7,
+				"y": 8,
+				"z": 9
+			}
+		},
+		"states": []
+	},
+	{
+		"ID": 4,
+		"CreatedAt": "2023-09-09T22:12:18.668123608+02:00",
+		"UpdatedAt": "2023-09-09T22:14:46.68169814+02:00",
+		"DeletedAt": null,
+		"UserID": "18a8bfd7-0f28-49be-aba6-13186fca7ec3",
+		"name": "User12",
+		"layer": "",
+		"ens": "",
+		"active": true,
+		"transform": {
+			"RotationID": 5,
+			"ScaleID": 5,
+			"PositionID": 5,
+			"position": {
+				"ID": 5,
+				"CreatedAt": "2023-09-09T22:12:18.66237607+02:00",
+				"UpdatedAt": "2023-09-09T22:14:46.67448893+02:00",
+				"DeletedAt": null,
+				"x": 1,
+				"y": 2,
+				"z": 3
+			},
+			"rotation": {
+				"ID": 5,
+				"CreatedAt": "2023-09-09T22:12:18.664758593+02:00",
+				"UpdatedAt": "2023-09-09T22:14:46.676704963+02:00",
+				"DeletedAt": null,
+				"x": 4,
+				"y": 5,
+				"z": 6,
+				"w": 0
+			},
+			"scale": {
+				"ID": 5,
+				"CreatedAt": "2023-09-09T22:12:18.666777896+02:00",
+				"UpdatedAt": "2023-09-09T22:14:46.677962475+02:00",
+				"DeletedAt": null,
+				"x": 7,
+				"y": 8,
+				"z": 9
+			}
+		},
+		"states": [
+			{
+				"ID": 1,
+				"CreatedAt": "2023-08-31T17:48:08.013886722+02:00",
+				"UpdatedAt": "2023-09-09T22:14:46.680543299+02:00",
+				"DeletedAt": null,
+				"PlayerID": 4,
+				"stateID": 0,
+				"value": 0.4
+			},
+			{
+				"ID": 2,
+				"CreatedAt": "2023-08-31T17:48:08.013886722+02:00",
+				"UpdatedAt": "2023-09-09T22:14:46.680543299+02:00",
+				"DeletedAt": null,
+				"PlayerID": 4,
+				"stateID": 0,
+				"value": 0.1
+			}
+		]
+	},
+	{
+		"ID": 5,
+		"CreatedAt": "2023-09-09T23:13:10.74373182+02:00",
+		"UpdatedAt": "2023-09-09T23:13:10.74373182+02:00",
+		"DeletedAt": null,
+		"UserID": "65ceceb3-611a-4c5a-843d-cd4f060590e2",
+		"name": "User1",
+		"layer": "",
+		"ens": "",
+		"active": true,
+		"transform": {
+			"RotationID": 6,
+			"ScaleID": 6,
+			"PositionID": 6,
+			"position": {
+				"ID": 6,
+				"CreatedAt": "2023-09-09T23:13:10.740599415+02:00",
+				"UpdatedAt": "2023-09-09T23:13:10.740599415+02:00",
+				"DeletedAt": null,
+				"x": 1,
+				"y": 2,
+				"z": 3
+			},
+			"rotation": {
+				"ID": 6,
+				"CreatedAt": "2023-09-09T23:13:10.742062057+02:00",
+				"UpdatedAt": "2023-09-09T23:13:10.742062057+02:00",
+				"DeletedAt": null,
+				"x": 4,
+				"y": 5,
+				"z": 6,
+				"w": 0
+			},
+			"scale": {
+				"ID": 6,
+				"CreatedAt": "2023-09-09T23:13:10.742933738+02:00",
+				"UpdatedAt": "2023-09-09T23:13:10.742933738+02:00",
+				"DeletedAt": null,
+				"x": 7,
+				"y": 8,
+				"z": 9
+			}
+		},
+		"states": []
+	}
+]
+```
 
 ##### Position
 `/position`
