@@ -440,58 +440,58 @@ Name | STRING | YES       | Has to be unique.
 **Request Body Example With all Accepted Fields:**
 ```json
 {
-		"ID": 4,
-		"CreatedAt": "2023-09-09T22:12:18.668123608+02:00",
-		"UpdatedAt": "2023-09-09T22:12:18.668123608+02:00",
-		"DeletedAt": null,
-		"UserID": "18a8bfd7-0f28-49be-aba6-13186fca7ec3",
-		"name": "User12",
-		"layer": "",
-		"ens": "",
-		"active": true,
-		"transform": {
-			"RotationID": 5,
-			"ScaleID": 5,
-			"PositionID": 5,
-			"position": {
-				"ID": 5,
-				"CreatedAt": "2023-09-09T22:12:18.66237607+02:00",
-				"UpdatedAt": "2023-09-09T22:12:18.66237607+02:00",
-				"DeletedAt": null,
-				"x": 1,
-				"y": 2,
-				"z": 3
-			},
-			"rotation": {
-				"ID": 5,
-				"CreatedAt": "2023-09-09T22:12:18.664758593+02:00",
-				"UpdatedAt": "2023-09-09T22:12:18.664758593+02:00",
-				"DeletedAt": null,
-				"x": 4,
-				"y": 5,
-				"z": 6,
-				"w": 0
-			},
-			"scale": {
-				"ID": 5,
-				"CreatedAt": "2023-09-09T22:12:18.666777896+02:00",
-				"UpdatedAt": "2023-09-09T22:12:18.666777896+02:00",
-				"DeletedAt": null,
-				"x": 7,
-				"y": 8,
-				"z": 9
-			}
-		},
-		"states": [
-                        {
-                                "id": 1,
-                                "value": 0.4
-                        },
-                        {
-                                "id": 2,
-                                "value": 0.1
-                        }
-                ]
+        "ID": 4,
+        "CreatedAt": "2023-09-09T22:12:18.668123608+02:00",
+        "UpdatedAt": "2023-09-09T22:12:18.668123608+02:00",
+        "DeletedAt": null,
+        "UserID": "18a8bfd7-0f28-49be-aba6-13186fca7ec3",
+        "name": "User12",
+        "layer": "",
+        "ens": "",
+        "active": true,
+        "transform": {
+                "RotationID": 5,
+                "ScaleID": 5,
+                "PositionID": 5,
+                "position": {
+                        "ID": 5,
+                        "CreatedAt": "2023-09-09T22:12:18.66237607+02:00",
+                        "UpdatedAt": "2023-09-09T22:12:18.66237607+02:00",
+                        "DeletedAt": null,
+                        "x": 1,
+                        "y": 2,
+                        "z": 3
+                },
+                "rotation": {
+                        "ID": 5,
+                        "CreatedAt": "2023-09-09T22:12:18.664758593+02:00",
+                        "UpdatedAt": "2023-09-09T22:12:18.664758593+02:00",
+                        "DeletedAt": null,
+                        "x": 4,
+                        "y": 5,
+                        "z": 6,
+                        "w": 0
+                },
+                "scale": {
+                        "ID": 5,
+                        "CreatedAt": "2023-09-09T22:12:18.666777896+02:00",
+                        "UpdatedAt": "2023-09-09T22:12:18.666777896+02:00",
+                        "DeletedAt": null,
+                        "x": 7,
+                        "y": 8,
+                        "z": 9
+                }
+        },
+        "states": [
+                {
+                        "id": 1,
+                        "value": 0.4
+                },
+                {
+                        "id": 2,
+                        "value": 0.1
+                }
+        ]
 }
 ```
 
