@@ -8,11 +8,11 @@ import (
 	"gorm.io/gorm/clause"
 )
 
-func DeletePlayer(c echo.Context) error {
+func Delete(c echo.Context) error {
 	//Open the database connection
 	db := database.GetDB()
 
-	idToRemove := c.QueryParam("id")
+	idToRemove := c.Param("id")
 
 	if idToRemove == "" {
 		return c.JSON(http.StatusBadRequest, "Invalid 'id' parameter value. Use a valid ID.")
