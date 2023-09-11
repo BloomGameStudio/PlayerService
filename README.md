@@ -20,11 +20,12 @@
     - [Websocket Endpoints](#websocket-endpoints)
         - [Position](#position)
         - [Rotation](#rotation)
+  - [Guides](#guides)
   - [How to Interact with the Player WebSocket](#how-to-interact-with-the-player-websocket)
   - [How to Interact with the Position WebSocket](#how-to-interact-with-the-position-websocket)
-  - [API Specifications and Documentation | Postman | OpenAPI](#api-specifications-and-documentation--postman--openapi)
   - [Examples](#examples)
-  - [Guides](#guides)
+  - [Postman | OpenAPI](#postman--openapi)
+  - [Rotation ressources](#rotation-ressources)
 
 
 ## Quickstart Guide:
@@ -584,6 +585,14 @@ ID   | INT  | YES       | Has to be unique.
 
 ---
 
+
+
+
+---
+
+
+## Guides
+
 ## How to Interact with the Player WebSocket
 
 Assuming standard config and hosting locally.
@@ -618,29 +627,6 @@ Assuming standard config and hosting locally.
 2. You will now recive a array of Positions
 3. To update any position you can send a single position object back in its entirety 
 This websocket is very similair to the player websocket 
-
-
----
-## API Specifications and Documentation | Postman | OpenAPI
-The Postman Collection: [PlayerService.postman_collection.json](docs/PlayerService.postman_collection.json)
-
-The OpenAPI spec: [open_api.yml](docs/open_api.yml)
-
-Can be found in docs dir.
-
-The OpenAPI spec is generated from the postman collection in the same dir via:
-
-https://joolfe.github.io/postman-to-openapi/ 
-
-        
-        p2o PlayerService.postman_collection.json -f open_api.yml
-
-
-## Examples
-
-Examples can be found in the docs dir.
-
-## Guides
 
 **How to setup private multiplayer**
 
@@ -795,7 +781,29 @@ Note: Sending the entire list of player objects back for update will fail and is
 
 
 
-**Rotation ressources**
+
+## Examples
+
+Examples can be found in the docs dir.
+
+
+## Postman | OpenAPI 
+
+The Postman Collection: [PlayerService.postman_collection.json](docs/PlayerService.postman_collection.json)
+
+The OpenAPI spec: [open_api.yml](docs/open_api.yml)
+
+Can be found in docs dir.
+
+The OpenAPI spec is generated from the postman collection in the same dir via:
+
+https://joolfe.github.io/postman-to-openapi/ 
+
+        
+        p2o PlayerService.postman_collection.json -f open_api.yml
+
+## Rotation ressources
+
 - https://compsci290-s2016.github.io/CoursePage/Materials/EulerAnglesViz/index.html
 - https://www.youtube.com/watch?v=2Cwa6hfn2K0
 - https://docs.unity3d.com/ScriptReference/Transform-eulerAngles.html
