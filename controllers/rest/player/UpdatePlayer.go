@@ -1,4 +1,4 @@
-package controllers
+package player
 
 import (
 	"net/http"
@@ -8,7 +8,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"gorm.io/gorm/clause"
 )
-func Update(c echo.Context) error {
+func UpdatePlayer(c echo.Context) error {
 
 	//we send the entire player struct to the client
 	

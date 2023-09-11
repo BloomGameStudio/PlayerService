@@ -1,9 +1,9 @@
-// Package controllers contains all the controller functions used by the application.
-package controllers
+package hello
 
 import (
 	"fmt"
 
+	"github.com/BloomGameStudio/PlayerService/controllers/ws"
 	"github.com/gorilla/websocket"
 	"github.com/labstack/echo/v4"
 )
@@ -16,7 +16,7 @@ func Hello(c echo.Context) error {
 	// writes Hello Client to the websocket
 
 	// Upgrade the connection to a WebSocket
-	ws, err := upgrader.Upgrade(c.Response(), c.Request(), nil)
+	ws, err := ws.Upgrader.Upgrade(c.Response(), c.Request(), nil)
 	if err != nil {
 		return err
 	}
