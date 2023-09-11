@@ -9,6 +9,9 @@ import (
 	"gorm.io/gorm/clause"
 )
 func Update(c echo.Context) error {
+
+	//we send the entire player struct to the client
+	
 	// Open the database connection
 	db := database.GetDB()
 
