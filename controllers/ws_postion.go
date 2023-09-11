@@ -3,6 +3,7 @@ package controllers
 import (
 	"context"
 	"errors"
+	"strconv"
 	"time"
 
 	"github.com/BloomGameStudio/PlayerService/database"
@@ -157,7 +158,16 @@ func positionWriter(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCT
 			c.Logger().Debug("Finished writing to the WebSocket Sleeping now")
 
 			// Update Interval NOTE: setting depending on the server and its performance either increase or decrease it.
-			time.Sleep(time.Millisecond * 1)
+			// rate query param passed in by client, set to 1 by default
+
+			params := c.Request().URL.Query()
+			rateStr := params.Get("rate")
+			rate, err := strconv.Atoi(rateStr)
+			if err != nil {
+				rate = 1
+			}
+
+			time.Sleep(time.Millisecond * time.Duration(rate))
 
 			if viper.GetBool("DEBUG") {
 				// Sleep for x second in DEBUG mode to not get fludded with data
