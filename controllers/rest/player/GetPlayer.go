@@ -1,4 +1,4 @@
-package controllers
+package player
 
 import (
 	"net/http"
@@ -16,22 +16,22 @@ func GetPlayer(c echo.Context) error {
 	db := database.GetDB()
 
 	// Read the "active" query parameter from the URL
-	activeParam := c.QueryParam("include_active")
+	activeParam := c.QueryParam("active")
 
 	// Initialize a variable to store the filter value
 	var active bool
 
 	// Check if the "active" query parameter is provided and parse it as a boolean
 	switch activeParam {
-		case "true":
-			active = true
-		case "false":
-			active = false
-		case "":
-			//handle some kind of things
+	case "true":
+		active = true
+	case "false":
+		active = false
+	case "":
+		//handle some kind of things
 
-		default:
-			return c.JSON(http.StatusBadRequest, "Invalid 'active' parameter value. Use 'true' or 'false'.")
+	default:
+		return c.JSON(http.StatusBadRequest, "Invalid 'active' parameter value. Use 'true' or 'false'.")
 	}
 
 	// Build the query based on the "active" filter

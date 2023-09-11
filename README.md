@@ -11,9 +11,15 @@
     - [**Docker**](#docker)
   - [Contributors Guide](#contributors-guide)
   - [Endpoints](#endpoints)
+    - [Rest Base Endpoints](#rest-base-endpoints)
+    - [WebSocket Base Endpoints](#websocket-base-endpoints)
     - [Rest Endpoints](#rest-endpoints)
         - [CreatePlayer](#createplayer)
+        - [GetPlayer](#getplayer)
+        - [DeletePlayer](#deleteplayer)
     - [Websocket Endpoints](#websocket-endpoints)
+        - [Position](#position)
+        - [Rotation](#rotation)
   - [How to Interact with the Player WebSocket](#how-to-interact-with-the-player-websocket)
   - [How to Interact with the Position WebSocket](#how-to-interact-with-the-position-websocket)
   - [API Specifications and Documentation | Postman | OpenAPI](#api-specifications-and-documentation--postman--openapi)
@@ -136,6 +142,448 @@ Contributing half finished and untested things is not ideal.
 
 
 ---
+
+## Endpoints
+
+Sending partial Data is Accepted and works on most Endpoints. 
+Indications will be made if partial Data is not supported for certain objects or Endpoints.
+
+Sending Incorrect or Malformed JSON will always result in failure for the entire request.
+
+### Rest Base Endpoints
+Local Base Endpoint with Default Config: 
+
+- http://127.0.0.1:1323
+
+Staging Base Endpoint:
+
+- http://staging.player.bloomstudio.gg
+
+Full Example:
+
+- http://127.0.0.1:1323/player
+
+### WebSocket Base Endpoints
+Local Base Endpoint with Default Config:
+
+- ws://localhost:1323/ws
+
+Staging Base Endpoint: 
+
+- ws://staging.player.bloomstudio.gg/ws
+
+Full Example:
+
+- ws://staging.player.bloomstudio.gg/ws/position
+
+
+### Rest Endpoints
+
+##### CreatePlayer
+`POST /player`
+
+Creates a Player.
+
+The primairy concern of the CreatePlayer endpoint is to handle the top level fields of the player.
+
+E.g Name,UserID. 
+Not associated fields like Transform or States.
+Use dedicated endpoints for associations and non top level fields if possible.
+
+**Headers:** None
+
+**Request Body:**
+
+Expects a JSON serilized Player [publicModel](./publicModels/player.go) or a [model](./models/player.go) object in the body.
+
+Name | Type   | Mandatory | Info
+-----|--------|-----------|------------------
+Name | STRING | YES       | Has to be unique.
+
+
+**Request Body Example With all Accepted Fields:**
+```json
+{
+    "UserID": "33b7e1f3-6f8e-40b9-97dc-c54d9162vb05",
+    "Name": "User1",
+    "Layer": "layer1",
+    "Ens": "",
+    "Active": true,
+    "Transform":{
+        "Position": {
+            "x": 1,
+            "y": 2,
+            "z": 3
+        },
+        "Rotation": {
+            "x": 4,
+            "y": 5,
+            "z": 6
+        },
+        "Scale": {
+            "x": 7,
+            "y": 8,
+            "z": 9
+        }
+    },
+    "states": [
+        {
+             "id": 1,
+             "value": 0.4
+        },
+        {
+             "id": 2,
+             "value": 0.1
+        }
+    ]
+}
+```
+*States are Unimplemented
+
+
+**Response:**
+```json
+{
+    "ID": 5,
+    "CreatedAt": "2023-09-09T23:13:10.74373182+02:00",
+    "UpdatedAt": "2023-09-09T23:13:10.74373182+02:00",
+    "DeletedAt": null,
+    "UserID": "65ceceb3-611a-4c5a-843d-cd4f060590e2",
+    "name": "User1",
+    "layer": "",
+    "ens": "",
+    "active": true,
+    "transform": {
+        "RotationID": 6,
+        "ScaleID": 6,
+        "PositionID": 6,
+        "position": {
+            "ID": 6,
+            "CreatedAt": "2023-09-09T23:13:10.740599415+02:00",
+            "UpdatedAt": "2023-09-09T23:13:10.740599415+02:00",
+            "DeletedAt": null,
+            "x": 1,
+            "y": 2,
+            "z": 3
+        },
+        "rotation": {
+            "ID": 6,
+            "CreatedAt": "2023-09-09T23:13:10.742062057+02:00",
+            "UpdatedAt": "2023-09-09T23:13:10.742062057+02:00",
+            "DeletedAt": null,
+            "x": 4,
+            "y": 5,
+            "z": 6,
+            "w": 0
+        },
+        "scale": {
+            "ID": 6,
+            "CreatedAt": "2023-09-09T23:13:10.742933738+02:00",
+            "UpdatedAt": "2023-09-09T23:13:10.742933738+02:00",
+            "DeletedAt": null,
+            "x": 7,
+            "y": 8,
+            "z": 9
+        }
+    },
+    "states": null
+}
+```
+
+##### GetPlayer
+`GET /player`
+
+Get a list of Players.
+
+**Headers:** None
+
+**Query Parameters:**
+
+Name   | Type | Mandatory | Default | Info
+-------|------|-----------|---------|------------------------------------------------------------------------------------------------------------------
+Active | BOOL | NO        | True    | Whether or not to include Inactive Players. Include Inactive Players with False. Does not exclude Active Players!
+
+
+**Request URL Example With all Accepted Query Params:**
+```html
+http://127.0.0.1:1323/player?active=true
+```
+
+**Response:**
+```json
+[
+    {
+        "ID": 1,
+        "CreatedAt": "2023-08-31T17:45:01.727297847+02:00",
+        "UpdatedAt": "2023-09-03T13:29:14.59514667+02:00",
+        "DeletedAt": null,
+        "UserID": "d6ce83e8-afa8-4fcc-af13-ab1f2e26f9e3",
+        "name": "User5",
+        "layer": "",
+        "ens": "",
+        "active": true,
+        "transform": {
+            "RotationID": 1,
+            "ScaleID": 1,
+            "PositionID": 1,
+            "position": {
+                "ID": 1,
+                "CreatedAt": "2023-08-31T17:45:01.724252373+02:00",
+                "UpdatedAt": "2023-09-03T13:29:14.592187627+02:00",
+                "DeletedAt": null,
+                "x": 1,
+                "y": 2,
+                "z": 3
+            },
+            "rotation": {
+                "ID": 1,
+                "CreatedAt": "2023-08-31T17:45:01.725541515+02:00",
+                "UpdatedAt": "2023-09-10T11:51:08.996298719+02:00",
+                "DeletedAt": null,
+                "x": 444,
+                "y": 555,
+                "z": 666,
+                "w": 8
+            },
+            "scale": {
+                "ID": 1,
+                "CreatedAt": "2023-08-31T17:45:01.726407856+02:00",
+                "UpdatedAt": "2023-09-03T13:29:14.594360829+02:00",
+                "DeletedAt": null,
+                "x": 7,
+                "y": 8,
+                "z": 9
+            }
+        },
+        "states": [
+            {
+                "ID": 3,
+                "CreatedAt": "2023-08-31T17:49:59.858256533+02:00",
+                "UpdatedAt": "2023-08-31T17:49:59.858256533+02:00",
+                "DeletedAt": null,
+                "PlayerID": 1,
+                "stateID": 0,
+                "value": 0.4
+            },
+            {
+                "ID": 12,
+                "CreatedAt": "2023-09-03T13:29:14.596106641+02:00",
+                "UpdatedAt": "2023-09-03T13:29:14.596106641+02:00",
+                "DeletedAt": null,
+                "PlayerID": 1,
+                "stateID": 333,
+                "value": 123456.991123123
+            }
+        ]
+    }
+]
+```
+
+
+##### DeletePlayer
+`DELETE /player`
+
+Soft Deletes a Player.
+
+**Headers:** None
+
+**Path Parameters:**
+
+Name | Type | Mandatory
+-----|------|----------
+ID   | INT  | YES 
+
+
+**Request URL Example With all Accepted Path Params:**
+```html
+http://127.0.0.1:1323/player/<ID>
+```
+
+**Response:**
+```html
+Status: 200 OK
+```
+
+---
+
+### Websocket Endpoints
+
+Websocket Endpoints on first connect will send all relevant data*¹.
+After the first transmition it will only send objects that have changes since the last transmition.
+
+*¹Except Data that has to be activly included and would not be included normally by default.
+
+E.g If by default inactive or soft deleted data|objects|rows wont be included 
+it also wont be included in the initial transfer unless queried|asked for by the client.
+
+##### Position
+`/position`
+
+Handles Position Data. Send and Receive Position Data.
+
+If no `ID` is sent it will act on and take the first Position object.
+
+**Headers:** None
+
+**Request Body:**
+
+Expects a JSON serilized Position [publicModel](./publicModels/position.go) or a [model](./models/position.go) object in the body.
+
+Name | Type | Mandatory | Info
+-----|------|-----------|------------------
+ID   | INT  | YES       | Has to be unique.
+
+
+**Request Body Example With all Accepted Fields:**
+```json
+{
+        "ID": 1,
+        "x": 1,
+        "y": 2,
+        "z": 3
+}
+```
+
+
+**Response:**
+```json
+[
+	{
+		"ID": 1,
+		"CreatedAt": "2023-08-31T17:45:01.724252373+02:00",
+		"UpdatedAt": "2023-09-03T13:29:14.592187627+02:00",
+		"DeletedAt": null,
+		"x": 1,
+		"y": 2,
+		"z": 3
+	},
+	{
+		"ID": 2,
+		"CreatedAt": "2023-08-31T17:46:17.436231232+02:00",
+		"UpdatedAt": "2023-09-05T14:02:16.429573435+02:00",
+		"DeletedAt": null,
+		"x": 1123,
+		"y": 2,
+		"z": 345
+	},
+	{
+		"ID": 3,
+		"CreatedAt": "2023-09-02T20:34:10.205426857+02:00",
+		"UpdatedAt": "2023-09-02T20:34:10.205426857+02:00",
+		"DeletedAt": null,
+		"x": 1,
+		"y": 2,
+		"z": 3
+	},
+	{
+		"ID": 4,
+		"CreatedAt": "2023-09-02T20:34:25.337078128+02:00",
+		"UpdatedAt": "2023-09-02T20:34:25.337078128+02:00",
+		"DeletedAt": null,
+		"x": 1,
+		"y": 2,
+		"z": 3
+	},
+	{
+		"ID": 5,
+		"CreatedAt": "2023-09-09T22:12:18.66237607+02:00",
+		"UpdatedAt": "2023-09-09T22:14:46.67448893+02:00",
+		"DeletedAt": null,
+		"x": 1,
+		"y": 2,
+		"z": 3
+	},
+	{
+		"ID": 6,
+		"CreatedAt": "2023-09-09T23:13:10.740599415+02:00",
+		"UpdatedAt": "2023-09-09T23:13:10.740599415+02:00",
+		"DeletedAt": null,
+		"x": 1,
+		"y": 2,
+		"z": 3
+	}
+]
+```
+
+##### Rotation
+`/rotation`
+
+Handles Rotation Data. Send and Receive Rotation Data.
+
+If no `ID` is sent it will act on and take the first Position object.
+
+**Headers:** None
+
+**Request Body:**
+
+Expects a JSON serilized Rotation [publicModel](./publicModels/rotation.go) or a [model](./models/rotation.go) object in the body.
+
+Name | Type | Mandatory | Info
+-----|------|-----------|------------------
+ID   | INT  | YES       | Has to be unique.
+
+
+**Request Body Example With all Accepted Fields:**
+```json
+{
+        "ID": 2,
+        "x": 444,
+        "y": 555,
+        "z": 666,
+        "w": 8
+}
+```
+
+
+**Response:**
+```json
+[
+	{
+		"ID": 1,
+		"CreatedAt": "2023-08-31T17:45:01.725541515+02:00",
+		"UpdatedAt": "2023-09-10T11:51:08.996298719+02:00",
+		"DeletedAt": null,
+		"x": 444,
+		"y": 555,
+		"z": 666,
+		"w": 8
+	},
+	{
+		"ID": 2,
+		"CreatedAt": "2023-08-31T17:46:17.438476376+02:00",
+		"UpdatedAt": "2023-09-10T11:52:54.218716343+02:00",
+		"DeletedAt": null,
+		"x": 444,
+		"y": 555,
+		"z": 666,
+		"w": 8
+	},
+	{
+		"ID": 3,
+		"CreatedAt": "2023-09-02T20:34:10.206732079+02:00",
+		"UpdatedAt": "2023-09-02T20:34:10.206732079+02:00",
+		"DeletedAt": null,
+		"x": 4,
+		"y": 5,
+		"z": 6,
+		"w": 0
+	},
+	{
+		"ID": 4,
+		"CreatedAt": "2023-09-02T20:34:25.338551329+02:00",
+		"UpdatedAt": "2023-09-02T20:34:25.338551329+02:00",
+		"DeletedAt": null,
+		"x": 4,
+		"y": 5,
+		"z": 6,
+		"w": 0
+	},
+]
+```
+
+
+---
+
 ## How to Interact with the Player WebSocket
 
 Assuming standard config and hosting locally.
