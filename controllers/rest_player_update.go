@@ -8,12 +8,12 @@ import (
 	"github.com/labstack/echo/v4"
 	"gorm.io/gorm/clause"
 )
-func UpdatePlayer(c echo.Context) error {
+func Update(c echo.Context) error {
 	// Open the database connection
 	db := database.GetDB()
 
 	// Parameters
-	playerId := c.QueryParam("id")
+	playerId := c.Param("id")
 
 	if playerId == "" {
 		return c.JSON(http.StatusBadRequest, "Invalid id parameter value. Use a valid ID")
@@ -42,7 +42,6 @@ func UpdatePlayer(c echo.Context) error {
 	queryPlayer.Position = updateData.Position
 	queryPlayer.Rotation = updateData.Rotation
 	queryPlayer.Scale = updateData.Scale
-	queryPlayer.Player.Layer = updateData.Layer
 
 	// Save the updated player
 	if err := db.Save(queryPlayer).Error; err != nil {

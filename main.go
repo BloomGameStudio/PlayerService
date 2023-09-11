@@ -26,11 +26,11 @@ func main() {
 	e.Use(middleware.Recover())
 
 	// HTTP routes
-
+	e.PUT("/players/:id", controllers.Update)
 	// HTTP Testing routes
 	e.GET("ping", controllers.Ping)
 	e.GET("v", controllers.Version)
-	e.PUT("updateplayer", controllers.UpdatePlayer)
+
 
 	// End of HTTP testing routes
 
