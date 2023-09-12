@@ -7,8 +7,7 @@ import (
 )
 
 func GetRate(c echo.Context) int {
-	params := c.Request().URL.Query()
-	rateStr := params.Get("rate")
+	rateStr := c.QueryParam("rate")
 	rate, err := strconv.Atoi(rateStr)
 	if err != nil {
 		rate = 1
