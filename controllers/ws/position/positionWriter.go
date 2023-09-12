@@ -40,32 +40,30 @@ func positionWriter(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCT
 
 			positions := &[]models.Position{}
 
-			params := c.Request().URL.Query()
-			radiusStr := params.Get("radius")
-			radius, err := strconv.ParseFloat(radiusStr, 32)
-			if err != nil {
-				// error handling, set radius to 1.0 as default value
-				radius = 1.0
-			}
-
-			var startingPoint_X float64 = 0
-			var startingPoint_Y float64 = 0
-
-			filter := func(pos *[]models.Position) *[]models.Position {
-				var out []models.Position
-				for i := 0; i < len(*pos); i++ {
-					if Distance(startingPoint_X, startingPoint_Y, (*pos)[i].X, (*pos)[i].Y) >= radius {
-						out = append(out, (*pos)[i])
-					}
-				}
-				return &out
-			}
-			positions = filter(positions)
-
 			db.Where("updated_at > ?", lastUpdateAt).Find(positions)
 			lastUpdateAt = time.Now() // update last update time to now only included positions that have been updated
 
-			// filteredPositions = filter(positions)
+			radius, err := strconv.ParseFloat(c.QueryParam("radius"), 32)
+			if err == nil {
+				// valid radius parameter was provided
+
+				// dummy anchor point, maybe can be passed in as query parameters
+				var anchorPointX float64 = 0
+				var anchorPointY float64 = 0
+
+				// filters positions slice in-place according to radius
+				n := 0
+				p := *positions
+				for _, pos := range p {
+					if Distance(anchorPointX, anchorPointY, pos.X, pos.Y) < radius {
+						p[n] = pos
+						n++
+					}
+
+				}
+
+				*positions = p[:n]
+			}
 
 			if len(*positions) > 0 {
 
