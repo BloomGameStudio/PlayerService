@@ -397,7 +397,7 @@ Soft Deletes a Player.
 **Request URL Example With all Accepted Path Params:**
 
 ```html
-http://127.0.0.1:1323/player/<ID></ID>
+http://127.0.0.1:1323/player/:ID
 ```
 
 **Response:**
