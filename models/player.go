@@ -19,6 +19,7 @@ type Player struct {
 
 	Transform `json:"transform"`
 	States    []State `json:"states"`
+	publicModels.PModel
 }
 
 func (p Player) IsValid() bool {
