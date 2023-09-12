@@ -67,7 +67,6 @@ The newer `docker compose`.
 
         docker compose <command>
 
-
 ### **Start the App and listen on port 1323**
 
 Note: Depending on your system and context you may have to configure your image & container versions
