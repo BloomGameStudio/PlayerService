@@ -1,6 +1,6 @@
 package publicModels
 
 type PModel struct {
-	ID uint `json:"id"`
-	MaterialID uint `json:"materialID"`
+	ModelID uint `json:"id"`
+	MaterialID uint `json:"material_id"`
 }

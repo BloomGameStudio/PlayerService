@@ -90,9 +90,9 @@ func playerReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX 
 			for _, state := range reqPlayer.States {
 				playerModel.States = append(playerModel.States, models.State{State: state})
 			}
+			playerModel.PModel.PModel = reqPlayer.PModel	
 
 			playerModel.Layer = reqPlayer.Layer
-			playerModel.PModel = reqPlayer.PModel
 			playerModel.Active = reqPlayer.Active
 
 			if viper.GetBool("DEBUG") {
