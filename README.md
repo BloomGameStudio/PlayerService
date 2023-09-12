@@ -410,6 +410,8 @@ Status: 200 OK
 
 ### Websocket Endpoints
 
+---
+
 Websocket Endpoints on first connect will send all relevant data\*¹.
 After the first transmition it will only send objects that have changes since the last transmition.
 
@@ -417,6 +419,20 @@ After the first transmition it will only send objects that have changes since th
 
 E.g If by default inactive or soft deleted data|objects|rows wont be included
 it also wont be included in the initial transfer unless queried|asked for by the client.
+
+---
+
+All Websocket Endpoints Accept the following:
+
+**Query Parameters:**
+
+| Name | Type | Mandatory | Default | Info                                                        |
+| ---- | ---- | --------- | ------- | ----------------------------------------------------------- |
+| rate | INT  | NO        | 1       | The Rate in Millisecond which the Server Updates the Client |
+
+\*Capitalization matters
+
+---
 
 ##### Player
 
