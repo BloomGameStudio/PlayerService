@@ -5,6 +5,7 @@ import (
 	"errors"
 	"time"
 
+	"github.com/BloomGameStudio/PlayerService/controllers/ws"
 	"github.com/BloomGameStudio/PlayerService/database"
 	"github.com/BloomGameStudio/PlayerService/models"
 	"github.com/gorilla/websocket"
@@ -12,7 +13,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-func positionWriter(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX context.Context) {
+func positionWriter(c echo.Context, socket *websocket.Conn, ch chan error, timeoutCTX context.Context) {
 
 	// Open DB outside of the loop
 	db := database.GetDB()
@@ -39,7 +40,7 @@ func positionWriter(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCT
 			if len(*positions) > 0 {
 
 				c.Logger().Debug("Pushing the positions to the WebSocket")
-				err := ws.WriteJSON(positions)
+				err := socket.WriteJSON(positions)
 
 				if err != nil {
 					switch {
@@ -75,7 +76,7 @@ func positionWriter(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCT
 			} else if lastPingCheck.Add(time.Second * 1).Before(time.Now()) {
 				c.Logger().Debug("Running Ping Check")
 
-				err := ws.WriteControl(websocket.PingMessage, []byte{}, time.Now().Add(time.Second*2))
+				err := socket.WriteControl(websocket.PingMessage, []byte{}, time.Now().Add(time.Second*2))
 
 				if err != nil {
 					switch {
@@ -112,7 +113,10 @@ func positionWriter(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCT
 			c.Logger().Debug("Finished writing to the WebSocket Sleeping now")
 
 			// Update Interval NOTE: setting depending on the server and its performance either increase or decrease it.
-			time.Sleep(time.Millisecond * 1)
+			// rate query param passed in by client, set to 1 by default
+
+			rate := ws.GetRate(c)
+			time.Sleep(time.Millisecond * time.Duration(rate))
 
 			if viper.GetBool("DEBUG") {
 				// Sleep for x second in DEBUG mode to not get fludded with data
