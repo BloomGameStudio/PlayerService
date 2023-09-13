@@ -20,6 +20,7 @@
         - [Player](#player)
         - [Position](#position)
         - [Rotation](#rotation)
+        - [States](#states)
   - [Guides](#guides)
   - [How to Interact with the Player WebSocket](#how-to-interact-with-the-player-websocket)
   - [How to Interact with the Position WebSocket](#how-to-interact-with-the-position-websocket)
@@ -972,6 +973,90 @@ Expects a JSON serilized Rotation [publicModel](./publicModels/rotation.go) or a
     "y": 5,
     "z": 6,
     "w": 0
+  }
+]
+```
+
+##### States
+
+`/states`
+
+Handles State Data. Send and Receive State Data.
+
+If no `ID` is sent it will act on and take the first object.
+
+**Headers:** None
+
+**Request Body:**
+
+Expects a JSON serilized State [publicModel](./publicModels/state.go) or a [model](./models/state.go) object in the body.
+
+| Name | Type | Mandatory | Info              |
+| ---- | ---- | --------- | ----------------- |
+| ID   | INT  | YES       | Has to be unique. |
+
+**Request Body Example With all Accepted Fields:**
+
+```json
+{
+  "ID": 4,
+  "CreatedAt": "2023-08-31T17:49:59.858256533+02:00",
+  "UpdatedAt": "2023-08-31T17:49:59.858256533+02:00",
+  "DeletedAt": null,
+  "PlayerID": 1,
+  "stateID": 0,
+  "value": 0.1
+}
+```
+
+**Response:**
+
+```json
+[
+  {
+    "ID": 3,
+    "CreatedAt": "2023-08-31T17:49:59.858256533+02:00",
+    "UpdatedAt": "2023-08-31T17:49:59.858256533+02:00",
+    "DeletedAt": null,
+    "PlayerID": 1,
+    "stateID": 0,
+    "value": 0.4
+  },
+  {
+    "ID": 4,
+    "CreatedAt": "2023-08-31T17:49:59.858256533+02:00",
+    "UpdatedAt": "2023-08-31T17:49:59.858256533+02:00",
+    "DeletedAt": null,
+    "PlayerID": 1,
+    "stateID": 0,
+    "value": 0.1
+  },
+  {
+    "ID": 7,
+    "CreatedAt": "2023-08-31T17:54:09.475338837+02:00",
+    "UpdatedAt": "2023-08-31T17:54:09.475338837+02:00",
+    "DeletedAt": null,
+    "PlayerID": 1,
+    "stateID": 22,
+    "value": 0.4435345
+  },
+  {
+    "ID": 9,
+    "CreatedAt": "2023-09-01T19:46:20.845375984+02:00",
+    "UpdatedAt": "2023-09-01T19:46:20.845375984+02:00",
+    "DeletedAt": null,
+    "PlayerID": 1,
+    "stateID": 223,
+    "value": 99.4435345
+  },
+  {
+    "ID": 12,
+    "CreatedAt": "2023-09-03T13:29:14.596106641+02:00",
+    "UpdatedAt": "2023-09-03T13:29:14.596106641+02:00",
+    "DeletedAt": null,
+    "PlayerID": 1,
+    "stateID": 333,
+    "value": 123456.991123123
   }
 ]
 ```
