@@ -3,10 +3,10 @@ package position
 import (
 	"context"
 	"errors"
-	"math"
 	"strconv"
 	"time"
 
+	"github.com/BloomGameStudio/PlayerService/controllers/ws"
 	"github.com/BloomGameStudio/PlayerService/database"
 	"github.com/BloomGameStudio/PlayerService/models"
 	"github.com/gorilla/websocket"
@@ -14,12 +14,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-func Distance(x1, y1, x2, y2 float64) float64 {
-	distance := math.Sqrt(math.Pow(x2-x1, 2) + math.Pow(y2-y1, 2))
-	return distance
-}
-
-func positionWriter(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX context.Context) {
+func positionWriter(c echo.Context, socket *websocket.Conn, ch chan error, timeoutCTX context.Context) {
 
 	// Open DB outside of the loop
 	db := database.GetDB()
@@ -52,23 +47,19 @@ func positionWriter(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCT
 				var anchorPointY float64 = 0
 
 				// filters positions slice in-place according to radius
-				n := 0
-				p := *positions
-				for _, pos := range p {
-					if Distance(anchorPointX, anchorPointY, pos.X, pos.Y) < radius {
-						p[n] = pos
-						n++
+				p := (*positions)[:0]
+				for i := range *positions {
+					if ws.Distance(anchorPointX, anchorPointY, (*positions)[i].X, (*positions)[i].Y) < radius {
+						p = append(p, (*positions)[i])
 					}
-
 				}
-
-				*positions = p[:n]
+				positions = &p
 			}
 
 			if len(*positions) > 0 {
 
 				c.Logger().Debug("Pushing the positions to the WebSocket")
-				err := ws.WriteJSON(positions)
+				err := socket.WriteJSON(positions)
 
 				if err != nil {
 					switch {
@@ -104,7 +95,7 @@ func positionWriter(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCT
 			} else if lastPingCheck.Add(time.Second * 1).Before(time.Now()) {
 				c.Logger().Debug("Running Ping Check")
 
-				err := ws.WriteControl(websocket.PingMessage, []byte{}, time.Now().Add(time.Second*2))
+				err := socket.WriteControl(websocket.PingMessage, []byte{}, time.Now().Add(time.Second*2))
 
 				if err != nil {
 					switch {
