@@ -39,18 +39,12 @@ func playerReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX 
 
 			c.Logger().Debugf("reqPlayer from the WebSocket: %+v", reqPlayer)
 
-			c.Logger().Debug("Validating reqPlayer")
 			if !reqPlayer.IsValid() {
 
-				c.Logger().Debug("reqPlayer is NOT valid returning")
 				ch <- errors.New("reqPlayer Validation failed")
-				c.Logger().Debug("Returning Now From Reader Go Routine")
 				return
 			}
 
-			c.Logger().Debug("reqPlayer is valid")
-
-			c.Logger().Debug("Initializing and populating player model!")
 			// Use dot annotation for promoted aka embedded fields.
 			playerModel := &models.Player{}
 			// TODO: Handle UserID and production mode
@@ -72,13 +66,10 @@ func playerReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX 
 
 			c.Logger().Debugf("playerModel: %+v", playerModel)
 
-			c.Logger().Debug("Validating playerModel")
 			if !playerModel.IsValid() {
 
-				c.Logger().Debug("playerModel is NOT valid returning")
 				// NOTE: No Timeout used here
 				ch <- errors.New("playerModel Validation failed")
-				c.Logger().Debug("Returning Now From Reader Go Routine")
 				return
 			}
 
