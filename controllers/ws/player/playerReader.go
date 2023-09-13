@@ -3,8 +3,8 @@ package player
 import (
 	"context"
 	"errors"
-	"time"
 
+	"github.com/BloomGameStudio/PlayerService/controllers/ws/errorHandlers"
 	"github.com/BloomGameStudio/PlayerService/handlers"
 	"github.com/BloomGameStudio/PlayerService/models"
 	"github.com/BloomGameStudio/PlayerService/publicModels"
@@ -34,36 +34,7 @@ func playerReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX 
 			err := ws.ReadJSON(reqPlayer)
 
 			if err != nil {
-				c.Logger().Debug("We get an error from Reading the JSON reqPlayer")
-				switch {
-
-				case websocket.IsCloseError(err, websocket.CloseNoStatusReceived):
-					c.Logger().Debug("Websocket CloseNoStatusReceived")
-					select {
-
-					case ch <- nil:
-						c.Logger().Debug("Sent nil to Reader channel")
-						return
-
-					case <-time.After(time.Second * 10):
-						c.Logger().Debug("Timed out sending nil to Reader channel")
-						return
-					}
-
-				default:
-
-					c.Logger().Error(err)
-
-					select {
-
-					case ch <- err:
-						c.Logger().Debug("Sent error to Reader channel")
-						return
-					case <-time.After(time.Second * 10):
-						c.Logger().Debug("Timed out sending error to Reader channel")
-						return
-					}
-				}
+				errorHandlers.HandleReadError(c, ch, err)
 			}
 
 			c.Logger().Debugf("reqPlayer from the WebSocket: %+v", reqPlayer)
