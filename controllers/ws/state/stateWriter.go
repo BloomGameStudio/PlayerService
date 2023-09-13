@@ -1,166 +1,122 @@
 package state
 
-// import (
-// 	"errors"
-// 	"time"
+import (
+	"context"
+	"errors"
+	"time"
 
-// 	"github.com/BloomGameStudio/PlayerService/database"
-// 	"github.com/BloomGameStudio/PlayerService/models"
-// 	"github.com/BloomGameStudio/PlayerService/publicModels"
-// 	"github.com/gorilla/websocket"
-// 	"github.com/labstack/echo/v4"
-// 	"github.com/spf13/viper"
-// 	"gorm.io/gorm/clause"
-// )
+	"github.com/BloomGameStudio/PlayerService/database"
+	"github.com/BloomGameStudio/PlayerService/models"
+	"github.com/gorilla/websocket"
+	"github.com/labstack/echo/v4"
+	"github.com/spf13/viper"
+)
 
-// // NOTE: We may need to adjust default configuration and values
-// // examples:
-// // https://github.com/gorilla/websocket/blob/master/examples/command/main.go
+func stateWriter(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX context.Context) {
 
-// func State(c echo.Context) error {
+	// Open DB outside of the loop
+	db := database.GetDB()
+	lastUpdateAt := time.Date(1900, 1, 1, 0, 0, 0, 0, time.UTC) // Use some ver old date for first update to get all players in the initial push
+	lastPingCheck := time.Now()
 
-// 	ws, err := upgrader.Upgrade(c.Response(), c.Request(), nil)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	defer ws.Close()
+	for {
+		select {
 
-// 	writerChan := make(chan error)
-// 	readerChan := make(chan error)
+		case <-timeoutCTX.Done():
+			c.Logger().Debug("stateWriter Timeout Context Done")
+			return
 
-// 	go stateWriter(c, ws, writerChan)
-// 	go stateReader(c, ws, readerChan)
+		default:
+			c.Logger().Debug("Getting states from the database")
 
-// 	// QUESTION: Do we want to wait on both routines to error out?
-// 	// Return the error if either the reader or the writer encounters a error
-// 	for {
-// 		select {
-// 		case r := <-readerChan:
-// 			c.Logger().Debugf("Recieved readerChan error: %v", r)
-// 			return r
-// 		case w := <-writerChan:
-// 			c.Logger().Debugf("Recieved writerChan error: %v", w)
-// 			return w
-// 		}
-// 	}
-// }
+			states := &[]models.State{}
 
-// // Write
-// func stateWriter(c echo.Context, ws *websocket.Conn, ch chan error) {
+			db.Where("updated_at > ?", lastUpdateAt).Find(states)
+			lastUpdateAt = time.Now() // update last update time to now only included states that have been updated
 
-// 	// TODO: Retrivement of data needs to be defined
-// 	// In Memory storage of the states has been agreed on
-// 	// Open DB outside of the loop
-// 	db := database.GetDB()
-// forloop:
-// 	for {
+			if len(*states) > 0 {
 
-// 		c.Logger().Debug("Writing to the WebSocket")
-// 		c.Logger().Debug("Getting all States from the database")
-// 		// Get all the states from the database
-// 		states := &models.State{} // COMBAK: Data structure TBD
-// 		db.Preload(clause.Associations).Find(states)
+				c.Logger().Debug("Pushing the states to the WebSocket")
+				err := ws.WriteJSON(states)
 
-// 		// Find/Filter the Changes that occured in the states and send them
+				if err != nil {
+					switch {
 
-// 		c.Logger().Debug("Pushing the states to the WebSocket")
-// 		err := ws.WriteJSON(states)
-// 		if err != nil {
+					case errors.Is(err, websocket.ErrCloseSent):
 
-// 			switch {
+						select {
 
-// 			case errors.Is(err, websocket.ErrCloseSent):
-// 				c.Logger().Debug("WEbsocket ErrCloseSent")
-// 				ch <- nil
-// 				close(ch)
-// 				break forloop
+						case ch <- nil:
+							c.Logger().Debug("Sent nil to Writer channel")
+							return
 
-// 			default:
-// 				c.Logger().Error(err)
-// 				ch <- err
-// 				close(ch)
-// 				break forloop
-// 			}
-// 		}
-// 		c.Logger().Debug("Finished writing to the WebSocket Sleeping now")
+						case <-time.After(time.Second * 10):
+							c.Logger().Debug("Timed out sending nil to Writer channel")
+							return
+						}
 
-// 		// Update Interval NOTE: setting depending on the server and its performance either increase or decrease it.
-// 		time.Sleep(time.Millisecond * 1)
+					default:
+						c.Logger().Error(err)
+						select {
+						case ch <- err:
+							c.Logger().Debug("Sent error to Writer channel")
+							return
 
-// 		if viper.GetBool("DEBUG") {
-// 			// Sleep for 1 second in DEBUG mode to not get fludded with data
-// 			time.Sleep(time.Second * 1)
-// 		}
-// 	}
-// }
+						case <-time.After(time.Second * 10):
+							c.Logger().Debug("Timed out sending error to Writer channel")
+							return
+						}
+					}
+				}
 
-// // Read
-// func stateReader(c echo.Context, ws *websocket.Conn, ch chan error) {
+				// Run Ping Check if there are no results to send and last ping check was older than 1 second ago
+			} else if lastPingCheck.Add(time.Second * 1).Before(time.Now()) {
+				c.Logger().Debug("Running Ping Check")
 
-// 	// TODO: NO VALIDATION OF INPUT DATA IS PERFORMED!!!
-// forloop:
-// 	for {
-// 		c.Logger().Debug("Reading from the WebSocket")
+				err := ws.WriteControl(websocket.PingMessage, []byte{}, time.Now().Add(time.Second*2))
 
-// 		// Initializer request player to bind into
-// 		reqState := &publicModels.State{}
-// 		err := ws.ReadJSON(reqState)
+				if err != nil {
+					switch {
 
-// 		if err != nil {
-// 			c.Logger().Debug("We get an error from Reading the JSON reqState")
-// 			switch {
+					case errors.Is(err, websocket.ErrCloseSent):
+						c.Logger().Debug("WEbsocket ErrCloseSent")
 
-// 			case websocket.IsCloseError(err, websocket.CloseNoStatusReceived):
-// 				c.Logger().Debug("Websocket CloseNoStatusReceived")
-// 				ch <- nil
-// 				close(ch)
-// 				break forloop
+						select {
 
-// 			default:
-// 				c.Logger().Error(err)
-// 				ch <- err
-// 				close(ch)
-// 				break forloop
+						case ch <- nil:
+							c.Logger().Debug("Sent nil to Writer channel")
+							return
+						case <-time.After(time.Second * 10):
+							c.Logger().Debug("Timed out sending nil to Writer channel")
+							return
+						}
 
-// 			}
-// 		}
+					default:
+						c.Logger().Error(err)
 
-// 		c.Logger().Debugf("reqState from the WebSocket: %+v", reqState)
+						select {
 
-// 		c.Logger().Debug("Validating reqState")
-// 		if !reqState.IsValid() {
-// 			c.Logger().Debug("reqState is NOT valid returning")
-// 			ch <- errors.New("reqState Validation failed")
-// 			close(ch)
-// 			break
-// 		}
+						case ch <- err:
+							c.Logger().Debug("Sent error to Writer channel")
+							return
+						case <-time.After(time.Second * 10):
+							c.Logger().Debug("Timed out sending error to Writer channel")
+							return
+						}
+					}
+				}
+			}
 
-// 		c.Logger().Debug("reqState is valid")
+			c.Logger().Debug("Finished writing to the WebSocket Sleeping now")
 
-// 		c.Logger().Debug("Initializing and populating reqState model!")
-// 		// Use dot annotation for promoted aka embedded fields.
-// 		stateModel := &models.State{}
+			// Update Interval NOTE: setting depending on the server and its performance either increase or decrease it.
+			time.Sleep(time.Millisecond * 1)
 
-// 		stateModel.Airborn = reqState.Airborn
-// 		stateModel.Grounded = reqState.Grounded
-// 		stateModel.Waterborn = reqState.Waterborn
+			if viper.GetBool("DEBUG") {
+				// Sleep for x second in DEBUG mode to not get fludded with data
+				time.Sleep(time.Second / 20)
+			}
+		}
+	}
 
-// 		if viper.GetBool("DEBUG") {
-
-// 		}
-
-// 		c.Logger().Debugf("stateModel: %+v", stateModel)
-
-// 		c.Logger().Debug("Validating stateModel")
-// 		if !stateModel.IsValid() {
-// 			c.Logger().Debug("stateModel is NOT valid returning")
-// 			ch <- errors.New("stateModel Validation failed")
-// 			close(ch)
-// 			break
-// 		}
-
-// 		c.Logger().Debug("playerModel is valid passing it to the Player handler")
-// 		// handlers.State(*stateModel, c) TODO: Implement StateHandler
-// 	}
-
-// }
+}
