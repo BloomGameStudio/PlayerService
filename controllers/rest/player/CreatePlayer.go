@@ -50,6 +50,9 @@ func CreatePlayer(c echo.Context) error {
 	playerModel.Position.Position = reqPlayer.Position
 	playerModel.Rotation.Rotation = reqPlayer.Rotation
 	playerModel.Scale.Scale = reqPlayer.Scale
+	for _, state := range reqPlayer.States {
+		playerModel.States = append(playerModel.States, models.State{State: state})
+	}
 
 	if !playerModel.IsValid() {
 		c.Logger().Debug("playerModel is NOT valid")
