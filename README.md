@@ -20,6 +20,7 @@
         - [Player](#player)
         - [Position](#position)
         - [Rotation](#rotation)
+        - [Scale](#scale)
         - [States](#states)
   - [Guides](#guides)
   - [How to Interact with the Player WebSocket](#how-to-interact-with-the-player-websocket)
@@ -973,6 +974,96 @@ Expects a JSON serilized Rotation [publicModel](./publicModels/rotation.go) or a
     "y": 5,
     "z": 6,
     "w": 0
+  }
+]
+```
+
+##### Scale
+
+`/scale`
+
+Handles Scale Data. Send and Receive Scale Data.
+
+If no `ID` is sent it will act on and take the first object.
+
+**Headers:** None
+
+**Request Body:**
+
+Expects a JSON serilized Scale [publicModel](./publicModels/scale.go) or a [model](./models/scale.go) object in the body.
+
+| Name | Type | Mandatory | Info              |
+| ---- | ---- | --------- | ----------------- |
+| ID   | INT  | YES       | Has to be unique. |
+
+**Request Body Example With all Accepted Fields:**
+
+```json
+{
+  "ID": 1,
+  "x": 1,
+  "y": 2,
+  "z": 3
+}
+```
+
+**Response:**
+
+```json
+[
+  {
+    "ID": 1,
+    "CreatedAt": "2023-08-31T17:45:01.724252373+02:00",
+    "UpdatedAt": "2023-09-03T13:29:14.592187627+02:00",
+    "DeletedAt": null,
+    "x": 1,
+    "y": 2,
+    "z": 3
+  },
+  {
+    "ID": 2,
+    "CreatedAt": "2023-08-31T17:46:17.436231232+02:00",
+    "UpdatedAt": "2023-09-05T14:02:16.429573435+02:00",
+    "DeletedAt": null,
+    "x": 1123,
+    "y": 2,
+    "z": 345
+  },
+  {
+    "ID": 3,
+    "CreatedAt": "2023-09-02T20:34:10.205426857+02:00",
+    "UpdatedAt": "2023-09-02T20:34:10.205426857+02:00",
+    "DeletedAt": null,
+    "x": 1,
+    "y": 2,
+    "z": 3
+  },
+  {
+    "ID": 4,
+    "CreatedAt": "2023-09-02T20:34:25.337078128+02:00",
+    "UpdatedAt": "2023-09-02T20:34:25.337078128+02:00",
+    "DeletedAt": null,
+    "x": 1,
+    "y": 2,
+    "z": 3
+  },
+  {
+    "ID": 5,
+    "CreatedAt": "2023-09-09T22:12:18.66237607+02:00",
+    "UpdatedAt": "2023-09-09T22:14:46.67448893+02:00",
+    "DeletedAt": null,
+    "x": 1,
+    "y": 2,
+    "z": 3
+  },
+  {
+    "ID": 6,
+    "CreatedAt": "2023-09-09T23:13:10.740599415+02:00",
+    "UpdatedAt": "2023-09-09T23:13:10.740599415+02:00",
+    "DeletedAt": null,
+    "x": 1,
+    "y": 2,
+    "z": 3
   }
 ]
 ```
