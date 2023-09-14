@@ -7,6 +7,7 @@ import (
 	"github.com/BloomGameStudio/PlayerService/models"
 	"github.com/labstack/echo/v4"
 	"gorm.io/gorm/clause"
+	"strconv"
 )
 func UpdatePlayer(c echo.Context) error {
 
@@ -16,16 +17,22 @@ func UpdatePlayer(c echo.Context) error {
 	db := database.GetDB()
 
 	// Parameters
-	playerId := c.Param("id")
+	playerIDStr := c.Param("id")
 
-	if playerId == "" {
-		return c.JSON(http.StatusBadRequest, "Invalid id parameter value. Use a valid ID")
+	if playerIDStr == "" {
+    	return c.JSON(http.StatusBadRequest, "Invalid id parameter value. Use a valid ID")
+	}
+
+	// Convert playerIDStr to uint
+	playerID, err := strconv.ParseUint(playerIDStr, 10, 64)
+	if err != nil {
+    	return c.JSON(http.StatusBadRequest, "Invalid id parameter value. Use a valid ID")
 	}
 
 	// Find the player from ID given
 	queryPlayer := &models.Player{}
-	if err := db.Preload(clause.Associations).Where("id = ?", playerId).First(queryPlayer).Error; err != nil {
-		return c.JSON(http.StatusNotFound, "Failed to retrieve player from the database")
+	if err := db.Preload(clause.Associations).Where("id = ?", playerID).First(queryPlayer).Error; err != nil {
+    	return c.JSON(http.StatusNotFound, "Failed to retrieve player from the database")
 	}
 
 	// Parse the JSON request body into a separate variable
