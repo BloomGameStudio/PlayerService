@@ -8,6 +8,7 @@ import (
 	wsPlayer "github.com/BloomGameStudio/PlayerService/controllers/ws/player"
 	"github.com/BloomGameStudio/PlayerService/controllers/ws/position"
 	"github.com/BloomGameStudio/PlayerService/controllers/ws/rotation"
+	"github.com/BloomGameStudio/PlayerService/controllers/ws/scale"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/spf13/viper"
@@ -58,6 +59,7 @@ func main() {
 	// ws.GET("state", controllers.State)
 	ws.GET("position", position.Position)
 	ws.GET("rotation", rotation.Rotation)
+	ws.GET("scale", scale.Scale)
 
 	port := viper.GetString("PORT")
 	e.Logger.Fatal(e.Start(":" + port))

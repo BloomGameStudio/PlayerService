@@ -34,6 +34,8 @@ func positionReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCT
 			err := ws.ReadJSON(reqPosition)
 
 			if err != nil {
+				wsTimeout := time.Second * time.Duration(viper.GetInt("WS_TIMEOUT_SECONDS"))
+
 				c.Logger().Debug("We get an error from Reading the JSON reqPosition")
 				switch {
 
@@ -44,7 +46,7 @@ func positionReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCT
 						c.Logger().Debug("Sent nil to Reader channel")
 						return
 
-					case <-time.After(time.Second * 10):
+					case <-time.After(wsTimeout):
 						c.Logger().Debug("Timed out sending nil to Reader channel")
 						return
 					}
@@ -55,7 +57,7 @@ func positionReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCT
 					case ch <- err:
 						c.Logger().Debug("Sent error to Reader channel")
 						return
-					case <-time.After(time.Second * 10):
+					case <-time.After(wsTimeout):
 						c.Logger().Debug("Timed out sending error to Reader channel")
 						return
 					}
