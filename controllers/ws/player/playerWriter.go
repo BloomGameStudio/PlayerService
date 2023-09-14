@@ -3,7 +3,6 @@ package player
 import (
 	"context"
 	"errors"
-	"strconv"
 	"time"
 
 	"github.com/BloomGameStudio/PlayerService/controllers/ws"
@@ -43,23 +42,7 @@ func playerWriter(c echo.Context, socket *websocket.Conn, ch chan error, timeout
 			db.Preload(clause.Associations).Where("updated_at > ?", lastUpdateAt).Where(queryPlayer).Find(players)
 			lastUpdateAt = time.Now() // update last update time to now only included players that have been updated
 
-			radius, err := strconv.ParseFloat(c.QueryParam("radius"), 32)
-			if err == nil {
-				// valid radius parameter was provided
-
-				// dummy anchor point, maybe can be passed in as query parameters
-				var anchorPointX float64 = 0
-				var anchorPointY float64 = 0
-
-				// filters positions slice in-place according to radius
-				p := (*players)[:0]
-				for i := range *players {
-					if ws.Distance(anchorPointX, anchorPointY, (*players)[i].Transform.Position.X, (*players)[i].Transform.Position.Y) < radius {
-						p = append(p, (*players)[i])
-					}
-				}
-				players = &p
-			}
+			players = ws.RadiusFilter(players, c)
 
 			if len(*players) > 0 {
 
