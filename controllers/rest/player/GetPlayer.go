@@ -16,7 +16,7 @@ func GetPlayer(c echo.Context) error {
 	db := database.GetDB()
 
 	// Read the "active" query parameter from the URL
-	activeParam := c.QueryParam("include_active")
+	activeParam := c.QueryParam("active")
 
 	// Initialize a variable to store the filter value
 	var active bool
@@ -38,7 +38,7 @@ func GetPlayer(c echo.Context) error {
 	queryPlayer := &models.Player{}
 	queryPlayer.Active = active
 	players := &[]models.Player{}
-	if err := db.Preload(clause.Associations).Where("active = ?", queryPlayer.Active).Find(players).Error; err != nil {
+	if err := db.Preload(clause.Associations).Where(queryPlayer).Find(players).Error; err != nil {
 		c.Logger().Error("Failed to retrieve players from the database")
 		return c.JSON(http.StatusInternalServerError, "Failed to retrieve players from the database")
 	}
