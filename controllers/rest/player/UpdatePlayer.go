@@ -31,7 +31,7 @@ func UpdatePlayer(c echo.Context) error {
 
 	// Find the player from ID given
 	queryPlayer := &models.Player{}
-	if err := db.Preload(clause.Associations).Where("id = ?", playerID).First(queryPlayer).Error; err != nil {
+	if err := db.Preload(clause.Associations).Where(playerID).First(queryPlayer).Error; err != nil {
     	return c.JSON(http.StatusNotFound, "Failed to retrieve player from the database")
 	}
 
