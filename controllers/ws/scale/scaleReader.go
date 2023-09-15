@@ -3,8 +3,8 @@ package scale
 import (
 	"context"
 	"errors"
-	"time"
 
+	"github.com/BloomGameStudio/PlayerService/controllers/ws/errorHandlers"
 	"github.com/BloomGameStudio/PlayerService/handlers"
 	"github.com/BloomGameStudio/PlayerService/models"
 	"github.com/gorilla/websocket"
@@ -28,24 +28,7 @@ func scaleReader(
 			err := ws.ReadJSON(reqScale)
 
 			if err != nil {
-				wsTimeout := time.Second * time.Duration(viper.GetInt("WS_TIMEOUT_SECONDS"))
-
-				switch {
-				case websocket.IsCloseError(err, websocket.CloseNoStatusReceived):
-					select {
-					case ch <- nil:
-						return
-					case <-time.After(wsTimeout):
-						return
-					}
-				default:
-					select {
-					case ch <- err:
-						return
-					case <-time.After(wsTimeout):
-						return
-					}
-				}
+				errorHandlers.HandleReadError(c, ch, err)
 			}
 
 			if !reqScale.IsValid() {

@@ -43,6 +43,7 @@ func HandleCloseNoStatusReceived(c echo.Context, ch chan error) {
 		return
 
 	}
+
 }
 
 func HandleUnknownError(c echo.Context, ch chan error, err error) {
@@ -60,4 +61,5 @@ func HandleUnknownError(c echo.Context, ch chan error, err error) {
 		return
 
 	}
+
 }
