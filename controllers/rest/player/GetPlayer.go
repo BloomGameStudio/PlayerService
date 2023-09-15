@@ -38,7 +38,7 @@ func GetPlayer(c echo.Context) error {
 	queryPlayer := &models.Player{}
 	queryPlayer.Active = active
 	players := &[]models.Player{}
-	if err := db.Preload(clause.Associations).Where(queryPlayer).Find(players).Error; err != nil {
+	if err := db.Preload(clause.Associations).Where(activeParam).Find(players).Error; err != nil {
 		c.Logger().Error("Failed to retrieve players from the database")
 		return c.JSON(http.StatusInternalServerError, "Failed to retrieve players from the database")
 	}
