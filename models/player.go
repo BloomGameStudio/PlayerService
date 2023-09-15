@@ -41,3 +41,7 @@ func (p Player) IsValid() bool {
 
 	return true
 }
+
+func (p Player) GetPosition() Position {
+	return p.Transform.Position
+}

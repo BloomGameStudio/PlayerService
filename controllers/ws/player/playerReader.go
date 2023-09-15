@@ -3,8 +3,8 @@ package player
 import (
 	"context"
 	"errors"
-	"time"
 
+	"github.com/BloomGameStudio/PlayerService/controllers/ws/errorHandlers"
 	"github.com/BloomGameStudio/PlayerService/handlers"
 	"github.com/BloomGameStudio/PlayerService/models"
 	"github.com/BloomGameStudio/PlayerService/publicModels"
@@ -34,54 +34,17 @@ func playerReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX 
 			err := ws.ReadJSON(reqPlayer)
 
 			if err != nil {
-				wsTimeout := time.Second * time.Duration(viper.GetInt("WS_TIMEOUT_SECONDS"))
-
-				c.Logger().Debug("We get an error from Reading the JSON reqPlayer")
-				switch {
-
-				case websocket.IsCloseError(err, websocket.CloseNoStatusReceived):
-					c.Logger().Debug("Websocket CloseNoStatusReceived")
-					select {
-
-					case ch <- nil:
-						c.Logger().Debug("Sent nil to Reader channel")
-						return
-
-					case <-time.After(wsTimeout):
-						c.Logger().Debug("Timed out sending nil to Reader channel")
-						return
-					}
-
-				default:
-
-					c.Logger().Error(err)
-
-					select {
-
-					case ch <- err:
-						c.Logger().Debug("Sent error to Reader channel")
-						return
-					case <-time.After(wsTimeout):
-						c.Logger().Debug("Timed out sending error to Reader channel")
-						return
-					}
-				}
+				errorHandlers.HandleReadError(c, ch, err)
 			}
 
 			c.Logger().Debugf("reqPlayer from the WebSocket: %+v", reqPlayer)
 
-			c.Logger().Debug("Validating reqPlayer")
 			if !reqPlayer.IsValid() {
 
-				c.Logger().Debug("reqPlayer is NOT valid returning")
 				ch <- errors.New("reqPlayer Validation failed")
-				c.Logger().Debug("Returning Now From Reader Go Routine")
 				return
 			}
 
-			c.Logger().Debug("reqPlayer is valid")
-
-			c.Logger().Debug("Initializing and populating player model!")
 			// Use dot annotation for promoted aka embedded fields.
 			playerModel := &models.Player{}
 			// TODO: Handle UserID and production mode
@@ -103,13 +66,10 @@ func playerReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX 
 
 			c.Logger().Debugf("playerModel: %+v", playerModel)
 
-			c.Logger().Debug("Validating playerModel")
 			if !playerModel.IsValid() {
 
-				c.Logger().Debug("playerModel is NOT valid returning")
 				// NOTE: No Timeout used here
 				ch <- errors.New("playerModel Validation failed")
-				c.Logger().Debug("Returning Now From Reader Go Routine")
 				return
 			}
 

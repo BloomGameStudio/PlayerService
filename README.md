@@ -20,6 +20,8 @@
         - [Player](#player)
         - [Position](#position)
         - [Rotation](#rotation)
+        - [Scale](#scale)
+        - [States](#states)
   - [Guides](#guides)
   - [How to Interact with the Player WebSocket](#how-to-interact-with-the-player-websocket)
   - [How to Interact with the Position WebSocket](#how-to-interact-with-the-position-websocket)
@@ -66,7 +68,6 @@ The more wider used `docker-compose`.
 The newer `docker compose`.
 
         docker compose <command>
-
 
 ### **Start the App and listen on port 1323**
 
@@ -398,7 +399,7 @@ Soft Deletes a Player.
 **Request URL Example With all Accepted Path Params:**
 
 ```html
-http://127.0.0.1:1323/player/<ID></ID>
+http://127.0.0.1:1323/player/:ID
 ```
 
 **Response:**
@@ -411,6 +412,8 @@ Status: 200 OK
 
 ### Websocket Endpoints
 
+---
+
 Websocket Endpoints on first connect will send all relevant data\*¹.
 After the first transmition it will only send objects that have changes since the last transmition.
 
@@ -418,6 +421,20 @@ After the first transmition it will only send objects that have changes since th
 
 E.g If by default inactive or soft deleted data|objects|rows wont be included
 it also wont be included in the initial transfer unless queried|asked for by the client.
+
+---
+
+All Websocket Endpoints Accept the following:
+
+**Query Parameters:**
+
+| Name | Type | Mandatory | Default | Info                                                        |
+| ---- | ---- | --------- | ------- | ----------------------------------------------------------- |
+| rate | INT  | NO        | 1       | The Rate in Millisecond which the Server Updates the Client |
+
+\*Capitalization matters
+
+---
 
 ##### Player
 
@@ -957,6 +974,180 @@ Expects a JSON serilized Rotation [publicModel](./publicModels/rotation.go) or a
     "y": 5,
     "z": 6,
     "w": 0
+  }
+]
+```
+
+##### Scale
+
+`/scale`
+
+Handles Scale Data. Send and Receive Scale Data.
+
+If no `ID` is sent it will act on and take the first object.
+
+**Headers:** None
+
+**Request Body:**
+
+Expects a JSON serilized Scale [publicModel](./publicModels/scale.go) or a [model](./models/scale.go) object in the body.
+
+| Name | Type | Mandatory | Info              |
+| ---- | ---- | --------- | ----------------- |
+| ID   | INT  | YES       | Has to be unique. |
+
+**Request Body Example With all Accepted Fields:**
+
+```json
+{
+  "ID": 1,
+  "x": 1,
+  "y": 2,
+  "z": 3
+}
+```
+
+**Response:**
+
+```json
+[
+  {
+    "ID": 1,
+    "CreatedAt": "2023-08-31T17:45:01.724252373+02:00",
+    "UpdatedAt": "2023-09-03T13:29:14.592187627+02:00",
+    "DeletedAt": null,
+    "x": 1,
+    "y": 2,
+    "z": 3
+  },
+  {
+    "ID": 2,
+    "CreatedAt": "2023-08-31T17:46:17.436231232+02:00",
+    "UpdatedAt": "2023-09-05T14:02:16.429573435+02:00",
+    "DeletedAt": null,
+    "x": 1123,
+    "y": 2,
+    "z": 345
+  },
+  {
+    "ID": 3,
+    "CreatedAt": "2023-09-02T20:34:10.205426857+02:00",
+    "UpdatedAt": "2023-09-02T20:34:10.205426857+02:00",
+    "DeletedAt": null,
+    "x": 1,
+    "y": 2,
+    "z": 3
+  },
+  {
+    "ID": 4,
+    "CreatedAt": "2023-09-02T20:34:25.337078128+02:00",
+    "UpdatedAt": "2023-09-02T20:34:25.337078128+02:00",
+    "DeletedAt": null,
+    "x": 1,
+    "y": 2,
+    "z": 3
+  },
+  {
+    "ID": 5,
+    "CreatedAt": "2023-09-09T22:12:18.66237607+02:00",
+    "UpdatedAt": "2023-09-09T22:14:46.67448893+02:00",
+    "DeletedAt": null,
+    "x": 1,
+    "y": 2,
+    "z": 3
+  },
+  {
+    "ID": 6,
+    "CreatedAt": "2023-09-09T23:13:10.740599415+02:00",
+    "UpdatedAt": "2023-09-09T23:13:10.740599415+02:00",
+    "DeletedAt": null,
+    "x": 1,
+    "y": 2,
+    "z": 3
+  }
+]
+```
+
+##### States
+
+`/states`
+
+Handles State Data. Send and Receive State Data.
+
+If no `ID` is sent it will act on and take the first object.
+
+**Headers:** None
+
+**Request Body:**
+
+Expects a JSON serilized State [publicModel](./publicModels/state.go) or a [model](./models/state.go) object in the body.
+
+| Name | Type | Mandatory | Info              |
+| ---- | ---- | --------- | ----------------- |
+| ID   | INT  | YES       | Has to be unique. |
+
+**Request Body Example With all Accepted Fields:**
+
+```json
+{
+  "ID": 4,
+  "CreatedAt": "2023-08-31T17:49:59.858256533+02:00",
+  "UpdatedAt": "2023-08-31T17:49:59.858256533+02:00",
+  "DeletedAt": null,
+  "PlayerID": 1,
+  "stateID": 0,
+  "value": 0.1
+}
+```
+
+**Response:**
+
+```json
+[
+  {
+    "ID": 3,
+    "CreatedAt": "2023-08-31T17:49:59.858256533+02:00",
+    "UpdatedAt": "2023-08-31T17:49:59.858256533+02:00",
+    "DeletedAt": null,
+    "PlayerID": 1,
+    "stateID": 0,
+    "value": 0.4
+  },
+  {
+    "ID": 4,
+    "CreatedAt": "2023-08-31T17:49:59.858256533+02:00",
+    "UpdatedAt": "2023-08-31T17:49:59.858256533+02:00",
+    "DeletedAt": null,
+    "PlayerID": 1,
+    "stateID": 0,
+    "value": 0.1
+  },
+  {
+    "ID": 7,
+    "CreatedAt": "2023-08-31T17:54:09.475338837+02:00",
+    "UpdatedAt": "2023-08-31T17:54:09.475338837+02:00",
+    "DeletedAt": null,
+    "PlayerID": 1,
+    "stateID": 22,
+    "value": 0.4435345
+  },
+  {
+    "ID": 9,
+    "CreatedAt": "2023-09-01T19:46:20.845375984+02:00",
+    "UpdatedAt": "2023-09-01T19:46:20.845375984+02:00",
+    "DeletedAt": null,
+    "PlayerID": 1,
+    "stateID": 223,
+    "value": 99.4435345
+  },
+  {
+    "ID": 12,
+    "CreatedAt": "2023-09-03T13:29:14.596106641+02:00",
+    "UpdatedAt": "2023-09-03T13:29:14.596106641+02:00",
+    "DeletedAt": null,
+    "PlayerID": 1,
+    "stateID": 333,
+    "value": 123456.991123123
   }
 ]
 ```
