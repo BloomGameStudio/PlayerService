@@ -42,6 +42,8 @@ func playerWriter(c echo.Context, socket *websocket.Conn, ch chan error, timeout
 			db.Preload(clause.Associations).Where("updated_at > ?", lastUpdateAt).Where(queryPlayer).Find(players)
 			lastUpdateAt = time.Now() // update last update time to now only included players that have been updated
 
+			players = ws.RadiusFilter(players, c)
+
 			if len(*players) > 0 {
 
 				// TODO: Find/Filter the Changes that occured in the players and send them NOTE: The above filters for changes pretty well but we may want to filter for specific changes

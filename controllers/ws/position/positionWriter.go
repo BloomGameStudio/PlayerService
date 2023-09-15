@@ -37,6 +37,8 @@ func positionWriter(c echo.Context, socket *websocket.Conn, ch chan error, timeo
 			db.Where("updated_at > ?", lastUpdateAt).Find(positions)
 			lastUpdateAt = time.Now() // update last update time to now only included positions that have been updated
 
+			positions = ws.RadiusFilter(positions, c)
+
 			if len(*positions) > 0 {
 
 				c.Logger().Debug("Pushing the positions to the WebSocket")
