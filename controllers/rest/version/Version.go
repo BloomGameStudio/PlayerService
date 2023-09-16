@@ -2,6 +2,7 @@ package version
 
 import (
 	"net/http"
+	"runtime"
 
 	"github.com/labstack/echo/v4"
 )
@@ -11,9 +12,9 @@ type VersionResp struct {
 }
 
 func Version(c echo.Context) error {
-	return c.JSON(http.StatusOK, &VersionResp{"0.0.1"})
+	return c.JSON(http.StatusOK, &VersionResp{runtime.Version()[2:]})
 }
 
 func Commit(c echo.Context) error {
-	return c.JSON(http.StatusOK, &VersionResp{"0.0.1"})
+	return c.JSON(http.StatusOK, &VersionResp{runtime.Version()[2:]})
 }
