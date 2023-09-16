@@ -25,4 +25,5 @@ func ViperInit() {
 	// Setting Default Values
 	viper.SetDefault("DEBUG", true)
 	viper.SetDefault("PORT", "1323") // Has to be a string as Echo expects a string
+	viper.SetDefault("WS_TIMEOUT_SECONDS", 10)
 }

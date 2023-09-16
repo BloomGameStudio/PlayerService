@@ -3,8 +3,8 @@ package rotation
 import (
 	"context"
 	"errors"
-	"time"
 
+	"github.com/BloomGameStudio/PlayerService/controllers/ws/errorHandlers"
 	"github.com/BloomGameStudio/PlayerService/handlers"
 	"github.com/BloomGameStudio/PlayerService/models"
 	"github.com/gorilla/websocket"
@@ -34,32 +34,7 @@ func rotationReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCT
 			err := ws.ReadJSON(reqRotation)
 
 			if err != nil {
-				c.Logger().Debug("We get an error from Reading the JSON reqRotation")
-				switch {
-
-				case websocket.IsCloseError(err, websocket.CloseNoStatusReceived):
-					select {
-
-					case ch <- nil:
-						c.Logger().Debug("Sent nil to Reader channel")
-						return
-
-					case <-time.After(time.Second * 10):
-						c.Logger().Debug("Timed out sending nil to Reader channel")
-						return
-					}
-
-				default:
-					c.Logger().Error(err)
-					select {
-					case ch <- err:
-						c.Logger().Debug("Sent error to Reader channel")
-						return
-					case <-time.After(time.Second * 10):
-						c.Logger().Debug("Timed out sending error to Reader channel")
-						return
-					}
-				}
+				errorHandlers.HandleReadError(c, ch, err)
 			}
 
 			c.Logger().Debugf("reqRotation from the WebSocket: %+v", reqRotation)
