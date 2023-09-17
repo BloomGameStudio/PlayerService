@@ -13,9 +13,10 @@ func Init() {
 
 	// TODO: Cleanup Migration
 	db := database.GetDB()
-	// This will Auto Migrate all its nested structs
+
 	db.AutoMigrate(&models.Player{})
 	db.AutoMigrate(&models.State{})
+	db.AutoMigrate(&models.Level{})
 
 }
 
