@@ -38,6 +38,8 @@ func rotationWriter(c echo.Context, socket *websocket.Conn, ch chan error, timeo
 			db.Where("updated_at > ?", lastUpdateAt).Find(rotations)
 			lastUpdateAt = time.Now() // update last update time to now only included rotations that have been updated
 
+			rotations = ws.RotationFilter(rotations, c)
+
 			if len(*rotations) > 0 {
 
 				c.Logger().Debug("Pushing the rotations to the WebSocket")

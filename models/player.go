@@ -45,3 +45,7 @@ func (p Player) IsValid() bool {
 func (p Player) GetPosition() Position {
 	return p.Transform.Position
 }
+
+func (p Player) GetRotation() Rotation {
+	return p.Transform.Rotation
+}

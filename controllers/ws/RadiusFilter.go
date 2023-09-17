@@ -7,11 +7,11 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-type Model interface {
+type Model_P interface {
 	GetPosition() models.Position
 }
 
-func RadiusFilter[m Model](a *[]m, c echo.Context) *[]m {
+func RadiusFilter[m Model_P](a *[]m, c echo.Context) *[]m {
 	radius, err_radius := strconv.ParseFloat(c.QueryParam("radius"), 32)
 	anchorPointX, err_anchorPointX := strconv.ParseFloat(c.QueryParam("anchorPointX"), 32)
 	anchorPointY, err_anchorPointY := strconv.ParseFloat(c.QueryParam("anchorPointY"), 32)
