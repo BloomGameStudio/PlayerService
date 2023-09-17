@@ -1,9 +1,5 @@
 package publicModels
 
-// type States struct {
-// 	IDS string `json:"ids"`
-// }
-
 type Player struct {
 	// publicModels.Player holds public fields for the player model.
 
