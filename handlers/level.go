@@ -25,7 +25,7 @@ func Level(level models.Level, c echo.Context) error {
 	queryLevel := &models.Level{}
 	queryLevel.ID = level.ID
 
-	result = db.Model(&models.Level{}).Where(queryLevel).First(&databaseLevelModel)
+	result = db.Model(&models.Level{}).Where(queryLevel).FirstOrCreate(&databaseLevelModel, &queryLevel)
 
 	if result.Error != nil {
 		logger.Error(result.Error)
