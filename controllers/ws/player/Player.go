@@ -13,14 +13,6 @@ import (
 
 func Player(c echo.Context) error {
 
-	// QUESTION: Is this needed?
-	// Only changes will be sent the only exception to this is the opening/first request where the full state will be sent
-	// Partial player data can be received or full
-	// TODO: Partial Reads
-	// TODO: Partial Writes
-
-	// TODO: Finalize how IDs are expected and handled
-
 	ws, err := ws.Upgrader.Upgrade(c.Response(), c.Request(), nil)
 	if err != nil {
 		return err
