@@ -67,7 +67,7 @@ func HandleCloseNoStatusReceived(c echo.Context, ch chan error) {
 
 func HandleErrCloseSent(c echo.Context, ch chan error, err error) {
 
-	c.Logger().Debug("WEbsocket ErrCloseSent")
+	c.Logger().Debug("Websocket ErrCloseSent")
 
 	select {
 
