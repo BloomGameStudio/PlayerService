@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added 
+
+- Level Model & Websocket
+  - https://github.com/BloomGameStudio/PlayerService/issues/33 
+  - This implements the `/level` Websocket Endpoint with full CRUD Functionality for "Level".
+    And Adds "Level" Read functionality to the `/player` Websocket Endpoint.
+   
+  - Implemented & Added:
+    - Level Websocket Controller
+    - Level Read Functionality in the `/player` Socket Endpoint
+    - Level Reader
+    - Level Writer
+    - Level Handler
+    - Level Model
+    - Level Public Model
+    - Level Model in Player Model
+    - Level Model in Public Player Model
+    
+  
+  - Note: This does not Implement "Level" Write Functionality in the `/player` Websocket Endpoint.
+
+
 ## [0.1.0] - 16-09-2032 
 
 ### Added
