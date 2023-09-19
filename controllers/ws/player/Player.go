@@ -28,7 +28,6 @@ func Player(c echo.Context) error {
 	go playerWriter(c, ws, writerChan, timeoutCTX)
 	go playerReader(c, ws, readerChan, timeoutCTX)
 
-	// QUESTION: Do we want to wait on both routines to error out?
 	// Return nil if either the reader or the writer encounters a error
 	// Do NOT return the error this will cause the error "the connection is hijacked"
 
