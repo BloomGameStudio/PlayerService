@@ -29,50 +29,58 @@ func positionReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCT
 
 			// Initializer request player to bind into
 			// NOTE: We are using a private model here TODO: Change to public model in production or handle this case
-			reqPosition := &models.Position{}
+			reqPos := &models.Position{}
+			reqPosArr := &[]models.Position{}
 
-			err := ws.ReadJSON(reqPosition)
+			err := ws.ReadJSON(reqPos)
 
 			if err != nil {
-				errorHandlers.HandleReadError(c, ch, err)
+				err2 := ws.ReadJSON(reqPosArr)
+				if err2 != nil {
+					errorHandlers.HandleReadError(c, ch, err)
+				}
+			} else {
+				reqPosArr = &[]models.Position{*reqPos}
 			}
+			for _, reqPosition := range *reqPosArr {
 
-			c.Logger().Debugf("reqPosition from the WebSocket: %+v", reqPosition)
+				c.Logger().Debugf("reqPosition from the WebSocket: %+v", reqPosition)
 
-			c.Logger().Debug("Validating reqPosition")
-			if !reqPosition.IsValid() {
-				c.Logger().Debug("reqPosition is NOT valid returning")
-				// NOTE: no Chan Timeout used
-				ch <- errors.New("reqPosition Validation failed")
-				return
+				c.Logger().Debug("Validating reqPosition")
+				if !reqPosition.IsValid() {
+					c.Logger().Debug("reqPosition is NOT valid returning")
+					// NOTE: no Chan Timeout used
+					ch <- errors.New("reqPosition Validation failed")
+					return
+				}
+
+				c.Logger().Debug("reqPosition is valid")
+
+				c.Logger().Debug("Initializing and populating position model!")
+				// Use dot annotation for promoted aka embedded fields.
+				positionModel := &models.Position{}
+				// TODO: Handle ID and production mode
+
+				if viper.GetBool("DEBUG") {
+					// Accept client provided ID in DEBUG mode
+					positionModel.ID = reqPosition.ID
+				}
+
+				positionModel.Vector3 = reqPosition.Vector3
+
+				c.Logger().Debugf("positionModel: %+v", positionModel)
+
+				c.Logger().Debug("Validating positionModel")
+				if !positionModel.IsValid() {
+					c.Logger().Debug("positionModel is NOT valid returning")
+					// NOTE: no Chan Timeout used
+					ch <- errors.New("positionModel Validation failed")
+					return
+				}
+
+				c.Logger().Debug("positionModel is valid passing it to the Poisition handler")
+				handlers.Position(*positionModel, c)
 			}
-
-			c.Logger().Debug("reqPosition is valid")
-
-			c.Logger().Debug("Initializing and populating position model!")
-			// Use dot annotation for promoted aka embedded fields.
-			positionModel := &models.Position{}
-			// TODO: Handle ID and production mode
-
-			if viper.GetBool("DEBUG") {
-				// Accept client provided ID in DEBUG mode
-				positionModel.ID = reqPosition.ID
-			}
-
-			positionModel.Vector3 = reqPosition.Vector3
-
-			c.Logger().Debugf("positionModel: %+v", positionModel)
-
-			c.Logger().Debug("Validating positionModel")
-			if !positionModel.IsValid() {
-				c.Logger().Debug("positionModel is NOT valid returning")
-				// NOTE: no Chan Timeout used
-				ch <- errors.New("positionModel Validation failed")
-				return
-			}
-
-			c.Logger().Debug("positionModel is valid passing it to the Poisition handler")
-			handlers.Position(*positionModel, c)
 		}
 	}
 }
