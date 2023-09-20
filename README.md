@@ -22,6 +22,7 @@
         - [Rotation](#rotation)
         - [Scale](#scale)
         - [States](#states)
+        - [Level](#level)
   - [Guides](#guides)
   - [How to Interact with the Player WebSocket](#how-to-interact-with-the-player-websocket)
   - [How to Interact with the Position WebSocket](#how-to-interact-with-the-position-websocket)
@@ -1148,6 +1149,95 @@ Expects a JSON serilized State [publicModel](./publicModels/state.go) or a [mode
     "PlayerID": 1,
     "stateID": 333,
     "value": 123456.991123123
+  }
+]
+```
+
+##### Level
+
+`/level`
+
+Handles Level Data. Send and Receive Level Data.
+
+**Headers:** None
+
+**Request Body:**
+
+Expects a JSON serilized State [publicModel](./publicModels/level.go) or a [model](./models/level.go) object in the body.
+
+| Name | Type | Mandatory | Info              |
+| ---- | ---- | --------- | ----------------- |
+| ID   | INT  | YES       | Has to be unique. |
+
+**Request Body Example With all Accepted Fields:**
+
+```json
+{
+  "ID": 9,
+  "PlayerID": 9,
+  "levelID": 99
+}
+```
+
+**Response:**
+
+```json
+[
+  {
+    "ID": 1,
+    "CreatedAt": "0001-01-01T00:00:00Z",
+    "UpdatedAt": "2023-09-19T18:58:01.004352074+02:00",
+    "DeletedAt": null,
+    "PlayerID": 1,
+    "levelID": 8
+  },
+  {
+    "ID": 2,
+    "CreatedAt": "0001-01-01T00:00:00Z",
+    "UpdatedAt": "2023-09-17T21:13:22.907264347+02:00",
+    "DeletedAt": null,
+    "PlayerID": 1,
+    "levelID": 99
+  },
+  {
+    "ID": 3,
+    "CreatedAt": "0001-01-01T00:00:00Z",
+    "UpdatedAt": "2023-09-18T12:55:28.270739728+02:00",
+    "DeletedAt": null,
+    "PlayerID": 3,
+    "levelID": 33
+  },
+  {
+    "ID": 4,
+    "CreatedAt": "0001-01-01T00:00:00Z",
+    "UpdatedAt": "2023-09-18T12:59:50.210264594+02:00",
+    "DeletedAt": null,
+    "PlayerID": 3,
+    "levelID": 33
+  },
+  {
+    "ID": 5,
+    "CreatedAt": "2023-09-18T13:23:07.32511678+02:00",
+    "UpdatedAt": "2023-09-18T13:23:22.24989923+02:00",
+    "DeletedAt": null,
+    "PlayerID": 3,
+    "levelID": 33
+  },
+  {
+    "ID": 6,
+    "CreatedAt": "2023-09-18T13:26:00.061928771+02:00",
+    "UpdatedAt": "2023-09-18T13:26:19.385058543+02:00",
+    "DeletedAt": null,
+    "PlayerID": 32,
+    "levelID": 323
+  },
+  {
+    "ID": 9,
+    "CreatedAt": "2023-09-19T18:57:03.427916819+02:00",
+    "UpdatedAt": "2023-09-19T18:57:23.383696443+02:00",
+    "DeletedAt": null,
+    "PlayerID": 9,
+    "levelID": 99
   }
 ]
 ```
