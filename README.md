@@ -1,5 +1,7 @@
 # PlayerService
 
+The Bloom & LostLight Playerservice.
+
 - [PlayerService](#playerservice)
   - [Quickstart Guide:](#quickstart-guide)
   - [Installation](#installation)
@@ -29,6 +31,8 @@
   - [Examples](#examples)
   - [Postman | OpenAPI](#postman--openapi)
   - [Rotation ressources](#rotation-ressources)
+
+This Project keeps a [Changelog](Changelog) in which all Versions and Notable Changes are Documentad.
 
 ## Quickstart Guide:
 
