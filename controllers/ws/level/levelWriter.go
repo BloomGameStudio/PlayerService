@@ -1,4 +1,4 @@
-package player
+package level
 
 import (
 	"context"
@@ -6,17 +6,16 @@ import (
 	"time"
 
 	"github.com/BloomGameStudio/PlayerService/controllers/ws"
-	"github.com/BloomGameStudio/PlayerService/controllers/ws/errorHandlers"
 	"github.com/BloomGameStudio/PlayerService/database"
 	"github.com/BloomGameStudio/PlayerService/models"
 	"github.com/gorilla/websocket"
 	"github.com/labstack/echo/v4"
 	"github.com/spf13/viper"
-	"gorm.io/gorm/clause"
 )
 
-func playerWriter(c echo.Context, socket *websocket.Conn, ch chan error, timeoutCTX context.Context) {
+func levelWriter(c echo.Context, socket *websocket.Conn, ch chan error, timeoutCTX context.Context) {
 
+	// Open DB outside of the loop
 	db := database.GetDB()
 	lastUpdateAt := time.Date(1900, 1, 1, 0, 0, 0, 0, time.UTC) // Use some ver old date for first update to get all players in the initial push
 	lastPingCheck := time.Now()
@@ -26,36 +25,49 @@ func playerWriter(c echo.Context, socket *websocket.Conn, ch chan error, timeout
 		select {
 
 		case <-timeoutCTX.Done():
-			c.Logger().Debug("PlayerWriter Timeout Context Done")
+			c.Logger().Debug("RotationWriter Timeout Context Done")
 			return
 
 		default:
+			// TODO: The Entire Level Model is being sent. It may contain information that should not be sent!
 
-			// TODO: The Entire Player Model is being sent. It may contain information that should not be sent!
-			c.Logger().Debug("Writing to the WebSocket")
+			levels := &[]models.Level{}
 
-			c.Logger().Debug("Getting all players from the database")
-			// Get all active players from the database
-			queryPlayer := &models.Player{}
-			queryPlayer.Active = true
+			db.Where("updated_at > ?", lastUpdateAt).Find(levels)
+			lastUpdateAt = time.Now() // update last update time to now only included objects that have been updated
 
-			players := &[]models.Player{}
+			if len(*levels) > 0 {
 
-			db.Preload(clause.Associations).Where("updated_at > ?", lastUpdateAt).Where(queryPlayer).Find(players)
-			lastUpdateAt = time.Now() // update last update time to now only included players that have been updated
-
-			players = ws.RadiusFilter(players, c)
-
-			if len(*players) > 0 {
-
-				// TODO: Find/Filter the Changes that occured in the players and send them NOTE: The above filters for changes pretty well but we may want to filter for specific changes
-				// PlayerChanges(players,players)
-
-				c.Logger().Debug("Pushing the player to the WebSocket")
-				err := socket.WriteJSON(players)
+				err := socket.WriteJSON(levels)
 
 				if err != nil {
-					errorHandlers.HandleWriteError(c, ch, err)
+					switch {
+
+					case errors.Is(err, websocket.ErrCloseSent):
+
+						select {
+
+						case ch <- nil:
+							c.Logger().Debug("Sent nil to Writer channel")
+							return
+
+						case <-time.After(wsTimeout):
+							c.Logger().Debug("Timed out sending nil to Writer channel")
+							return
+						}
+
+					default:
+						c.Logger().Error(err)
+						select {
+						case ch <- err:
+							c.Logger().Debug("Sent error to Writer channel")
+							return
+
+						case <-time.After(wsTimeout):
+							c.Logger().Debug("Timed out sending error to Writer channel")
+							return
+						}
+					}
 				}
 
 				// Run Ping Check if there are no results to send and last ping check was older than 1 second ago
@@ -69,6 +81,7 @@ func playerWriter(c echo.Context, socket *websocket.Conn, ch chan error, timeout
 
 					case errors.Is(err, websocket.ErrCloseSent):
 						c.Logger().Debug("WEbsocket ErrCloseSent")
+
 						select {
 
 						case ch <- nil:
