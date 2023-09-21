@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/BloomGameStudio/PlayerService/controllers/ws"
+	"github.com/BloomGameStudio/PlayerService/controllers/ws/errorHandlers"
 	"github.com/BloomGameStudio/PlayerService/database"
 	"github.com/BloomGameStudio/PlayerService/models"
 	"github.com/gorilla/websocket"
@@ -54,34 +55,7 @@ func playerWriter(c echo.Context, socket *websocket.Conn, ch chan error, timeout
 				err := socket.WriteJSON(players)
 
 				if err != nil {
-					switch {
-
-					case errors.Is(err, websocket.ErrCloseSent):
-						c.Logger().Debug("WEbsocket ErrCloseSent")
-
-						select {
-
-						case ch <- nil:
-							c.Logger().Debug("Sent nil to Writer channel")
-							return
-
-						case <-time.After(wsTimeout):
-							c.Logger().Debug("Timed out sending nil to Writer channel")
-							return
-						}
-
-					default:
-						c.Logger().Error(err)
-						select {
-						case ch <- err:
-							c.Logger().Debug("Sent error to Writer channel")
-							return
-
-						case <-time.After(wsTimeout):
-							c.Logger().Debug("Timed out sending error to Writer channel")
-							return
-						}
-					}
+					errorHandlers.HandleWriteError(c, ch, err)
 				}
 
 				// Run Ping Check if there are no results to send and last ping check was older than 1 second ago
