@@ -62,6 +62,11 @@ func rotationReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCT
 			rotationModel.Vector3 = reqRotation.Vector3
 			rotationModel.W = reqRotation.W
 
+			if reqRotation.ID <= 0 {
+				ch <- errors.New("missing/invalid ID")
+				return
+			}
+
 			c.Logger().Debugf("rotationModel: %+v", rotationModel)
 
 			c.Logger().Debug("Validating rotationModel")

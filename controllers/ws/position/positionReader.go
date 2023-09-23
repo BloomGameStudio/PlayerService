@@ -61,6 +61,11 @@ func positionReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCT
 
 			positionModel.Vector3 = reqPosition.Vector3
 
+			if reqPosition.ID <= 0 {
+				ch <- errors.New("missing/invalid ID")
+				return
+			}
+
 			c.Logger().Debugf("positionModel: %+v", positionModel)
 
 			c.Logger().Debug("Validating positionModel")
