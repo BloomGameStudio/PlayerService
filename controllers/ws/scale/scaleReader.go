@@ -44,9 +44,8 @@ func scaleReader(
 			}
 
 			scaleModel.Vector3 = reqScale.Vector3
-			scaleModel.ID = reqScale.ID
 
-			if scaleModel.ID <= 0 {
+			if reqScale.ID <= 0 {
 				ch <- errors.New("missing/invalid ID")
 				return
 			}

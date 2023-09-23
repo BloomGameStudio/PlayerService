@@ -7,6 +7,7 @@ import (
 	"github.com/BloomGameStudio/PlayerService/controllers/ws/errorHandlers"
 	"github.com/BloomGameStudio/PlayerService/handlers"
 	"github.com/BloomGameStudio/PlayerService/models"
+	"github.com/BloomGameStudio/PlayerService/publicModels"
 	"github.com/gorilla/websocket"
 	"github.com/labstack/echo/v4"
 	"github.com/spf13/viper"
@@ -29,7 +30,7 @@ func playerReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX 
 			c.Logger().Debug("Reading from the WebSocket")
 
 			// Initializer request player to bind into
-			reqPlayer := &models.Player{}
+			reqPlayer := &publicModels.Player{}
 			err := ws.ReadJSON(reqPlayer)
 
 			if err != nil {
@@ -47,12 +48,12 @@ func playerReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX 
 			// Use dot annotation for promoted aka embedded fields.
 			playerModel := &models.Player{}
 			// TODO: Handle UserID and production mode
-			playerModel.Position = reqPlayer.Position
-			playerModel.Rotation = reqPlayer.Rotation
-			playerModel.Scale = reqPlayer.Scale
+			playerModel.Position.Position = reqPlayer.Position
+			playerModel.Rotation.Rotation = reqPlayer.Rotation
+			playerModel.Scale.Scale = reqPlayer.Scale
 
 			for _, state := range reqPlayer.States {
-				playerModel.States = append(playerModel.States, state)
+				playerModel.States = append(playerModel.States, models.State{State: state})
 			}
 
 			playerModel.Layer = reqPlayer.Layer
