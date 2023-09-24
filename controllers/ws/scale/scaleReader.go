@@ -44,8 +44,14 @@ func scaleReader(
 				if viper.GetBool("DEBUG") {
 					scaleModel.ID = reqScale.ID
 				}
+        
+        if reqScale.ID <= 0 {
+          ch <- errors.New("missing/invalid ID")
+          return
+			  }
 
 				scaleModel.Vector3 = reqScale.Vector3
+
 
 				if !scaleModel.IsValid() {
 					ch <- errors.New("scaleModel validation failed")

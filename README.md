@@ -1,5 +1,7 @@
 # PlayerService
 
+The Bloom & LostLight Playerservice.
+
 - [PlayerService](#playerservice)
   - [Quickstart Guide:](#quickstart-guide)
   - [Installation](#installation)
@@ -29,6 +31,8 @@
   - [Examples](#examples)
   - [Postman | OpenAPI](#postman--openapi)
   - [Rotation ressources](#rotation-ressources)
+
+This Project keeps a [Changelog](Changelog) in which all Versions and Notable Changes are Documentad.
 
 ## Quickstart Guide:
 
@@ -1165,7 +1169,10 @@ Handles Level Data. Send and Receive Level Data.
 
 **Request Body:**
 
+
 Expects a JSON serialized State [publicModel](./publicModels/level.go) or a [model](./models/level.go) object in the body.
+
+
 
 | Name | Type | Mandatory | Info              |
 | ---- | ---- | --------- | ----------------- |

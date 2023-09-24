@@ -1,6 +1,7 @@
 package errorHandlers
 
 import (
+	"errors"
 	"time"
 
 	"github.com/gorilla/websocket"
@@ -9,6 +10,24 @@ import (
 )
 
 var wsTimeout time.Duration = time.Second * time.Duration(viper.GetInt("WS_TIMEOUT_SECONDS"))
+
+func HandleWriteError(c echo.Context, ch chan error, err error) {
+
+	c.Logger().Debug("We get an error from Writing the JSON")
+
+	switch {
+
+	case errors.Is(err, websocket.ErrCloseSent):
+		HandleErrCloseSent(c, ch, err)
+		return
+
+	default:
+		HandleUnknownError(c, ch, err)
+		return
+
+	}
+
+}
 
 func HandleReadError(c echo.Context, ch chan error, err error) {
 
@@ -44,6 +63,23 @@ func HandleCloseNoStatusReceived(c echo.Context, ch chan error) {
 
 	}
 
+}
+
+func HandleErrCloseSent(c echo.Context, ch chan error, err error) {
+
+	c.Logger().Debug("Websocket ErrCloseSent")
+
+	select {
+
+	case ch <- nil:
+		c.Logger().Debug("Sent nil to Writer channel")
+		return
+
+	case <-time.After(wsTimeout):
+		c.Logger().Debug("Timed out sending nil to Writer channel")
+		return
+
+	}
 }
 
 func HandleUnknownError(c echo.Context, ch chan error, err error) {
