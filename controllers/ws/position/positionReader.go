@@ -12,6 +12,10 @@ import (
 	"github.com/spf13/viper"
 )
 
+type Unmarshaler interface {
+	UnmarshalJSON([]byte) error
+}
+
 func positionReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX context.Context) {
 
 	// TODO: THIS IS VULNARABLE CLIENTS CAN CHANGE OBJECT IDS especially the nested ones!!!
@@ -29,20 +33,17 @@ func positionReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCT
 
 			// Initializer request player to bind into
 			// NOTE: We are using a private model here TODO: Change to public model in production or handle this case
-			reqPos := &models.Position{}
 			reqPosArr := &[]models.Position{}
 
-			err := ws.ReadJSON(reqPos)
+			err := ws.ReadJSON(reqPosArr)
 
 			if err != nil {
-				err2 := ws.ReadJSON(reqPosArr)
-				if err2 != nil {
-					errorHandlers.HandleReadError(c, ch, err)
-				}
-			} else {
-				reqPosArr = &[]models.Position{*reqPos}
+				errorHandlers.HandleReadError(c, ch, err)
 			}
+
 			for _, reqPosition := range *reqPosArr {
+
+				positionModel := &models.Position{}
 
 				c.Logger().Debugf("reqPosition from the WebSocket: %+v", reqPosition)
 
@@ -58,7 +59,7 @@ func positionReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCT
 
 				c.Logger().Debug("Initializing and populating position model!")
 				// Use dot annotation for promoted aka embedded fields.
-				positionModel := &models.Position{}
+
 				// TODO: Handle ID and production mode
 
 				if viper.GetBool("DEBUG") {
@@ -78,7 +79,7 @@ func positionReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCT
 					return
 				}
 
-				c.Logger().Debug("positionModel is valid passing it to the Poisition handler")
+				c.Logger().Debug("positionModel is valid passing it to the Position handler")
 				handlers.Position(*positionModel, c)
 			}
 		}
