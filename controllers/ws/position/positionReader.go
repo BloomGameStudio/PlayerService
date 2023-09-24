@@ -12,10 +12,6 @@ import (
 	"github.com/spf13/viper"
 )
 
-type Unmarshaler interface {
-	UnmarshalJSON([]byte) error
-}
-
 func positionReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX context.Context) {
 
 	// TODO: THIS IS VULNARABLE CLIENTS CAN CHANGE OBJECT IDS especially the nested ones!!!
@@ -60,21 +56,17 @@ func positionReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCT
 				c.Logger().Debug("Initializing and populating position model!")
 				// Use dot annotation for promoted aka embedded fields.
 
-
 				// TODO: Handle ID and production mode
-
-        c.Logger().Debugf("positionModel: %+v", positionModel)
-
 
 				if viper.GetBool("DEBUG") {
 					// Accept client provided ID in DEBUG mode
 					positionModel.ID = reqPosition.ID
 				}
-        
-        if reqPosition.ID <= 0 {
-          ch <- errors.New("missing/invalid ID")
-          return
-        }
+
+				if reqPosition.ID <= 0 {
+					ch <- errors.New("missing/invalid ID")
+					return
+				}
 
 				positionModel.Vector3 = reqPosition.Vector3
 

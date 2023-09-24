@@ -15,16 +15,16 @@ The Bloom & LostLight Playerservice.
     - [Rest Base Endpoints](#rest-base-endpoints)
     - [WebSocket Base Endpoints](#websocket-base-endpoints)
     - [Rest Endpoints](#rest-endpoints)
-      - [CreatePlayer](#createplayer)
-      - [GetPlayer](#getplayer)
-      - [DeletePlayer](#deleteplayer)
+        - [CreatePlayer](#createplayer)
+        - [GetPlayer](#getplayer)
+        - [DeletePlayer](#deleteplayer)
     - [Websocket Endpoints](#websocket-endpoints)
-      - [Player](#player)
-      - [Position](#position)
-      - [Rotation](#rotation)
-      - [Scale](#scale)
-      - [States](#states)
-      - [Level](#level)
+        - [Player](#player)
+        - [Position](#position)
+        - [Rotation](#rotation)
+        - [Scale](#scale)
+        - [States](#states)
+        - [Level](#level)
   - [Guides](#guides)
   - [How to Interact with the Player WebSocket](#how-to-interact-with-the-player-websocket)
   - [How to Interact with the Position WebSocket](#how-to-interact-with-the-position-websocket)
@@ -48,7 +48,7 @@ This Project keeps a [Changelog](Changelog) in which all Versions and Notable Ch
 
 **Optional Live Code Reloading with Air**
 
-Install Air via your preferred installation method: https://github.com/cosmtrek/air
+Install Air via your preffered installation method: https://github.com/cosmtrek/air
 
         // Run the server on port 1323 with live code reloading
         air
@@ -59,14 +59,14 @@ Install Air via your preferred installation method: https://github.com/cosmtrek/
 
 ### **Docker-Compose**
 
-Choose your docker compose cli
+Chose your docker compose cli
 Depending on what version you have or how you installed docker compose.
 
-The examples will use the more widely used `docker-compose`
+The examples will use the more wider used `docker-compose`
 
-For more information read: https://stackoverflow.com/questions/66514436/difference-between-docker-compose-and-docker-compose
+For more Information read: https://stackoverflow.com/questions/66514436/difference-between-docker-compose-and-docker-compose
 
-The more widely used `docker-compose`.
+The more wider used `docker-compose`.
 
         docker-compose <command>
 
@@ -76,28 +76,28 @@ The newer `docker compose`.
 
 ### **Start the App and listen on port 1323**
 
-Note: Depending on your system and context you may have to configure your image & container versions.
-View the official Docker Compose documentation on how Docker determines what and how it runs images & containers and how <docker-compose up> behaves.
+Note: Depending on your system and context you may have to configure your image & container versions
+view the official Docker Compose documentation on how Docker determines what and how it runs images & containers and how <docker-compose up> behaves.
 
-TLDR: Docker and by extension Docker Compose will choose the latest container and if that does not exist the latest image to run your application.
+TLDR: Docker and by extension Docker Compose will chose the latest container and if that does not exist the latest image to run your application.
 
-**Run the latest version that was built from the branch main.**
+**Run the latest version that was build from the branch main.**
 
-Note: If you have built a later version or somehow else have a later version on your system a version that docker thinks is later than what was built from main it will most likely use that.
-This results in you not running the version from main and not running the intended version.
+Note: If you have build a later version or somehow else have a later version on your system a version that docker thinks is later than what was build from main it will most likely use that.
+Which resulst in you not runing the version from main and not runing the intended version.
 This will automatically be resolved for you if a new push to main happens.
 
         docker-compose up
         // CTRL + C to stop
 
-**Run & Build the current state of the currently checked out branch.**
+**Run & Build the current state of the currently checkout out branch.**
 
-Note: This will build a image and run and build a container which probably is a later version than the prebuilt image built from the main branch.
+Note: This will build a image and run and build a container which probably is a later version than the prebuild image built from the main branch.
 
         docker-compose up --build
         // CTRL + C to stop
 
-        // If there are caching issues or some other problems or you want to be 100% sure that you run and have built the latest version of the current branch you can run:
+        // If there are caching issues or some other problems or you want to be 100% sure that you run and have build the latest version of the current branch you can run:
         docker-compose up --build --force-recreate
         // This will recreate everything and might take longer.
 
@@ -105,11 +105,11 @@ Note: This will build a image and run and build a container which probably is a 
 
 ### **Docker**
 
-1.  Create the docker volume for the database
+1.  Create a The docker volume for the database
 
         docker volume create playerservicevolume
 
-2.  Run the container
+2.  Run The Container
 
         // From Github Container Registry via Image
         // You can Replace the tag <main> at the end with whatever tag you want
@@ -133,10 +133,10 @@ Note: This will build a image and run and build a container which probably is a 
 
 ## Contributors Guide
 
-1. Assign an Issue\*(Github Issue) to yourself and/or clearly indicate to at least Balu if not everyone else involved that that you are now working on this task. If you lack permissions to assign an issue to yourself contact Balu or any other person with the needed permissions to assign the issue to you.
-2. Continuously push your work to Github so that other people can follow the progress passively. Ask for help if you are stuck, notify Balu if you can't complete it. Ghosting is 0/10.
-3. Test everything and make sure everything works as intended.
-4. Open a pull request. Ask Balu if you lack permissions.
+1. Assign a Issue\*(Github Issue) to yourself and or clearly indicate to at least Balu if not everyone else involved that that you are now working on this task. If you lack permissions to assign a issue to yourself contact Balu or any other person with the needed permissions to assign the issue to you.
+2. Continuesly Push your work to Github so that other people can follow the progress passivly. Ask for Help if you are stuck Notify Balu if you cant complete it. Ghosting is 0/10.
+3. Test everything and make sure everything works as intended
+4. Open a Pull Request. Ask Balu if you lack permissions.
 5. Address comments on the PR if there are any.
 6. Shake hands firmly.
 
@@ -148,10 +148,10 @@ Contributing half finished and untested things is not ideal.
 
 ## Endpoints
 
-Sending partial data is accepted and works on most endpoints.
-Indications will be made if partial data is not supported for certain objects or endpoints.
+Sending partial Data is Accepted and works on most Endpoints.
+Indications will be made if partial Data is not supported for certain objects or Endpoints.
 
-Sending incorrect or malformed JSON will always result in failure for the entire request.
+Sending Incorrect or Malformed JSON will always result in failure for the entire request.
 
 ### Rest Base Endpoints
 
@@ -189,17 +189,17 @@ Full Example:
 
 Creates a Player.
 
-The primary concern of the CreatePlayer endpoint is to handle the top level fields of the player.
+The primairy concern of the CreatePlayer endpoint is to handle the top level fields of the player.
 
 E.g Name,UserID.
 Not associated fields like Transform or States.
-Use dedicated endpoints for associations and non-top-level fields if possible.
+Use dedicated endpoints for associations and non top level fields if possible.
 
 **Headers:** None
 
 **Request Body:**
 
-Expects a JSON serialized Player [publicModel](./publicModels/player.go) or a [model](./models/player.go) object in the body.
+Expects a JSON serilized Player [publicModel](./publicModels/player.go) or a [model](./models/player.go) object in the body.
 
 | Name | Type   | Mandatory | Info              |
 | ---- | ------ | --------- | ----------------- |
@@ -420,9 +420,9 @@ Status: 200 OK
 ---
 
 Websocket Endpoints on first connect will send all relevant data\*¹.
-After the first transmition it will only send objects that have changes since the last transmission.
+After the first transmition it will only send objects that have changes since the last transmition.
 
-\*¹Except data that has to be actively included and would not be included normally by default.
+\*¹Except Data that has to be activly included and would not be included normally by default.
 
 E.g If by default inactive or soft deleted data|objects|rows wont be included
 it also wont be included in the initial transfer unless queried|asked for by the client.
@@ -462,62 +462,60 @@ Expects a JSON serialized array of one or more Player [publicModel](./publicMode
 **Request Body Example With all Accepted Fields:**
 
 ```json
-[
-  {
-    "ID": 4,
-    "CreatedAt": "2023-09-09T22:12:18.668123608+02:00",
-    "UpdatedAt": "2023-09-09T22:12:18.668123608+02:00",
-    "DeletedAt": null,
-    "UserID": "18a8bfd7-0f28-49be-aba6-13186fca7ec3",
-    "name": "User12",
-    "layer": "",
-    "ens": "",
-    "active": true,
-    "transform": {
-      "RotationID": 5,
-      "ScaleID": 5,
-      "PositionID": 5,
-      "position": {
-        "ID": 5,
-        "CreatedAt": "2023-09-09T22:12:18.66237607+02:00",
-        "UpdatedAt": "2023-09-09T22:12:18.66237607+02:00",
-        "DeletedAt": null,
-        "x": 1,
-        "y": 2,
-        "z": 3
-      },
-      "rotation": {
-        "ID": 5,
-        "CreatedAt": "2023-09-09T22:12:18.664758593+02:00",
-        "UpdatedAt": "2023-09-09T22:12:18.664758593+02:00",
-        "DeletedAt": null,
-        "x": 4,
-        "y": 5,
-        "z": 6,
-        "w": 0
-      },
-      "scale": {
-        "ID": 5,
-        "CreatedAt": "2023-09-09T22:12:18.666777896+02:00",
-        "UpdatedAt": "2023-09-09T22:12:18.666777896+02:00",
-        "DeletedAt": null,
-        "x": 7,
-        "y": 8,
-        "z": 9
-      }
+{
+  "ID": 4,
+  "CreatedAt": "2023-09-09T22:12:18.668123608+02:00",
+  "UpdatedAt": "2023-09-09T22:12:18.668123608+02:00",
+  "DeletedAt": null,
+  "UserID": "18a8bfd7-0f28-49be-aba6-13186fca7ec3",
+  "name": "User12",
+  "layer": "",
+  "ens": "",
+  "active": true,
+  "transform": {
+    "RotationID": 5,
+    "ScaleID": 5,
+    "PositionID": 5,
+    "position": {
+      "ID": 5,
+      "CreatedAt": "2023-09-09T22:12:18.66237607+02:00",
+      "UpdatedAt": "2023-09-09T22:12:18.66237607+02:00",
+      "DeletedAt": null,
+      "x": 1,
+      "y": 2,
+      "z": 3
     },
-    "states": [
-      {
-        "id": 1,
-        "value": 0.4
-      },
-      {
-        "id": 2,
-        "value": 0.1
-      }
-    ]
-  }
-]
+    "rotation": {
+      "ID": 5,
+      "CreatedAt": "2023-09-09T22:12:18.664758593+02:00",
+      "UpdatedAt": "2023-09-09T22:12:18.664758593+02:00",
+      "DeletedAt": null,
+      "x": 4,
+      "y": 5,
+      "z": 6,
+      "w": 0
+    },
+    "scale": {
+      "ID": 5,
+      "CreatedAt": "2023-09-09T22:12:18.666777896+02:00",
+      "UpdatedAt": "2023-09-09T22:12:18.666777896+02:00",
+      "DeletedAt": null,
+      "x": 7,
+      "y": 8,
+      "z": 9
+    }
+  },
+  "states": [
+    {
+      "id": 1,
+      "value": 0.4
+    },
+    {
+      "id": 2,
+      "value": 0.1
+    }
+  ]
+}
 ```
 
 **Response:**
@@ -824,6 +822,8 @@ Expects a JSON serialized array of one or more Player [publicModel](./publicMode
 
 Handles Position Data. Send and Receive Position Data.
 
+If no `ID` is sent it will act on and take the first Position object.
+
 **Headers:** None
 
 **Request Body:**
@@ -837,14 +837,12 @@ Expects a JSON serialized array of one or more Position [publicModel](./publicMo
 **Request Body Example With all Accepted Fields:**
 
 ```json
-[
-  {
-    "ID": 1,
-    "x": 1,
-    "y": 2,
-    "z": 3
-  }
-]
+{
+  "ID": 1,
+  "x": 1,
+  "y": 2,
+  "z": 3
+}
 ```
 
 **Response:**
@@ -914,6 +912,8 @@ Expects a JSON serialized array of one or more Position [publicModel](./publicMo
 
 Handles Rotation Data. Send and Receive Rotation Data.
 
+If no `ID` is sent it will act on and take the first Position object.
+
 **Headers:** None
 
 **Request Body:**
@@ -927,15 +927,13 @@ Expects a JSON serialized array of one or more Rotation [publicModel](./publicMo
 **Request Body Example With all Accepted Fields:**
 
 ```json
-[
-  {
-    "ID": 2,
-    "x": 444,
-    "y": 555,
-    "z": 666,
-    "w": 8
-  }
-]
+{
+  "ID": 2,
+  "x": 444,
+  "y": 555,
+  "z": 666,
+  "w": 8
+}
 ```
 
 **Response:**
@@ -991,6 +989,8 @@ Expects a JSON serialized array of one or more Rotation [publicModel](./publicMo
 
 Handles Scale Data. Send and Receive Scale Data.
 
+If no `ID` is sent it will act on and take the first object.
+
 **Headers:** None
 
 **Request Body:**
@@ -1004,14 +1004,12 @@ Expects a JSON serialized array of one or more Scale [publicModel](./publicModel
 **Request Body Example With all Accepted Fields:**
 
 ```json
-[
-  {
-    "ID": 1,
-    "x": 1,
-    "y": 2,
-    "z": 3
-  }
-]
+{
+  "ID": 1,
+  "x": 1,
+  "y": 2,
+  "z": 3
+}
 ```
 
 **Response:**
@@ -1081,6 +1079,8 @@ Expects a JSON serialized array of one or more Scale [publicModel](./publicModel
 
 Handles State Data. Send and Receive State Data.
 
+If no `ID` is sent it will act on and take the first object.
+
 **Headers:** None
 
 **Request Body:**
@@ -1094,17 +1094,15 @@ Expects a JSON serialized array of one or more State [publicModel](./publicModel
 **Request Body Example With all Accepted Fields:**
 
 ```json
-[
-  {
-    "ID": 4,
-    "CreatedAt": "2023-08-31T17:49:59.858256533+02:00",
-    "UpdatedAt": "2023-08-31T17:49:59.858256533+02:00",
-    "DeletedAt": null,
-    "PlayerID": 1,
-    "stateID": 0,
-    "value": 0.1
-  }
-]
+{
+  "ID": 4,
+  "CreatedAt": "2023-08-31T17:49:59.858256533+02:00",
+  "UpdatedAt": "2023-08-31T17:49:59.858256533+02:00",
+  "DeletedAt": null,
+  "PlayerID": 1,
+  "stateID": 0,
+  "value": 0.1
+}
 ```
 
 **Response:**
@@ -1169,10 +1167,7 @@ Handles Level Data. Send and Receive Level Data.
 
 **Request Body:**
 
-
-Expects a JSON serialized State [publicModel](./publicModels/level.go) or a [model](./models/level.go) object in the body.
-
-
+Expects a JSON serilized State [publicModel](./publicModels/level.go) or a [model](./models/level.go) object in the body.
 
 | Name | Type | Mandatory | Info              |
 | ---- | ---- | --------- | ----------------- |
@@ -1289,7 +1284,7 @@ Assuming standard config and hosting locally.
 
 **How to setup private multiplayer**
 
-1.  Create a Player in the DB. More Resources than the below example are available either in the docs folder or in this Readme.
+1.  Create a Player in the DB. More Ressources than the below example are availabe either in the docs folder or in this Readme.
 
     - #### **How To Create a Player:**
 
@@ -1428,14 +1423,14 @@ Assuming standard config and hosting locally.
     ```
 
 4.  If you want to modify your player or any other players you can modify the list of player objects that you received
-    and send the single modified (Not the entire list) player object back within the same websocket your received it from to the service you received it from.
-    Note: Sending the entire list of player objects back for update will fail and is currently not supported. You have to send a single player object back.
+    and send the singel modified (Not the entire list) player object back within the same websocket your received it from to the service you received it from.
+    Note: Sending the entire list of player objects back for update will fail and is currently not supported. You have to send a singel player object back.
 
     - #### **How to Update The Player object/s.**
 
       1. Modify and make the desired changes to the list of of Player objects that you have received in the previous step.
       2. Push a modified single player object(Not a list) to the [ws://staging.player.bloomstudio.gg/ws/player](ws://staging.player.bloomstudio.gg/ws/player) websocket
-      3. Optional: Confirm that the changes took place by looking at the next data push from the websocket.
+      3. Optional Confirm that the changes took place by looking at the next data push from the websocket.
 
 ## Examples
 
