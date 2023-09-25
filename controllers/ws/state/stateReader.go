@@ -65,6 +65,11 @@ forloop:
 
 		}
 
+		if reqState.ID <= 0 {
+			ch <- errors.New("missing/invalid ID")
+			return
+		}
+
 		c.Logger().Debugf("stateModel: %+v", stateModel)
 
 		c.Logger().Debug("Validating stateModel")

@@ -822,8 +822,6 @@ Expects a JSON serilized Player [publicModel](./publicModels/player.go) or a [mo
 
 Handles Position Data. Send and Receive Position Data.
 
-If no `ID` is sent it will act on and take the first Position object.
-
 **Headers:** None
 
 **Request Body:**
@@ -912,8 +910,6 @@ Expects a JSON serilized Position [publicModel](./publicModels/position.go) or a
 
 Handles Rotation Data. Send and Receive Rotation Data.
 
-If no `ID` is sent it will act on and take the first Position object.
-
 **Headers:** None
 
 **Request Body:**
@@ -988,8 +984,6 @@ Expects a JSON serilized Rotation [publicModel](./publicModels/rotation.go) or a
 `/scale`
 
 Handles Scale Data. Send and Receive Scale Data.
-
-If no `ID` is sent it will act on and take the first object.
 
 **Headers:** None
 
@@ -1078,8 +1072,6 @@ Expects a JSON serilized Scale [publicModel](./publicModels/scale.go) or a [mode
 `/states`
 
 Handles State Data. Send and Receive State Data.
-
-If no `ID` is sent it will act on and take the first object.
 
 **Headers:** None
 
