@@ -1,4 +1,4 @@
-package controllers
+package player
 
 import (
 	"net/http"
@@ -16,29 +16,29 @@ func GetPlayer(c echo.Context) error {
 	db := database.GetDB()
 
 	// Read the "active" query parameter from the URL
-	activeParam := c.QueryParam("include_active")
+	activeParam := c.QueryParam("active")
 
 	// Initialize a variable to store the filter value
 	var active bool
 
 	// Check if the "active" query parameter is provided and parse it as a boolean
 	switch activeParam {
-		case "true":
-			active = true
-		case "false":
-			active = false
-		case "":
-			//handle some kind of things
+	case "true":
+		active = true
+	case "false":
+		active = false
+	case "":
+		active = true
 
-		default:
-			return c.JSON(http.StatusBadRequest, "Invalid 'active' parameter value. Use 'true' or 'false'.")
+	default:
+		return c.JSON(http.StatusBadRequest, "Invalid 'active' parameter value. Use 'true' or 'false'.")
 	}
 
 	// Build the query based on the "active" filter
 	queryPlayer := &models.Player{}
 	queryPlayer.Active = active
 	players := &[]models.Player{}
-	if err := db.Preload(clause.Associations).Where(queryPlayer.Active).Find(players).Error; err != nil {
+	if err := db.Preload(clause.Associations).Where(queryPlayer).Find(players).Error; err != nil {
 		c.Logger().Error("Failed to retrieve players from the database")
 		return c.JSON(http.StatusInternalServerError, "Failed to retrieve players from the database")
 	}

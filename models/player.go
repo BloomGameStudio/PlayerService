@@ -19,6 +19,7 @@ type Player struct {
 
 	Transform `json:"transform"`
 	States    []State `json:"states"`
+	Level     Level   `json:"level"`
 }
 
 func (p Player) IsValid() bool {
@@ -40,4 +41,8 @@ func (p Player) IsValid() bool {
 	}
 
 	return true
+}
+
+func (p Player) GetPosition() Position {
+	return p.Transform.Position
 }

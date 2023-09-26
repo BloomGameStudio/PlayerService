@@ -5,6 +5,5 @@ type Scale struct {
 }
 
 func (s Scale) IsValid() bool {
-
 	return true
 }
