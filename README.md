@@ -32,7 +32,7 @@ The Bloom & LostLight Playerservice.
   - [Postman | OpenAPI](#postman--openapi)
   - [Rotation ressources](#rotation-ressources)
 
-This Project keeps a [Changelog](Changelog) in which all Versions and Notable Changes are Documentad.
+This Project keeps a [Changelog](CHANGELOG.md) in which all Versions and Notable Changes are Documentad.
 
 ## Quickstart Guide:
 
