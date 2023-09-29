@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 26-09-2032 
+
 ### Added 
 
 - Write Error Handler
@@ -47,4 +49,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 [unreleased]: https://github.com/BloomGameStudio/PlayerService/compare/staging...dev
+[0.2.0]: https://github.com/BloomGameStudio/PlayerService/releases/tag/0.2.0
 [0.1.0]: https://github.com/BloomGameStudio/PlayerService/releases/tag/0.1.0
