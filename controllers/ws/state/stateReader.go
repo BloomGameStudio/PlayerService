@@ -19,8 +19,8 @@ forloop:
 		c.Logger().Debug("Reading from the WebSocket")
 
 		// Initializer request player to bind into
-		reqStateArr := &[]publicModels.State{}
-		err := ws.ReadJSON(reqStateArr)
+		reqState := &publicModels.State{}
+		err := ws.ReadJSON(reqState)
 
 		if err != nil {
 			c.Logger().Debug("We get an error from Reading the JSON reqState")
@@ -41,45 +41,47 @@ forloop:
 			}
 		}
 
-		for _, reqState := range *reqStateArr {
+		c.Logger().Debugf("reqState from the WebSocket: %+v", reqState)
 
-			c.Logger().Debugf("reqState from the WebSocket: %+v", reqState)
-
-			c.Logger().Debug("Validating reqState")
-			if !reqState.IsValid() {
-				c.Logger().Debug("reqState is NOT valid returning")
-				ch <- errors.New("reqState Validation failed")
-				close(ch)
-				break
-			}
-
-			c.Logger().Debug("reqState is valid")
-
-			c.Logger().Debug("Initializing and populating reqState model!")
-			// Use dot annotation for promoted aka embedded fields.
-			stateModel := &models.State{}
-
-			// stateModel.Airborn = reqState.Airborn
-			// stateModel.Grounded = reqState.Grounded
-			// stateModel.Waterborn = reqState.Waterborn
-
-			if viper.GetBool("DEBUG") {
-
-			}
-
-			c.Logger().Debugf("stateModel: %+v", stateModel)
-
-			c.Logger().Debug("Validating stateModel")
-			if !stateModel.IsValid() {
-				c.Logger().Debug("stateModel is NOT valid returning")
-				ch <- errors.New("stateModel Validation failed")
-				close(ch)
-				break
-			}
-
-			c.Logger().Debug("playerModel is valid passing it to the Player handler")
-			// handlers.State(*stateModel, c) TODO: Implement StateHandler
+		c.Logger().Debug("Validating reqState")
+		if !reqState.IsValid() {
+			c.Logger().Debug("reqState is NOT valid returning")
+			ch <- errors.New("reqState Validation failed")
+			close(ch)
+			break
 		}
+
+		c.Logger().Debug("reqState is valid")
+
+		c.Logger().Debug("Initializing and populating reqState model!")
+		// Use dot annotation for promoted aka embedded fields.
+		stateModel := &models.State{}
+
+		// stateModel.Airborn = reqState.Airborn
+		// stateModel.Grounded = reqState.Grounded
+		// stateModel.Waterborn = reqState.Waterborn
+
+		if viper.GetBool("DEBUG") {
+
+		}
+
+		if reqState.ID <= 0 {
+			ch <- errors.New("missing/invalid ID")
+			return
+		}
+
+		c.Logger().Debugf("stateModel: %+v", stateModel)
+
+		c.Logger().Debug("Validating stateModel")
+		if !stateModel.IsValid() {
+			c.Logger().Debug("stateModel is NOT valid returning")
+			ch <- errors.New("stateModel Validation failed")
+			close(ch)
+			break
+		}
+
+		c.Logger().Debug("playerModel is valid passing it to the Player handler")
+		// handlers.State(*stateModel, c) TODO: Implement StateHandler
 	}
 
 }
