@@ -30,51 +30,54 @@ func playerReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX 
 			c.Logger().Debug("Reading from the WebSocket")
 
 			// Initializer request player to bind into
-			reqPlayer := &publicModels.Player{}
-			err := ws.ReadJSON(reqPlayer)
+			reqPlayerArr := &[]publicModels.Player{}
+			err := ws.ReadJSON(reqPlayerArr)
 
 			if err != nil {
 				errorHandlers.HandleReadError(c, ch, err)
 			}
 
-			c.Logger().Debugf("reqPlayer from the WebSocket: %+v", reqPlayer)
+			for _, reqPlayer := range *reqPlayerArr {
 
-			if !reqPlayer.IsValid() {
+				c.Logger().Debugf("reqPlayer from the WebSocket: %+v", reqPlayer)
 
-				ch <- errors.New("reqPlayer Validation failed")
-				return
+				if !reqPlayer.IsValid() {
+
+					ch <- errors.New("reqPlayer Validation failed")
+					return
+				}
+
+				// Use dot annotation for promoted aka embedded fields.
+				playerModel := &models.Player{}
+				// TODO: Handle UserID and production mode
+				playerModel.Position.Position = reqPlayer.Position
+				playerModel.Rotation.Rotation = reqPlayer.Rotation
+				playerModel.Scale.Scale = reqPlayer.Scale
+
+				for _, state := range reqPlayer.States {
+					playerModel.States = append(playerModel.States, models.State{State: state})
+				}
+
+				playerModel.Layer = reqPlayer.Layer
+				playerModel.Active = reqPlayer.Active
+
+				if viper.GetBool("DEBUG") {
+					// Add the Player.Name in DEBUG mode that it can be used as ID in the Player handle to avoid the Userservice dependency
+					playerModel.Name = reqPlayer.Name
+				}
+
+				c.Logger().Debugf("playerModel: %+v", playerModel)
+
+				if !playerModel.IsValid() {
+
+					// NOTE: No Timeout used here
+					ch <- errors.New("playerModel Validation failed")
+					return
+				}
+
+				c.Logger().Debug("playerModel is valid passing it to the Player handler")
+				handlers.Player(*playerModel, c) //TODO: handle errors
 			}
-
-			// Use dot annotation for promoted aka embedded fields.
-			playerModel := &models.Player{}
-			// TODO: Handle UserID and production mode
-			playerModel.Position.Position = reqPlayer.Position
-			playerModel.Rotation.Rotation = reqPlayer.Rotation
-			playerModel.Scale.Scale = reqPlayer.Scale
-
-			for _, state := range reqPlayer.States {
-				playerModel.States = append(playerModel.States, models.State{State: state})
-			}
-
-			playerModel.Layer = reqPlayer.Layer
-			playerModel.Active = reqPlayer.Active
-
-			if viper.GetBool("DEBUG") {
-				// Add the Player.Name in DEBUG mode that it can be used as ID in the Player handle to avoid the Userservice dependency
-				playerModel.Name = reqPlayer.Name
-			}
-
-			c.Logger().Debugf("playerModel: %+v", playerModel)
-
-			if !playerModel.IsValid() {
-
-				// NOTE: No Timeout used here
-				ch <- errors.New("playerModel Validation failed")
-				return
-			}
-
-			c.Logger().Debug("playerModel is valid passing it to the Player handler")
-			handlers.Player(*playerModel, c) //TODO: handle errors
 		}
 	}
 

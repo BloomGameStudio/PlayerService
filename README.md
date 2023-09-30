@@ -453,7 +453,7 @@ Send and Receive Player Data.
 
 **Request Body:**
 
-Expects a JSON serilized Player [publicModel](./publicModels/player.go) or a [model](./models/player.go) object in the body.
+Expects a JSON serialized array of one or more Player [publicModel](./publicModels/player.go) or [model](./models/player.go) objects in the body.
 
 | Name | Type   | Mandatory | Info              |
 | ---- | ------ | --------- | ----------------- |
@@ -462,60 +462,62 @@ Expects a JSON serilized Player [publicModel](./publicModels/player.go) or a [mo
 **Request Body Example With all Accepted Fields:**
 
 ```json
-{
-  "ID": 4,
-  "CreatedAt": "2023-09-09T22:12:18.668123608+02:00",
-  "UpdatedAt": "2023-09-09T22:12:18.668123608+02:00",
-  "DeletedAt": null,
-  "UserID": "18a8bfd7-0f28-49be-aba6-13186fca7ec3",
-  "name": "User12",
-  "layer": "",
-  "ens": "",
-  "active": true,
-  "transform": {
-    "RotationID": 5,
-    "ScaleID": 5,
-    "PositionID": 5,
-    "position": {
-      "ID": 5,
-      "CreatedAt": "2023-09-09T22:12:18.66237607+02:00",
-      "UpdatedAt": "2023-09-09T22:12:18.66237607+02:00",
-      "DeletedAt": null,
-      "x": 1,
-      "y": 2,
-      "z": 3
+[
+  {
+    "ID": 4,
+    "CreatedAt": "2023-09-09T22:12:18.668123608+02:00",
+    "UpdatedAt": "2023-09-09T22:12:18.668123608+02:00",
+    "DeletedAt": null,
+    "UserID": "18a8bfd7-0f28-49be-aba6-13186fca7ec3",
+    "name": "User12",
+    "layer": "",
+    "ens": "",
+    "active": true,
+    "transform": {
+      "RotationID": 5,
+      "ScaleID": 5,
+      "PositionID": 5,
+      "position": {
+        "ID": 5,
+        "CreatedAt": "2023-09-09T22:12:18.66237607+02:00",
+        "UpdatedAt": "2023-09-09T22:12:18.66237607+02:00",
+        "DeletedAt": null,
+        "x": 1,
+        "y": 2,
+        "z": 3
+      },
+      "rotation": {
+        "ID": 5,
+        "CreatedAt": "2023-09-09T22:12:18.664758593+02:00",
+        "UpdatedAt": "2023-09-09T22:12:18.664758593+02:00",
+        "DeletedAt": null,
+        "x": 4,
+        "y": 5,
+        "z": 6,
+        "w": 0
+      },
+      "scale": {
+        "ID": 5,
+        "CreatedAt": "2023-09-09T22:12:18.666777896+02:00",
+        "UpdatedAt": "2023-09-09T22:12:18.666777896+02:00",
+        "DeletedAt": null,
+        "x": 7,
+        "y": 8,
+        "z": 9
+      }
     },
-    "rotation": {
-      "ID": 5,
-      "CreatedAt": "2023-09-09T22:12:18.664758593+02:00",
-      "UpdatedAt": "2023-09-09T22:12:18.664758593+02:00",
-      "DeletedAt": null,
-      "x": 4,
-      "y": 5,
-      "z": 6,
-      "w": 0
-    },
-    "scale": {
-      "ID": 5,
-      "CreatedAt": "2023-09-09T22:12:18.666777896+02:00",
-      "UpdatedAt": "2023-09-09T22:12:18.666777896+02:00",
-      "DeletedAt": null,
-      "x": 7,
-      "y": 8,
-      "z": 9
-    }
-  },
-  "states": [
-    {
-      "id": 1,
-      "value": 0.4
-    },
-    {
-      "id": 2,
-      "value": 0.1
-    }
-  ]
-}
+    "states": [
+      {
+        "id": 1,
+        "value": 0.4
+      },
+      {
+        "id": 2,
+        "value": 0.1
+      }
+    ]
+  }
+]
 ```
 
 **Response:**
@@ -826,7 +828,7 @@ Handles Position Data. Send and Receive Position Data.
 
 **Request Body:**
 
-Expects a JSON serilized Position [publicModel](./publicModels/position.go) or a [model](./models/position.go) object in the body.
+Expects a JSON serialized array of one or more Position [publicModel](./publicModels/position.go) or [model](./models/position.go) objects in the body.
 
 | Name | Type | Mandatory | Info              |
 | ---- | ---- | --------- | ----------------- |
@@ -835,12 +837,14 @@ Expects a JSON serilized Position [publicModel](./publicModels/position.go) or a
 **Request Body Example With all Accepted Fields:**
 
 ```json
-{
-  "ID": 1,
-  "x": 1,
-  "y": 2,
-  "z": 3
-}
+[
+  {
+    "ID": 1,
+    "x": 1,
+    "y": 2,
+    "z": 3
+  }
+]
 ```
 
 **Response:**
@@ -914,7 +918,7 @@ Handles Rotation Data. Send and Receive Rotation Data.
 
 **Request Body:**
 
-Expects a JSON serilized Rotation [publicModel](./publicModels/rotation.go) or a [model](./models/rotation.go) object in the body.
+Expects a JSON serialized array of one or more Rotation [publicModel](./publicModels/rotation.go) or [model](./models/rotation.go) objects in the body.
 
 | Name | Type | Mandatory | Info              |
 | ---- | ---- | --------- | ----------------- |
@@ -923,13 +927,15 @@ Expects a JSON serilized Rotation [publicModel](./publicModels/rotation.go) or a
 **Request Body Example With all Accepted Fields:**
 
 ```json
-{
-  "ID": 2,
-  "x": 444,
-  "y": 555,
-  "z": 666,
-  "w": 8
-}
+[
+  {
+    "ID": 2,
+    "x": 444,
+    "y": 555,
+    "z": 666,
+    "w": 8
+  }
+]
 ```
 
 **Response:**
@@ -989,7 +995,7 @@ Handles Scale Data. Send and Receive Scale Data.
 
 **Request Body:**
 
-Expects a JSON serilized Scale [publicModel](./publicModels/scale.go) or a [model](./models/scale.go) object in the body.
+Expects a JSON serialized array of one or more Scale [publicModel](./publicModels/scale.go) or [model](./models/scale.go) objects in the body.
 
 | Name | Type | Mandatory | Info              |
 | ---- | ---- | --------- | ----------------- |
@@ -998,12 +1004,14 @@ Expects a JSON serilized Scale [publicModel](./publicModels/scale.go) or a [mode
 **Request Body Example With all Accepted Fields:**
 
 ```json
-{
-  "ID": 1,
-  "x": 1,
-  "y": 2,
-  "z": 3
-}
+[
+  {
+    "ID": 1,
+    "x": 1,
+    "y": 2,
+    "z": 3
+  }
+]
 ```
 
 **Response:**
@@ -1077,7 +1085,7 @@ Handles State Data. Send and Receive State Data.
 
 **Request Body:**
 
-Expects a JSON serilized State [publicModel](./publicModels/state.go) or a [model](./models/state.go) object in the body.
+Expects a JSON serialized array of one or more State [publicModel](./publicModels/state.go) or [model](./models/state.go) objects in the body.
 
 | Name | Type | Mandatory | Info              |
 | ---- | ---- | --------- | ----------------- |
@@ -1086,15 +1094,17 @@ Expects a JSON serilized State [publicModel](./publicModels/state.go) or a [mode
 **Request Body Example With all Accepted Fields:**
 
 ```json
-{
-  "ID": 4,
-  "CreatedAt": "2023-08-31T17:49:59.858256533+02:00",
-  "UpdatedAt": "2023-08-31T17:49:59.858256533+02:00",
-  "DeletedAt": null,
-  "PlayerID": 1,
-  "stateID": 0,
-  "value": 0.1
-}
+[
+  {
+    "ID": 4,
+    "CreatedAt": "2023-08-31T17:49:59.858256533+02:00",
+    "UpdatedAt": "2023-08-31T17:49:59.858256533+02:00",
+    "DeletedAt": null,
+    "PlayerID": 1,
+    "stateID": 0,
+    "value": 0.1
+  }
+]
 ```
 
 **Response:**
@@ -1159,7 +1169,7 @@ Handles Level Data. Send and Receive Level Data.
 
 **Request Body:**
 
-Expects a JSON serilized State [publicModel](./publicModels/level.go) or a [model](./models/level.go) object in the body.
+Expects a JSON serialized array of one or more Level [publicModel](./publicModels/level.go) or [model](./models/level.go) objects in the body.
 
 | Name | Type | Mandatory | Info              |
 | ---- | ---- | --------- | ----------------- |
@@ -1168,11 +1178,13 @@ Expects a JSON serilized State [publicModel](./publicModels/level.go) or a [mode
 **Request Body Example With all Accepted Fields:**
 
 ```json
-{
-  "ID": 9,
-  "PlayerID": 9,
-  "levelID": 99
-}
+[
+  {
+    "ID": 9,
+    "PlayerID": 9,
+    "levelID": 99
+  }
+]
 ```
 
 **Response:**

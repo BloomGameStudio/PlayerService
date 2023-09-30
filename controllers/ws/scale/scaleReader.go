@@ -23,39 +23,42 @@ func scaleReader(
 		case <-timeoutContext.Done():
 			return
 		default:
-			reqScale := &models.Scale{}
+			reqScaleArr := &[]models.Scale{}
 
-			err := ws.ReadJSON(reqScale)
+			err := ws.ReadJSON(reqScaleArr)
 
 			if err != nil {
 				errorHandlers.HandleReadError(c, ch, err)
 			}
 
-			if !reqScale.IsValid() {
-				ch <- errors.New("reqScale validation failed")
-				return
+			for _, reqScale := range *reqScaleArr {
+
+				if !reqScale.IsValid() {
+					ch <- errors.New("reqScale validation failed")
+					return
+				}
+
+				scaleModel := &models.Scale{}
+
+				// Accept client provided ID in DEBUG mode
+				if viper.GetBool("DEBUG") {
+					scaleModel.ID = reqScale.ID
+				}
+
+				if reqScale.ID <= 0 {
+					ch <- errors.New("missing/invalid ID")
+					return
+				}
+
+				scaleModel.Vector3 = reqScale.Vector3
+
+				if !scaleModel.IsValid() {
+					ch <- errors.New("scaleModel validation failed")
+					return
+				}
+
+				handlers.Scale(*scaleModel, c)
 			}
-
-			scaleModel := &models.Scale{}
-
-			// Accept client provided ID in DEBUG mode
-			if viper.GetBool("DEBUG") {
-				scaleModel.ID = reqScale.ID
-			}
-
-			scaleModel.Vector3 = reqScale.Vector3
-
-			if reqScale.ID <= 0 {
-				ch <- errors.New("missing/invalid ID")
-				return
-			}
-
-			if !scaleModel.IsValid() {
-				ch <- errors.New("scaleModel validation failed")
-				return
-			}
-
-			handlers.Scale(*scaleModel, c)
 		}
 	}
 }
