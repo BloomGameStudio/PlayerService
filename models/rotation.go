@@ -19,3 +19,7 @@ func (r Rotation) IsValid() bool {
 
 	return true
 }
+
+func (r Rotation) GetRotation() Rotation {
+	return r
+}
