@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed setting the first DB record`s "active" field to false after disconnect
+- Added forgotten return in playerReader.go fixing read error handling
+
 ## [0.2.0] - 26-09-2032 
 
 ### Added 
