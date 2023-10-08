@@ -16,7 +16,6 @@ type Rotation struct {
 }
 
 func (r Rotation) IsValid() bool {
-
 	return true
 }
 

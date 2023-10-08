@@ -45,7 +45,7 @@ func playerWriter(c echo.Context, socket *websocket.Conn, ch chan error, timeout
 			lastUpdateAt = time.Now() // update last update time to now only included players that have been updated
 
 			players = ws.RadiusFilter(players, c)
-			players = ws.RotationFilter(players, c)
+			// players = ws.InactiveUpdateObjects(players, c)
 
 			if len(*players) > 0 {
 
