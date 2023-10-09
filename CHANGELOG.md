@@ -7,11 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added 
+### Changed 
 
-- Array functionality for data sent to websockets
-- This allows for sending multiple objects at once to a websocket
-- Sending a single object requires sending as an array with one element
+- All Websockets
+  - Functionality for updating multiple objects at once
+  - Data received is required to be an array of one or more objects
 
 ## [0.2.0] - 26-09-2032 
 
