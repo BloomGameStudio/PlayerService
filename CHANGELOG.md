@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed 
+
+- All Websockets
+  - Functionality for updating multiple objects at once
+  - Data received is required to be an array of one or more objects
 ### Fixed
 
 - Fixed setting the first DB record`s "active" field to false after disconnect
