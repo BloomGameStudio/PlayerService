@@ -28,7 +28,7 @@ func scaleReader(
 			err := ws.ReadJSON(reqScaleArr)
 
 			if err != nil {
-				errorHandlers.HandleReadError(c, ch, err)
+				errorHandlers.HandleReadError(c, ch, err, false)
 			}
 
 			for _, reqScale := range *reqScaleArr {

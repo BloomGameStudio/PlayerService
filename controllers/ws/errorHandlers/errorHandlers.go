@@ -29,20 +29,22 @@ func HandleWriteError(c echo.Context, ch chan error, err error) {
 
 }
 
-func HandleReadError(c echo.Context, ch chan error, err error) {
+func HandleReadError(c echo.Context, ch chan error, err error, fatal bool) {
 
 	c.Logger().Debug("We get an error from Reading the JSON")
 
-	switch {
+	if fatal {
+		switch {
 
-	case websocket.IsCloseError(err, websocket.CloseNoStatusReceived):
-		HandleCloseNoStatusReceived(c, ch)
-		return
+		case websocket.IsCloseError(err, websocket.CloseNoStatusReceived):
+			HandleCloseNoStatusReceived(c, ch)
+			return
 
-	default:
-		HandleUnknownError(c, ch, err)
-		return
+		default:
+			HandleUnknownError(c, ch, err)
+			return
 
+		}
 	}
 
 }

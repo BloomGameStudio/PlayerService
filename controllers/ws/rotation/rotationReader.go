@@ -34,7 +34,7 @@ func rotationReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCT
 			err := ws.ReadJSON(reqRotArr)
 
 			if err != nil {
-				errorHandlers.HandleReadError(c, ch, err)
+				errorHandlers.HandleReadError(c, ch, err, false)
 			}
 
 			for _, reqRotation := range *reqRotArr {

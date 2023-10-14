@@ -33,7 +33,7 @@ func levelReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX c
 			err := ws.ReadJSON(reqLevel)
 
 			if err != nil {
-				errorHandlers.HandleReadError(c, ch, err)
+				errorHandlers.HandleReadError(c, ch, err, false)
 			}
 
 			if !reqLevel.IsValid() {
