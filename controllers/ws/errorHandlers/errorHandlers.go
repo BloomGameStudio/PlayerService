@@ -32,6 +32,7 @@ func HandleWriteError(c echo.Context, ch chan error, err error) {
 func HandleReadError(c echo.Context, ch chan error, err error, fatal bool) {
 
 	c.Logger().Debug("We get an error from Reading the JSON")
+	c.Logger().Error(err)
 
 	if fatal {
 		switch {
@@ -85,8 +86,6 @@ func HandleErrCloseSent(c echo.Context, ch chan error, err error) {
 }
 
 func HandleUnknownError(c echo.Context, ch chan error, err error) {
-
-	c.Logger().Error(err)
 
 	select {
 
