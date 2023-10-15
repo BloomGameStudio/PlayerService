@@ -16,7 +16,6 @@ func HandleWriteError(c echo.Context, ch chan error, err error) {
 	c.Logger().Debug("We get an error from Writing the JSON")
 
 	switch {
-
 	case errors.Is(err, websocket.ErrCloseSent):
 		HandleErrCloseSent(c, ch, err)
 		return
@@ -24,28 +23,24 @@ func HandleWriteError(c echo.Context, ch chan error, err error) {
 	default:
 		HandleUnknownError(c, ch, err)
 		return
-
 	}
 
 }
 
-func HandleReadError(c echo.Context, ch chan error, err error, fatal bool) {
+func HandleReadError(c echo.Context, ch chan error, err error) {
 
 	c.Logger().Debug("We get an error from Reading the JSON")
-	c.Logger().Error(err)
 
-	if fatal {
-		switch {
+	switch {
 
-		case websocket.IsCloseError(err, websocket.CloseNoStatusReceived):
-			HandleCloseNoStatusReceived(c, ch)
-			return
+	case websocket.IsCloseError(err, websocket.CloseNoStatusReceived):
+		HandleCloseNoStatusReceived(c, ch)
+		return
 
-		default:
-			HandleUnknownError(c, ch, err)
-			return
+	default:
+		HandleUnknownError(c, ch, err)
+		return
 
-		}
 	}
 
 }
