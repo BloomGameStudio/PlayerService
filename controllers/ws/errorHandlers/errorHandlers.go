@@ -12,17 +12,6 @@ import (
 
 var wsTimeout time.Duration = time.Second * time.Duration(viper.GetInt("WS_TIMEOUT_SECONDS"))
 
-func CheckTypeError(c echo.Context, ch chan error, err error) {
-	switch err.(type) {
-	case *json.UnmarshalTypeError:
-		c.Logger().Error(err)
-	default:
-		HandleReadError(c, ch, err)
-		return
-	}
-
-}
-
 func HandleWriteError(c echo.Context, ch chan error, err error) {
 
 	c.Logger().Debug("We get an error from Writing the JSON")
