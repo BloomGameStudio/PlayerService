@@ -36,12 +36,7 @@ func UpdatePlayer(c echo.Context) error {
 	}
 
 	// Parse the JSON request body into a separate variable
-	updateData := struct {
-		Layer string `json:"layer"`
-		Position models.Position `json:"position"`
-		Rotation models.Rotation `json:"rotation"`
-		Scale    models.Scale    `json:"scale"`
-	}{}
+	updateData := models.Player{}
 
 	if err := c.Bind(&updateData); err != nil {
 		c.Logger().Error("Failed to parse update data")
