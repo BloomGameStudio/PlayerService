@@ -2,7 +2,6 @@ package level
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 
 	"github.com/BloomGameStudio/PlayerService/controllers/ws/errorHandlers"
@@ -34,13 +33,7 @@ func levelReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX c
 			err := ws.ReadJSON(reqLevel)
 
 			if err != nil {
-				switch err.(type) {
-				case *json.UnmarshalTypeError:
-					c.Logger().Error(err)
-				default:
-					errorHandlers.HandleReadError(c, ch, err)
-					return
-				}
+				errorHandlers.HandleReadError(c, ch, err)
 			}
 
 			if !reqLevel.IsValid() {

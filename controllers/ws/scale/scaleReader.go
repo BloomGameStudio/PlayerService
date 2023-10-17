@@ -26,15 +26,9 @@ func scaleReader(
 			reqScaleArr := &[]models.Scale{}
 
 			err := ws.ReadJSON(reqScaleArr)
-			unmarshalError := errors.New("json: cannot unmarshal object into Go value of type []models.Position")
 
 			if err != nil {
-				if errors.Is(err, unmarshalError) {
-					c.Logger().Debug("")
-				} else {
-					errorHandlers.HandleReadError(c, ch, err)
-					return
-				}
+				errorHandlers.HandleReadError(c, ch, err)
 			}
 
 			for _, reqScale := range *reqScaleArr {

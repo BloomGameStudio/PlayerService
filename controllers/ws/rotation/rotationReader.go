@@ -2,7 +2,6 @@ package rotation
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 
 	"github.com/BloomGameStudio/PlayerService/controllers/ws/errorHandlers"
@@ -35,13 +34,7 @@ func rotationReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCT
 			err := ws.ReadJSON(reqRotArr)
 
 			if err != nil {
-				switch err.(type) {
-				case *json.UnmarshalTypeError:
-					c.Logger().Error(err)
-				default:
-					errorHandlers.HandleReadError(c, ch, err)
-					return
-				}
+				errorHandlers.HandleReadError(c, ch, err)
 			}
 
 			for _, reqRotation := range *reqRotArr {

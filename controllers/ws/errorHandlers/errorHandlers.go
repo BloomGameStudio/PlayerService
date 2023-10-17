@@ -1,6 +1,7 @@
 package errorHandlers
 
 import (
+	"encoding/json"
 	"errors"
 	"time"
 
@@ -10,6 +11,17 @@ import (
 )
 
 var wsTimeout time.Duration = time.Second * time.Duration(viper.GetInt("WS_TIMEOUT_SECONDS"))
+
+func CheckTypeError(c echo.Context, ch chan error, err error) {
+	switch err.(type) {
+	case *json.UnmarshalTypeError:
+		c.Logger().Error(err)
+	default:
+		HandleReadError(c, ch, err)
+		return
+	}
+
+}
 
 func HandleWriteError(c echo.Context, ch chan error, err error) {
 
@@ -29,18 +41,23 @@ func HandleWriteError(c echo.Context, ch chan error, err error) {
 
 func HandleReadError(c echo.Context, ch chan error, err error) {
 
-	c.Logger().Debug("We get an error from Reading the JSON")
-
-	switch {
-
-	case websocket.IsCloseError(err, websocket.CloseNoStatusReceived):
-		HandleCloseNoStatusReceived(c, ch)
-		return
-
+	switch err.(type) {
+	case *json.UnmarshalTypeError:
+		c.Logger().Error(err)
 	default:
-		HandleUnknownError(c, ch, err)
-		return
+		c.Logger().Debug("We get an error from Reading the JSON")
 
+		switch {
+
+		case websocket.IsCloseError(err, websocket.CloseNoStatusReceived):
+			HandleCloseNoStatusReceived(c, ch)
+			return
+
+		default:
+			HandleUnknownError(c, ch, err)
+			return
+
+		}
 	}
 
 }
