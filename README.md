@@ -16,6 +16,7 @@
     - [Rest Endpoints](#rest-endpoints)
         - [CreatePlayer](#createplayer)
         - [GetPlayer](#getplayer)
+        - [UpdatePlayer](#updateplayer)
         - [DeletePlayer](#deleteplayer)
     - [Websocket Endpoints](#websocket-endpoints)
         - [Position](#position)
@@ -379,6 +380,98 @@ http://127.0.0.1:1323/player?active=true
 ]
 ```
 
+##### UpdatePlayer
+`PUT /player`
+
+Handles Updating Player Model Data. If no data is sent in JSON format then no data will be updated and saved into the database for a player.
+
+If no `ID` is sent an error will be returned.
+
+**Headers:** None
+
+**Query Parameters:**
+
+Name   | Type | Mandatory | 
+-------|------|-----------|
+ID     | INT |    YES     |
+
+
+**Request URL Example With all Accepted Query Params:**
+```html
+http://127.0.0.1:1323/1
+```
+
+```json
+{
+	"transform": {
+		"rotation": {
+			"x": 5,
+			"y": 5,
+			"z": 6,
+			"w": 9
+		},
+		"position": {
+			"x": 1,
+			"y": 2,
+			"z": 6
+		}
+	}
+}
+
+
+``` 
+**Response:**
+```html
+Status: 200 OK
+```
+
+```json
+{
+	"ID": 6,
+	"CreatedAt": "2023-10-18T02:57:40.873503774Z",
+	"UpdatedAt": "2023-10-18T04:15:40.226135068Z",
+	"DeletedAt": null,
+	"UserID": "af4151db-c47a-4b42-ba2c-405e07e130d4",
+	"name": "joelsy",
+	"layer": "",
+	"ens": "",
+	"active": true,
+	"transform": {
+		"RotationID": 10,
+		"ScaleID": 0,
+		"PositionID": 13,
+		"position": {
+			"ID": 13,
+			"CreatedAt": "2023-10-18T04:15:40.187169123Z",
+			"UpdatedAt": "2023-10-18T04:15:40.187169123Z",
+			"DeletedAt": null,
+			"x": 1,
+			"y": 2,
+			"z": 6
+		},
+		"rotation": {
+			"ID": 10,
+			"CreatedAt": "2023-10-18T04:15:40.212436566Z",
+			"UpdatedAt": "2023-10-18T04:15:40.212436566Z",
+			"DeletedAt": null,
+			"x": 5,
+			"y": 5,
+			"z": 6,
+			"w": 9
+		},
+		"scale": {
+			"ID": 0,
+			"CreatedAt": "0001-01-01T00:00:00Z",
+			"UpdatedAt": "0001-01-01T00:00:00Z",
+			"DeletedAt": null,
+			"x": 0,
+			"y": 0,
+			"z": 0
+		}
+	},
+	"states": []
+}
+```
 
 ##### DeletePlayer
 `DELETE /player`
