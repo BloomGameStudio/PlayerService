@@ -12,7 +12,7 @@ import (
 func UpdatePlayer(c echo.Context) error {
 
 	//we send the entire player struct to the client
-	
+
 	// Open the database connection
 	db := database.GetDB()
 
@@ -26,8 +26,10 @@ func UpdatePlayer(c echo.Context) error {
 	// Convert playerIDStr to uint
 	playerID, err := strconv.ParseUint(playerIDStr, 10, 64)
 	if err != nil {
+    	c.Logger().Error("Failed to parse player ID")
     	return c.JSON(http.StatusBadRequest, "Invalid id parameter value. Use a valid ID")
 	}
+
 
 	// Find the player from ID given
 	queryPlayer := &models.Player{}
@@ -37,16 +39,15 @@ func UpdatePlayer(c echo.Context) error {
 
 	// Parse the JSON request body into a separate variable
 	updateData := models.Player{}
-
 	if err := c.Bind(&updateData); err != nil {
 		c.Logger().Error("Failed to parse update data")
 		return c.JSON(http.StatusBadRequest, "Invalid update data")
 	}
 
 	// Update the specific fields in queryPlayer
-	queryPlayer.Position = updateData.Position
-	queryPlayer.Rotation = updateData.Rotation
-	queryPlayer.Scale = updateData.Scale
+	queryPlayer.Transform.Position = updateData.Transform.Position
+	queryPlayer.Transform.Rotation = updateData.Transform.Rotation
+	queryPlayer.Transform.Scale = updateData.Transform.Scale
 
 	// Save the updated player
 	if err := db.Save(queryPlayer).Error; err != nil {
@@ -56,5 +57,6 @@ func UpdatePlayer(c echo.Context) error {
 
 	// Return the updated player as a JSON response
 	return c.JSON(http.StatusOK, queryPlayer)
+
 }
 
