@@ -6,7 +6,7 @@ type State struct {
 	// publicModels.State holds public fields for the State model.
 
 	gorm.Model         // NOTE: COMEBACK: Accepting ID from Client Should only be for debug mode
-	StateID    uint    `json:"stateID"`
+	StateID    uint    `json:"ID"`
 	Value      float64 `json:"value"`
 	// Grounded, Airborn, Waterborn bool
 }
