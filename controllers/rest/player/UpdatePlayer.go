@@ -9,9 +9,8 @@ import (
 	"gorm.io/gorm/clause"
 	"strconv"
 )
-func UpdatePlayer(c echo.Context) error {
 
-	//we send the entire player struct to the client
+func UpdatePlayer(c echo.Context) error {
 
 	// Open the database connection
 	db := database.GetDB()
@@ -45,9 +44,20 @@ func UpdatePlayer(c echo.Context) error {
 	}
 
 	// Update the specific fields in queryPlayer
+	queryPlayer.Layer = updateData.Layer
+	queryPlayer.ENS = updateData.ENS
+	queryPlayer.Active = updateData.Active
 	queryPlayer.Transform.Position = updateData.Transform.Position
 	queryPlayer.Transform.Rotation = updateData.Transform.Rotation
 	queryPlayer.Transform.Scale = updateData.Transform.Scale
+
+	/*queryPlayer.States = []models.State{}
+
+	for _, state := range updateData.States {
+		queryPlayer.States = append(queryPlayer.States, models.State{
+			State: state.State,
+		})
+	}*/ 
 
 	// Save the updated player
 	if err := db.Save(queryPlayer).Error; err != nil {
