@@ -391,20 +391,29 @@ http://127.0.0.1:1323/player?active=true
 
 `DELETE /player`
 
-Soft Deletes a Player.
+Soft Deletes a Player. At least *one* query parameter needs to be used.
+Any of the query params can be combined.
 
 **Headers:** None
 
-**Path Parameters:**
+**Query Parameters:**
 
 | Name | Type | Mandatory |
 | ---- | ---- | --------- |
-| ID   | INT  | YES       |
+|  ID  | Int  | Optional  |
+| Name | Str  | Optional  |
+| UserID| UUID| Optional  |
 
-**Request URL Example With all Accepted Path Params:**
+**Request URL Example With all Accepted Query Params:**
 
 ```html
-http://127.0.0.1:1323/player/:ID
+http://127.0.0.1:1323/player?id=1
+
+http://127.0.0.1:1323/player?userid=203b08d4-2f58-465f-852c-3df6bca9ff61
+
+http://127.0.0.1:1323/player?name=sarahtonein
+
+http://127.0.0.1:1323/player?name=sarahtonein&userid=203b08d4-2f58-465f-852c-3df6bca9ff61
 ```
 
 **Response:**
