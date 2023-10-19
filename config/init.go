@@ -13,9 +13,10 @@ func Init() {
 
 	// TODO: Cleanup Migration
 	db := database.GetDB()
-	// This will Auto Migrate all its nested structs
+
 	db.AutoMigrate(&models.Player{})
 	db.AutoMigrate(&models.State{})
+	db.AutoMigrate(&models.Level{})
 
 }
 
@@ -25,4 +26,5 @@ func ViperInit() {
 	// Setting Default Values
 	viper.SetDefault("DEBUG", true)
 	viper.SetDefault("PORT", "1323") // Has to be a string as Echo expects a string
+	viper.SetDefault("WS_TIMEOUT_SECONDS", 10)
 }

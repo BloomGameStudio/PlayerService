@@ -5,9 +5,12 @@ import (
 	"github.com/BloomGameStudio/PlayerService/controllers/rest/player"
 	"github.com/BloomGameStudio/PlayerService/controllers/rest/version"
 	"github.com/BloomGameStudio/PlayerService/controllers/ws/hello"
+	"github.com/BloomGameStudio/PlayerService/controllers/ws/level"
 	wsPlayer "github.com/BloomGameStudio/PlayerService/controllers/ws/player"
 	"github.com/BloomGameStudio/PlayerService/controllers/ws/position"
 	"github.com/BloomGameStudio/PlayerService/controllers/ws/rotation"
+	"github.com/BloomGameStudio/PlayerService/controllers/ws/scale"
+	"github.com/BloomGameStudio/PlayerService/controllers/ws/state"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/spf13/viper"
@@ -56,9 +59,11 @@ func main() {
 	// End of Web Socket testing routes
 
 	ws.GET("player", wsPlayer.Player)
-	// ws.GET("state", controllers.State)
+	ws.GET("state", state.State)
 	ws.GET("position", position.Position)
 	ws.GET("rotation", rotation.Rotation)
+	ws.GET("scale", scale.Scale)
+	ws.GET("level", level.Level)
 
 	port := viper.GetString("PORT")
 	e.Logger.Fatal(e.Start(":" + port))

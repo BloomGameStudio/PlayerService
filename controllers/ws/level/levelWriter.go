@@ -1,4 +1,4 @@
-package rotation
+package level
 
 import (
 	"context"
@@ -13,7 +13,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-func rotationWriter(c echo.Context, socket *websocket.Conn, ch chan error, timeoutCTX context.Context) {
+func levelWriter(c echo.Context, socket *websocket.Conn, ch chan error, timeoutCTX context.Context) {
 
 	// Open DB outside of the loop
 	db := database.GetDB()
@@ -29,19 +29,16 @@ func rotationWriter(c echo.Context, socket *websocket.Conn, ch chan error, timeo
 			return
 
 		default:
-			// TODO: The Entire Rotation Model is being sent. It may contain information that should not be sent!
+			// TODO: The Entire Level Model is being sent. It may contain information that should not be sent!
 
-			c.Logger().Debug("Getting rotations from the database")
+			levels := &[]models.Level{}
 
-			rotations := &[]models.Rotation{}
+			db.Where("updated_at > ?", lastUpdateAt).Find(levels)
+			lastUpdateAt = time.Now() // update last update time to now only included objects that have been updated
 
-			db.Where("updated_at > ?", lastUpdateAt).Find(rotations)
-			lastUpdateAt = time.Now() // update last update time to now only included rotations that have been updated
+			if len(*levels) > 0 {
 
-			if len(*rotations) > 0 {
-
-				c.Logger().Debug("Pushing the rotations to the WebSocket")
-				err := socket.WriteJSON(rotations)
+				err := socket.WriteJSON(levels)
 
 				if err != nil {
 					switch {
