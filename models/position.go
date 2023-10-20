@@ -7,6 +7,7 @@ import (
 
 type Position struct {
 	gorm.Model
+	PlayerID uint
 	publicModels.Position
 	// Normalized   *Position `json:"normalized,omitempty"`
 	// Magnitude    float64   `json:"magnitude"`
