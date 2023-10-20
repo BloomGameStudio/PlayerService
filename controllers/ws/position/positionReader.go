@@ -34,7 +34,9 @@ func positionReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCT
 			err := ws.ReadJSON(reqPosArr)
 
 			if err != nil {
-				errorHandlers.HandleReadError(c, ch, err)
+				if errorHandlers.HandleReadError(c, ch, err) {
+					return
+				}
 			}
 
 			for _, reqPosition := range *reqPosArr {

@@ -35,7 +35,9 @@ func playerReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX 
 			err := ws.ReadJSON(reqPlayerArr)
 
 			if err != nil {
-				errorHandlers.HandleReadError(c, ch, err)
+				if errorHandlers.HandleReadError(c, ch, err) {
+					return
+				}
 			}
 
 			for _, reqPlayer := range *reqPlayerArr {

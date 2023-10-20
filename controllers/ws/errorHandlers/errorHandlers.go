@@ -28,11 +28,12 @@ func HandleWriteError(c echo.Context, ch chan error, err error) {
 
 }
 
-func HandleReadError(c echo.Context, ch chan error, err error) {
+func HandleReadError(c echo.Context, ch chan error, err error) bool {
 
 	switch err.(type) {
 	case *json.UnmarshalTypeError:
 		c.Logger().Error(err)
+		return false
 	default:
 		c.Logger().Debug("We get an error from Reading the JSON")
 
@@ -40,11 +41,11 @@ func HandleReadError(c echo.Context, ch chan error, err error) {
 
 		case websocket.IsCloseError(err, websocket.CloseNoStatusReceived):
 			HandleCloseNoStatusReceived(c, ch)
-			return
+			return true
 
 		default:
 			HandleUnknownError(c, ch, err)
-			return
+			return true
 
 		}
 	}
