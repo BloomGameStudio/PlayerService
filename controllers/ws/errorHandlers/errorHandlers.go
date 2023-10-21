@@ -1,7 +1,6 @@
 package errorHandlers
 
 import (
-	"encoding/json"
 	"errors"
 	"time"
 
@@ -28,26 +27,20 @@ func HandleWriteError(c echo.Context, ch chan error, err error) {
 
 }
 
-func HandleReadError(c echo.Context, ch chan error, err error) bool {
+func HandleReadError(c echo.Context, ch chan error, err error) {
 
-	switch err.(type) {
-	case *json.UnmarshalTypeError:
-		c.Logger().Error(err)
-		return false
+	c.Logger().Debug("We get an error from Reading the JSON")
+
+	switch {
+
+	case websocket.IsCloseError(err, websocket.CloseNoStatusReceived):
+		HandleCloseNoStatusReceived(c, ch)
+		return
+
 	default:
-		c.Logger().Debug("We get an error from Reading the JSON")
+		HandleUnknownError(c, ch, err)
+		return
 
-		switch {
-
-		case websocket.IsCloseError(err, websocket.CloseNoStatusReceived):
-			HandleCloseNoStatusReceived(c, ch)
-			return true
-
-		default:
-			HandleUnknownError(c, ch, err)
-			return true
-
-		}
 	}
 
 }

@@ -2,6 +2,7 @@ package player
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 
 	"github.com/BloomGameStudio/PlayerService/controllers/ws/errorHandlers"
@@ -35,7 +36,11 @@ func playerReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX 
 			err := ws.ReadJSON(reqPlayerArr)
 
 			if err != nil {
-				if errorHandlers.HandleReadError(c, ch, err) {
+				switch err.(type) {
+				case *json.UnmarshalTypeError:
+					c.Logger().Error(err)
+				default:
+					errorHandlers.HandleReadError(c, ch, err)
 					return
 				}
 			}

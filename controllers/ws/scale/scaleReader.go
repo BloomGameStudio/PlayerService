@@ -2,6 +2,7 @@ package scale
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 
 	"github.com/BloomGameStudio/PlayerService/controllers/ws/errorHandlers"
@@ -28,7 +29,11 @@ func scaleReader(
 			err := ws.ReadJSON(reqScaleArr)
 
 			if err != nil {
-				if errorHandlers.HandleReadError(c, ch, err) {
+				switch err.(type) {
+				case *json.UnmarshalTypeError:
+					c.Logger().Error(err)
+				default:
+					errorHandlers.HandleReadError(c, ch, err)
 					return
 				}
 			}
