@@ -7,7 +7,7 @@ type Player struct {
 	Name   string `json:"name" gorm:"uniqueIndex"`
 	Layer  string `json:"layer"`
 	ENS    string `json:"ens"`
-	Active bool   `json:"active" gorm:"default:1"` // default to true only tested on SQLite might behave differently on other databases
+	Active *bool   `json:"active,omitempty" gorm:"default:1"` // default to true only tested on SQLite might behave differently on other databases
 
 	Level     Level `json:"level" gorm:"-:all"`
 	Transform `json:"transform" gorm:"-:all"`
