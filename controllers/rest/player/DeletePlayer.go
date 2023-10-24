@@ -20,9 +20,14 @@ func DeletePlayer(c echo.Context) error {
 
     queryPlayer := &models.Player{}
 
+    uuidRegex, err := regexp.Compile(`^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$`)
+    if err != nil {
+    // Handle the error if the regex fails to compile
+        return c.JSON(http.StatusInternalServerError, "Internal server error")
+    }
     for _, part := range parts {
-        matchUUID, _ := regexp.MatchString(`^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$`, part)
-        if matchUUID {
+        // Use the compiled regex to match the string
+        if uuidRegex.MatchString(part) {
             uuidValue, err := uuid.FromString(part)
             if err != nil {
                 return c.JSON(http.StatusBadRequest, "Invalid UUID format")
