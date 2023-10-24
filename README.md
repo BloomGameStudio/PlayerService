@@ -389,37 +389,50 @@ http://127.0.0.1:1323/player?active=true
 
 ##### DeletePlayer
 
-`DELETE /player`
+`DELETE /player{identifier}`
 
-Soft Deletes a Player. At least *one* query parameter needs to be used.
-Any of the query params can be combined.
+Soft Deletes a Player. Clients can use multiple values in the URL structure by utilizing a colon :
+
+This distinguishes separate multiple values within a single path parameter.
 
 **Headers:** None
 
-**Query Parameters:**
+**Path Parameters:**
 
-| Name | Type | Mandatory |
-| ---- | ---- | --------- |
-|  ID  | Int  | Optional  |
-| Name | Str  | Optional  |
-| UserID| UUID| Optional  |
+| Name       |  Type   | Mandatory |
+| ---------- |  -----  | --------- |
+| Identifier | String  | Yes
 
 **Request URL Example With all Accepted Query Params:**
 
 ```html
-http://127.0.0.1:1323/player?id=1
-
-http://127.0.0.1:1323/player?userid=203b08d4-2f58-465f-852c-3df6bca9ff61
-
-http://127.0.0.1:1323/player?name=sarahtonein
-
-http://127.0.0.1:1323/player?name=sarahtonein&userid=203b08d4-2f58-465f-852c-3df6bca9ff61
+http://localhost:1323/player/37:User1
+http://localhost:1323/player/0b22df53-aba7-425f-bfea-84bf6f6e19c5:23
 ```
 
 **Response:**
 
 ```html
 Status: 200 OK
+Body: "Player deleted successfully"
+```
+
+**Errors:**
+
+```html
+Status: 500 Internal Server Error
+Body: "Failed to delete player from the database"
+```
+
+```html
+Status: 404 Not Found
+Body: "No player found to delete"
+
+```
+
+```html
+Status: 400 Bad Request
+Body: "Invalid identifier format"
 ```
 
 ---

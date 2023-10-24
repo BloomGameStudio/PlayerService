@@ -26,7 +26,6 @@ func DeletePlayer(c echo.Context) error {
         }
         queryPlayer.Name = parts[1]
     } else {
-        // Handle the error or decide on another strategy.
         return c.JSON(http.StatusBadRequest, "Invalid identifier format")
     }
 
