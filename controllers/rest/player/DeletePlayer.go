@@ -5,8 +5,8 @@ import (
 	"github.com/BloomGameStudio/PlayerService/database"
 	"github.com/BloomGameStudio/PlayerService/models"
 	"github.com/labstack/echo/v4"
-    uuid "github.com/satori/go.uuid"
 	"strconv"
+    "strings"
 	
 
 )
@@ -15,41 +15,19 @@ func DeletePlayer(c echo.Context) error {
     // Open the database connection
     db := database.GetDB()
 
-    idParam := c.QueryParam("id")
-    nameParam := c.QueryParam("name")
-    userIDParam := c.QueryParam("userid")
+    identifier := c.Param("identifier")
+    parts := strings.Split(identifier, ":")
 
     queryPlayer := &models.Player{}
 
-    //check ID
-    if idParam != "" {
-        idUint, err := strconv.ParseUint(idParam, 10, 64)
-        if err != nil {
-            c.Logger().Error("Invalid 'id' parameter value. Use a valid numeric ID.")
-            return c.JSON(http.StatusBadRequest, "Invalid 'id' parameter value. Use a valid numeric ID.")
+    if len(parts) == 2 {
+        if idUint, err := strconv.ParseUint(parts[0], 10, 64); err == nil {
+            queryPlayer.ID = uint(idUint)
         }
-        queryPlayer.ID = uint(idUint)
-    }
-
-    // Check Name
-    if nameParam != "" {
-        queryPlayer.Name = nameParam
-    }
-
-    // Check UserID
-    if userIDParam != "" {
-        userID, err := uuid.FromString(userIDParam)
-        if err != nil {
-            c.Logger().Error("Invalid 'userid' parameter value. Use a valid UUID.")
-            return c.JSON(http.StatusBadRequest, "Invalid 'userid' parameter value. Use a valid UUID.")
-        }
-        queryPlayer.UserID = userID
-    }
-    
-
-    // Make sure at least one parameter is provided
-    if idParam == "" && nameParam == "" && userIDParam == "" {
-        return c.JSON(http.StatusBadRequest, "Provide at least one parameter to delete a player")
+        queryPlayer.Name = parts[1]
+    } else {
+        // Handle the error or decide on another strategy.
+        return c.JSON(http.StatusBadRequest, "Invalid identifier format")
     }
 
     // Delete the player and check if any rows were affected
@@ -61,6 +39,6 @@ func DeletePlayer(c echo.Context) error {
     if result.RowsAffected == 0 {
         return c.JSON(http.StatusNotFound, "No player found to delete")
     }
-
+ 
     return c.JSON(http.StatusOK, "Player deleted successfully")
 }
