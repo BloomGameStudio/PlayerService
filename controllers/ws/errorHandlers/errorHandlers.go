@@ -16,7 +16,6 @@ func HandleWriteError(c echo.Context, ch chan error, err error) {
 	c.Logger().Debug("We get an error from Writing the JSON")
 
 	switch {
-
 	case errors.Is(err, websocket.ErrCloseSent):
 		HandleErrCloseSent(c, ch, err)
 		return
@@ -24,7 +23,6 @@ func HandleWriteError(c echo.Context, ch chan error, err error) {
 	default:
 		HandleUnknownError(c, ch, err)
 		return
-
 	}
 
 }
@@ -83,8 +81,6 @@ func HandleErrCloseSent(c echo.Context, ch chan error, err error) {
 }
 
 func HandleUnknownError(c echo.Context, ch chan error, err error) {
-
-	c.Logger().Error(err)
 
 	select {
 

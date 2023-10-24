@@ -2,6 +2,7 @@ package position
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 
 	"github.com/BloomGameStudio/PlayerService/controllers/ws/errorHandlers"
@@ -34,7 +35,13 @@ func positionReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCT
 			err := ws.ReadJSON(reqPosArr)
 
 			if err != nil {
-				errorHandlers.HandleReadError(c, ch, err)
+				switch err.(type) {
+				case *json.UnmarshalTypeError:
+					c.Logger().Error(err)
+				default:
+					errorHandlers.HandleReadError(c, ch, err)
+					return
+				}
 			}
 
 			for _, reqPosition := range *reqPosArr {
