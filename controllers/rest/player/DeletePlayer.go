@@ -6,13 +6,13 @@ import (
 	"github.com/BloomGameStudio/PlayerService/models"
 	"github.com/labstack/echo/v4"
 	"strconv"
+    "regexp"
     "strings"
-	
+    uuid "github.com/satori/go.uuid"
 
 )
 
 func DeletePlayer(c echo.Context) error {
-    // Open the database connection
     db := database.GetDB()
 
     identifier := c.Param("identifier")
@@ -20,16 +20,30 @@ func DeletePlayer(c echo.Context) error {
 
     queryPlayer := &models.Player{}
 
-    if len(parts) == 2 {
-        if idUint, err := strconv.ParseUint(parts[0], 10, 64); err == nil {
-            queryPlayer.ID = uint(idUint)
+    for _, part := range parts {
+        matchUUID, _ := regexp.MatchString(`^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$`, part)
+        if matchUUID {
+            uuidValue, err := uuid.FromString(part)
+            if err != nil {
+                return c.JSON(http.StatusBadRequest, "Invalid UUID format")
+            }
+            queryPlayer.UserID = uuidValue
+            continue
         }
-        queryPlayer.Name = parts[1]
-    } else {
+        
+        if idUint, err := strconv.ParseUint(part, 10, 64); err == nil {
+            queryPlayer.ID = uint(idUint)
+            continue
+        }
+        
+        // If the part is not UUID or ID, then it's assumed to be a name.
+        queryPlayer.Name = part
+    }
+
+    if len(parts) < 1 || len(parts) > 3 {
         return c.JSON(http.StatusBadRequest, "Invalid identifier format")
     }
 
-    // Delete the player and check if any rows were affected
     result := db.Where(queryPlayer).Delete(&models.Player{})
     if result.Error != nil {
         c.Logger().Error("Failed to delete player from the database")
@@ -38,6 +52,6 @@ func DeletePlayer(c echo.Context) error {
     if result.RowsAffected == 0 {
         return c.JSON(http.StatusNotFound, "No player found to delete")
     }
- 
+
     return c.JSON(http.StatusOK, "Player deleted successfully")
 }
