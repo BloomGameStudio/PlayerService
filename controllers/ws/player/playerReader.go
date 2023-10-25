@@ -62,13 +62,16 @@ func playerReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX 
 				playerModel.Layer = reqPlayer.Layer
 				playerModel.Active = reqPlayer.Active
 
-				if reqPlayer.Active != nil && *reqPlayer.Active {
-					trueVal := true
-					playerModel.Active = &trueVal
-				} else {
-					falseVal := false
-					playerModel.Active = &falseVal
+				if reqPlayer.Active != nil {
+					if *reqPlayer.Active {
+						trueVal := true
+						playerModel.Active = &trueVal
+					} else {
+						falseVal := false
+						playerModel.Active = &falseVal
+					}
 				}
+				
 
 				
 				if viper.GetBool("DEBUG") {
