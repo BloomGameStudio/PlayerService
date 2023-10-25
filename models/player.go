@@ -17,9 +17,11 @@ type Player struct {
 
 	publicModels.Player
 
+	ModelID uint `json:"model_id"`
+	MaterialID uint `json: "material_id"`
 	Transform `json:"transform"`
 	States    []State `json:"states"`
-	PModel    `json:"model"`
+	ModelData Model `json:"model"`
 }
 
 func (p Player) IsValid() bool {
