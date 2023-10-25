@@ -3,8 +3,8 @@ package rotation
 import (
 	"context"
 	"errors"
-	"time"
 
+	"github.com/BloomGameStudio/PlayerService/controllers/ws/errorHandlers"
 	"github.com/BloomGameStudio/PlayerService/handlers"
 	"github.com/BloomGameStudio/PlayerService/models"
 	"github.com/gorilla/websocket"
@@ -29,76 +29,59 @@ func rotationReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCT
 
 			// Initializer request player to bind into
 			// NOTE: We are using a private model here TODO: Change to public model in production or handle this case
-			reqRotation := &models.Rotation{}
+			reqRotArr := &[]models.Rotation{}
 
-			err := ws.ReadJSON(reqRotation)
+			err := ws.ReadJSON(reqRotArr)
 
 			if err != nil {
-				c.Logger().Debug("We get an error from Reading the JSON reqRotation")
-				switch {
+				errorHandlers.HandleReadError(c, ch, err)
+			}
 
-				case websocket.IsCloseError(err, websocket.CloseNoStatusReceived):
-					select {
+			for _, reqRotation := range *reqRotArr {
 
-					case ch <- nil:
-						c.Logger().Debug("Sent nil to Reader channel")
-						return
+				c.Logger().Debugf("reqRotation from the WebSocket: %+v", reqRotation)
 
-					case <-time.After(time.Second * 10):
-						c.Logger().Debug("Timed out sending nil to Reader channel")
-						return
-					}
-
-				default:
-					c.Logger().Error(err)
-					select {
-					case ch <- err:
-						c.Logger().Debug("Sent error to Reader channel")
-						return
-					case <-time.After(time.Second * 10):
-						c.Logger().Debug("Timed out sending error to Reader channel")
-						return
-					}
+				c.Logger().Debug("Validating reqRotation")
+				if !reqRotation.IsValid() {
+					c.Logger().Debug("reqRotation is NOT valid returning")
+					// NOTE: no Chan Timeout used
+					ch <- errors.New("reqRotation Validation failed")
+					return
 				}
+
+				c.Logger().Debug("reqRotation is valid")
+
+				c.Logger().Debug("Initializing and populating rotation model!")
+				// Use dot annotation for promoted aka embedded fields.
+				rotationModel := &models.Rotation{}
+				// TODO: Handle ID and production mode
+
+				if viper.GetBool("DEBUG") {
+					// Accept client provided ID in DEBUG mode
+					rotationModel.ID = reqRotation.ID
+				}
+
+				if reqRotation.ID <= 0 {
+					ch <- errors.New("missing/invalid ID")
+					return
+				}
+
+				rotationModel.Vector3 = reqRotation.Vector3
+				rotationModel.W = reqRotation.W
+
+				c.Logger().Debugf("rotationModel: %+v", rotationModel)
+
+				c.Logger().Debug("Validating rotationModel")
+				if !rotationModel.IsValid() {
+					c.Logger().Debug("rotationModel is NOT valid returning")
+					// NOTE: no Chan Timeout used
+					ch <- errors.New("rotationModel Validation failed")
+					return
+				}
+
+				c.Logger().Debug("rotationModel is valid passing it to the Rotation handler")
+				handlers.Rotation(*rotationModel, c)
 			}
-
-			c.Logger().Debugf("reqRotation from the WebSocket: %+v", reqRotation)
-
-			c.Logger().Debug("Validating reqRotation")
-			if !reqRotation.IsValid() {
-				c.Logger().Debug("reqRotation is NOT valid returning")
-				// NOTE: no Chan Timeout used
-				ch <- errors.New("reqRotation Validation failed")
-				return
-			}
-
-			c.Logger().Debug("reqRotation is valid")
-
-			c.Logger().Debug("Initializing and populating rotation model!")
-			// Use dot annotation for promoted aka embedded fields.
-			rotationModel := &models.Rotation{}
-			// TODO: Handle ID and production mode
-
-			if viper.GetBool("DEBUG") {
-				// Accept client provided ID in DEBUG mode
-				rotationModel.ID = reqRotation.ID
-			}
-
-			rotationModel.Vector3 = reqRotation.Vector3
-			rotationModel.W = reqRotation.W
-
-			c.Logger().Debugf("rotationModel: %+v", rotationModel)
-
-			c.Logger().Debug("Validating rotationModel")
-			if !rotationModel.IsValid() {
-				c.Logger().Debug("rotationModel is NOT valid returning")
-				// NOTE: no Chan Timeout used
-				ch <- errors.New("rotationModel Validation failed")
-				return
-			}
-
-			c.Logger().Debug("rotationModel is valid passing it to the Poisition handler")
-			handlers.Rotation(*rotationModel, c)
 		}
 	}
 }
