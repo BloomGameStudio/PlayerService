@@ -37,7 +37,9 @@ func playerWriter(c echo.Context, socket *websocket.Conn, ch chan error, timeout
 			c.Logger().Debug("Getting all players from the database")
 			// Get all active players from the database
 			queryPlayer := &models.Player{}
-			queryPlayer.Active = true
+			active := true
+			queryPlayer.Active = &active
+
 
 			players := &[]models.Player{}
 
