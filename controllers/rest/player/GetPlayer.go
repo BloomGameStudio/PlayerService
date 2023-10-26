@@ -28,7 +28,7 @@ func GetPlayer(c echo.Context) error {
 	case "false":
 		active = false
 	case "":
-		//handle some kind of things
+		active = true
 
 	default:
 		return c.JSON(http.StatusBadRequest, "Invalid 'active' parameter value. Use 'true' or 'false'.")
@@ -38,7 +38,7 @@ func GetPlayer(c echo.Context) error {
 	queryPlayer := &models.Player{}
 	queryPlayer.Active = active
 	players := &[]models.Player{}
-	if err := db.Preload(clause.Associations).Where(queryPlayer.Active).Find(players).Error; err != nil {
+	if err := db.Preload(clause.Associations).Where(queryPlayer).Find(players).Error; err != nil {
 		c.Logger().Error("Failed to retrieve players from the database")
 		return c.JSON(http.StatusInternalServerError, "Failed to retrieve players from the database")
 	}

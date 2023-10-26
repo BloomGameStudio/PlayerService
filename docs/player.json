@@ -1,0 +1,70 @@
+{
+	"ID": 5,
+	"CreatedAt": "2023-08-23T03:21:25.851291264Z",
+	"UpdatedAt": "2023-08-23T19:58:27.650440633Z",
+	"DeletedAt": null,
+	"UserID": "56413875-ef57-4076-bbbc-19afcaa86485",
+	"name": "tommy_pickles",
+	"layer": "",
+	"ens": "",
+	"active": true,
+	"transform": {
+		"PositionID": 4,
+		"position": {
+			"ID": 4,
+			"CreatedAt": "2023-08-23T04:31:20.14923353Z",
+			"UpdatedAt": "2023-08-23T19:58:27.647357603Z",
+			"DeletedAt": null,
+			"x": 3,
+			"y": 6,
+			"z": 1555
+		},
+		"RotationID": 2,
+		"rotation": {
+			"ID": 2,
+			"CreatedAt": "2023-08-23T04:31:20.15075822Z",
+			"UpdatedAt": "2023-08-23T19:58:27.648627322Z",
+			"DeletedAt": null,
+			"x": 4,
+			"y": 5,
+			"z": 6,
+			"w": 7
+		},
+		"ScaleID": 2,
+		"scale": {
+			"ID": 2,
+			"CreatedAt": "2023-08-23T04:31:20.151939645Z",
+			"UpdatedAt": "2023-08-23T19:58:27.649665591Z",
+			"DeletedAt": null,
+			"x": 1,
+			"y": 1,
+			"z": 1
+		}
+	},
+	"level": {
+		"level_id": 2
+	},
+	"states": {
+		"active": {
+			"all": 48392,
+			"movement": 3488,
+			"health": 348,
+			"attack": 34245,
+			"defense": 3258,
+			"mount": 234,
+			"environment": 48124,
+			"size": 0,
+			"intraMovement": 580,
+			"party": 23958
+		},
+		"speed": {
+			"x": 4,
+			"y": 5,
+			"z": 6
+		}
+	},
+	"model": {
+		"id": 1,
+		"material_id": 2
+	}
+}
