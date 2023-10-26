@@ -3,11 +3,12 @@ package player
 import (
 	"net/http"
 
+	"strconv"
+
 	"github.com/BloomGameStudio/PlayerService/database"
 	"github.com/BloomGameStudio/PlayerService/models"
 	"github.com/labstack/echo/v4"
 	"gorm.io/gorm/clause"
-	"strconv"
 )
 
 func UpdatePlayer(c echo.Context) error {
@@ -51,13 +52,13 @@ func UpdatePlayer(c echo.Context) error {
 	queryPlayer.Transform.Rotation = updateData.Transform.Rotation
 	queryPlayer.Transform.Scale = updateData.Transform.Scale
 
-	/*queryPlayer.States = []models.State{}
+	queryPlayer.States = []models.State{}
 
 	for _, state := range updateData.States {
 		queryPlayer.States = append(queryPlayer.States, models.State{
 			State: state.State,
 		})
-	}*/ 
+	} 
 
 	// Save the updated player
 	if err := db.Save(queryPlayer).Error; err != nil {
