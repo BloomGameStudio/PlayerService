@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/BloomGameStudio/PlayerService/controllers/ws"
+	"github.com/BloomGameStudio/PlayerService/controllers/ws/errorHandlers"
 	"github.com/BloomGameStudio/PlayerService/database"
 	"github.com/BloomGameStudio/PlayerService/models"
 	"github.com/gorilla/websocket"
@@ -85,31 +86,16 @@ func positionWriter(c echo.Context, socket *websocket.Conn, ch chan error, timeo
 					switch {
 
 					case errors.Is(err, websocket.ErrCloseSent):
-						c.Logger().Debug("WEbsocket ErrCloseSent")
+						c.Logger().Debug("Websocket ErrCloseSent")
 
-						select {
-
-						case ch <- nil:
-							c.Logger().Debug("Sent nil to Writer channel")
-							return
-						case <-time.After(wsTimeout):
-							c.Logger().Debug("Timed out sending nil to Writer channel")
-							return
-						}
+						errorHandlers.SendNilOrTimeout(c, ch)
 
 					default:
-						c.Logger().Error(err)
+						errorHandlers.SendErrOrTimeout(c, ch, err)
 
-						select {
-
-						case ch <- err:
-							c.Logger().Debug("Sent error to Writer channel")
-							return
-						case <-time.After(wsTimeout):
-							c.Logger().Debug("Timed out sending error to Writer channel")
-							return
-						}
 					}
+
+					return
 				}
 			}
 

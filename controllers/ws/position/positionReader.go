@@ -46,8 +46,6 @@ func positionReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCT
 
 			for _, reqPosition := range *reqPosArr {
 
-				positionModel := &models.Position{}
-
 				c.Logger().Debugf("reqPosition from the WebSocket: %+v", reqPosition)
 
 				c.Logger().Debug("Validating reqPosition")
@@ -62,7 +60,7 @@ func positionReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCT
 
 				c.Logger().Debug("Initializing and populating position model!")
 				// Use dot annotation for promoted aka embedded fields.
-
+				positionModel := &models.Position{}
 				// TODO: Handle ID and production mode
 
 				if viper.GetBool("DEBUG") {

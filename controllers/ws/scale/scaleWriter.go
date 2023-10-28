@@ -5,6 +5,7 @@ import (
 	"errors"
 	"time"
 
+	"github.com/BloomGameStudio/PlayerService/controllers/ws/errorHandlers"
 	"github.com/BloomGameStudio/PlayerService/database"
 	"github.com/BloomGameStudio/PlayerService/models"
 	"github.com/gorilla/websocket"
@@ -58,21 +59,18 @@ func scaleWriter(
 
 				if err != nil {
 					switch {
+
 					case errors.Is(err, websocket.ErrCloseSent):
-						select {
-						case ch <- nil:
-							return
-						case <-time.After(wsTimeout):
-							return
-						}
+						c.Logger().Debug("Websocket ErrCloseSent")
+
+						errorHandlers.SendNilOrTimeout(c, ch)
+
 					default:
-						select {
-						case ch <- err:
-							return
-						case <-time.After(wsTimeout):
-							return
-						}
+						errorHandlers.SendErrOrTimeout(c, ch, err)
+
 					}
+
+					return
 				}
 			}
 

@@ -20,7 +20,6 @@ func playerWriter(c echo.Context, socket *websocket.Conn, ch chan error, timeout
 	db := database.GetDB()
 	lastUpdateAt := time.Date(1900, 1, 1, 0, 0, 0, 0, time.UTC) // Use some ver old date for first update to get all players in the initial push
 	lastPingCheck := time.Now()
-	wsTimeout := time.Second * time.Duration(viper.GetInt("WS_TIMEOUT_SECONDS"))
 
 	for {
 		select {
@@ -68,30 +67,16 @@ func playerWriter(c echo.Context, socket *websocket.Conn, ch chan error, timeout
 					switch {
 
 					case errors.Is(err, websocket.ErrCloseSent):
-						c.Logger().Debug("WEbsocket ErrCloseSent")
-						select {
+						c.Logger().Debug("Websocket ErrCloseSent")
 
-						case ch <- nil:
-							c.Logger().Debug("Sent nil to Writer channel")
-							return
-						case <-time.After(wsTimeout):
-							c.Logger().Debug("Timed out sending nil to Writer channel")
-							return
-						}
+						errorHandlers.SendNilOrTimeout(c, ch)
 
 					default:
-						c.Logger().Error(err)
+						errorHandlers.SendErrOrTimeout(c, ch, err)
 
-						select {
-
-						case ch <- err:
-							c.Logger().Debug("Sent error to Writer channel")
-							return
-						case <-time.After(wsTimeout):
-							c.Logger().Debug("Timed out sending error to Writer channel")
-							return
-						}
 					}
+
+					return
 				}
 			}
 
