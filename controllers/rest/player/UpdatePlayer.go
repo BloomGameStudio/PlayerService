@@ -8,30 +8,31 @@ import (
 	"github.com/BloomGameStudio/PlayerService/database"
 	"github.com/BloomGameStudio/PlayerService/models"
 	"github.com/labstack/echo/v4"
+	uuid "github.com/satori/go.uuid"
 	"gorm.io/gorm/clause"
 )
 
 func UpdatePlayer(c echo.Context) error {
 
-	// Open the database connection
 	db := database.GetDB()
 
-	// Parameters
-	playerIDStr := c.Param("id")
+	identifier := c.Param("identifier")
 
-	if playerIDStr == "" {
-		return c.JSON(http.StatusBadRequest, "Invalid id parameter value. Use a valid ID")
+	if identifier == "" {
+		return c.JSON(http.StatusBadRequest, "Invalid identifier parameter")
 	}
 
-	// Convert playerIDStr to uint
-	playerID, err := strconv.ParseUint(playerIDStr, 10, 64)
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, "Invalid id parameter value. Use a valid ID")
+	var queryPlayer models.Player
+
+	if uid, err := uuid.FromString(identifier); err == nil {
+		queryPlayer.UserID = uid
+	} else if id, err := strconv.Atoi(identifier); err == nil {
+		queryPlayer.ID = uint(id)
+	} else {
+		queryPlayer.Name = identifier
 	}
 
-	// Find the player from ID given
-	queryPlayer := &models.Player{}
-	if err := db.Preload(clause.Associations).Where(playerID).First(queryPlayer).Error; err != nil {
+	if err := db.Preload(clause.Associations).Where(&queryPlayer).First(&queryPlayer).Error; err != nil {
 		return c.JSON(http.StatusNotFound, "Failed to retrieve player from the database")
 	}
 
@@ -44,6 +45,7 @@ func UpdatePlayer(c echo.Context) error {
 	// Update the specific fields in queryPlayer
 	queryPlayer.Layer = updateData.Layer
 	queryPlayer.ENS = updateData.ENS
+	c.Logger().Debug("Player Active status before update:", queryPlayer.Active)
 	queryPlayer.Active = updateData.Active
 	queryPlayer.Transform.Position = updateData.Transform.Position
 	queryPlayer.Transform.Rotation = updateData.Transform.Rotation
@@ -58,7 +60,7 @@ func UpdatePlayer(c echo.Context) error {
 	}
 
 	// Save the updated player
-	if err := db.Save(queryPlayer).Error; err != nil {
+	if err := db.Save(&queryPlayer).Error; err != nil {
 		return c.JSON(http.StatusInternalServerError, "Failed to update player in the database")
 	}
 

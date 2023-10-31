@@ -35,7 +35,7 @@ func main() {
 	e.Use(middleware.Recover())
 
 	// HTTP routes
-	
+
 	// HTTP Testing routes
 	e.GET("ping", ping.Ping)
 	e.GET("v", version.Version)
@@ -44,7 +44,7 @@ func main() {
 	// Player routes
 	e.GET("player", player.GetPlayer)
 	e.POST("player", player.CreatePlayer)
-	e.PUT("/player/:id", player.UpdatePlayer)
+	e.PUT("player/:identifier", player.UpdatePlayer)
 	// End Player routes
 
 	// End of HTTP routes
