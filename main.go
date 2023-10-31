@@ -5,6 +5,7 @@ import (
 	"github.com/BloomGameStudio/PlayerService/controllers/rest/player"
 	"github.com/BloomGameStudio/PlayerService/controllers/rest/version"
 	"github.com/BloomGameStudio/PlayerService/controllers/ws/hello"
+	"github.com/BloomGameStudio/PlayerService/controllers/ws/model"
 	wsPlayer "github.com/BloomGameStudio/PlayerService/controllers/ws/player"
 	"github.com/BloomGameStudio/PlayerService/controllers/ws/position"
 	"github.com/BloomGameStudio/PlayerService/controllers/ws/rotation"
@@ -58,6 +59,7 @@ func main() {
 	// ws.GET("state", controllers.State)
 	ws.GET("position", position.Position)
 	ws.GET("rotation", rotation.Rotation)
+	ws.GET("model", model.Model)
 
 	port := viper.GetString("PORT")
 	e.Logger.Fatal(e.Start(":" + port))
