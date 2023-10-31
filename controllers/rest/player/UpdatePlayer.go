@@ -45,7 +45,6 @@ func UpdatePlayer(c echo.Context) error {
 	// Update the specific fields in queryPlayer
 	queryPlayer.Layer = updateData.Layer
 	queryPlayer.ENS = updateData.ENS
-	c.Logger().Debug("Player Active status before update:", queryPlayer.Active)
 	queryPlayer.Active = updateData.Active
 	queryPlayer.Transform.Position = updateData.Transform.Position
 	queryPlayer.Transform.Rotation = updateData.Transform.Rotation
