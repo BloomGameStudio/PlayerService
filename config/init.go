@@ -16,6 +16,7 @@ func Init() {
 	// This will Auto Migrate all its nested structs
 	db.AutoMigrate(&models.Player{})
 	db.AutoMigrate(&models.State{})
+	db.AutoMigrate(&models.Model{})
 
 }
 
