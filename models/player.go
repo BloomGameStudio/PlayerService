@@ -16,7 +16,7 @@ type Player struct {
 	UserID uuid.UUID `gorm:"type:uuid;uniqueIndex"`
 
 	publicModels.Player
-	ModelDataID uint
+	ModelDataID uint  `json:"-"`
 	ModelData   Model `json:"model"`
 	Transform   `json:"transform"`
 	States      []State `json:"states"`

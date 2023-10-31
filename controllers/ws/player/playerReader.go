@@ -93,7 +93,7 @@ func playerReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX 
 			playerModel.Layer = reqPlayer.Layer
 			playerModel.Active = reqPlayer.Active
 
-			playerModel.ModelData.Data = reqPlayer.Model
+			playerModel.ModelData.ModelData = reqPlayer.Model
 
 			if viper.GetBool("DEBUG") {
 				// Add the Player.Name in DEBUG mode that it can be used as ID in the Player handle to avoid the Userservice dependency
