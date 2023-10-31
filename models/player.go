@@ -16,12 +16,10 @@ type Player struct {
 	UserID uuid.UUID `gorm:"type:uuid;uniqueIndex"`
 
 	publicModels.Player
-
-	ModelID uint `json:"model_id"`
-	MaterialID uint `json: "material_id"`
-	Transform `json:"transform"`
-	States    []State `json:"states"`
-	ModelData Model `json:"model"`
+	ModelDataID uint
+	ModelData   Model `json:"model"`
+	Transform   `json:"transform"`
+	States      []State `json:"states"`
 }
 
 func (p Player) IsValid() bool {

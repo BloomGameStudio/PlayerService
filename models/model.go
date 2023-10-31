@@ -10,7 +10,7 @@ type Model struct {
 	Data publicModels.Model
 }
 
-func (m Model) isValid() bool {
-	
+func (m Model) IsValid() bool {
+
 	return true
 }
