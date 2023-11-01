@@ -50,24 +50,15 @@ func CreatePlayer(c echo.Context) error {
 	playerModel.Position.Position = reqPlayer.Position
 	playerModel.Rotation.Rotation = reqPlayer.Rotation
 	playerModel.Scale.Scale = reqPlayer.Scale
-
-	// Set the Model fields
 	playerModel.ModelData.ModelData = reqPlayer.Model
-
-	// Save ModelData first
-	db := database.GetDB()
-	if result := db.Create(&playerModel.ModelData); result.Error != nil {
-		c.Logger().Errorf("Failed to save ModelData: %v", result.Error)
-		return c.JSON(http.StatusInternalServerError, "Failed to save ModelData")
-	}
 
 	if !playerModel.IsValid() {
 		c.Logger().Debug("playerModel is NOT valid")
 		return c.JSON(http.StatusBadRequest, "bad request")
 	}
 	c.Logger().Debug("playerModel is valid")
-
-	// Now, save the main Player model
+	db := database.GetDB()
+	//Save the Player model
 	if result := db.Create(&playerModel); result.Error != nil {
 		c.Logger().Errorf("Failed to save playerModel: %v", result.Error)
 		return c.JSON(http.StatusInternalServerError, "Failed to save player")
