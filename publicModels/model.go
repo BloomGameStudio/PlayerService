@@ -1,6 +1,6 @@
 package publicModels
 
 type Model struct {
-	ModelID uint `json:"id"`
-	MaterialID uint `json:"material_id"`
+	ModelID    uint `gorm:"column:model_id" json:"id"`
+	MaterialID uint `gorm:"column:material_id" json:"material_id"`
 }

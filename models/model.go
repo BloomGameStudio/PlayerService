@@ -7,7 +7,7 @@ import (
 
 type Model struct {
 	gorm.Model
-	ModelData publicModels.Model `json:"model"`
+	ModelData publicModels.Model `gorm:"embedded" json:"model"`
 }
 
 func (m Model) IsValid() bool {
