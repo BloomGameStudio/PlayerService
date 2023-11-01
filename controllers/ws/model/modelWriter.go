@@ -9,6 +9,7 @@ import (
 	"github.com/BloomGameStudio/PlayerService/models"
 	"github.com/gorilla/websocket"
 	"github.com/labstack/echo/v4"
+	"github.com/spf13/viper"
 )
 
 func modelWriter(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX context.Context) {
@@ -90,6 +91,12 @@ func modelWriter(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX c
 				}
 
 				lastPingCheck = time.Now()
+			}
+			c.Logger().Debug("Finished accessing the database. Sleeping")
+			time.Sleep(time.Millisecond * 1)
+
+			if viper.GetBool("DEBUG") {
+				time.Sleep(time.Second / 20)
 			}
 		}
 	}
