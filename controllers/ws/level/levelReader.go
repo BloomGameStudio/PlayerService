@@ -29,9 +29,9 @@ func levelReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX c
 
 			// Initializer model to bind into
 			// NOTE: We are using a private model here TODO: Change to public model in production or handle this case
-			reqLevel := &models.Level{}
+			reqLevelArr := &[]models.Level{}
 
-			err := ws.ReadJSON(reqLevel)
+			err := ws.ReadJSON(reqLevelArr)
 
 			if err != nil {
 				switch err.(type) {
@@ -43,33 +43,36 @@ func levelReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX c
 				}
 			}
 
-			if !reqLevel.IsValid() {
-				// NOTE: no Chan Timeout used
-				ch <- errors.New("reqLevel Validation failed")
-				return
+			for _, reqLevel := range *reqLevelArr {
+
+				if !reqLevel.IsValid() {
+					// NOTE: no Chan Timeout used
+					ch <- errors.New("reqLevel Validation failed")
+					return
+				}
+
+				// Use dot annotation for promoted aka embedded fields.
+				levelModel := &models.Level{}
+				// TODO: Handle ID and production mode
+
+				if viper.GetBool("DEBUG") {
+					// Accept client provided ID and PlayerID in DEBUG mode
+					levelModel.ID = reqLevel.ID
+					levelModel.PlayerID = reqLevel.PlayerID
+
+				}
+
+				levelModel.LevelID = reqLevel.LevelID
+
+				if !levelModel.IsValid() {
+					// NOTE: no Chan Timeout used
+					ch <- errors.New("levelModel Validation failed")
+					return
+				}
+
+				c.Logger().Debug("rotationModel is valid passing it to the Poisition handler")
+				handlers.Level(*levelModel, c)
 			}
-
-			// Use dot annotation for promoted aka embedded fields.
-			levelModel := &models.Level{}
-			// TODO: Handle ID and production mode
-
-			if viper.GetBool("DEBUG") {
-				// Accept client provided ID and PlayerID in DEBUG mode
-				levelModel.ID = reqLevel.ID
-				levelModel.PlayerID = reqLevel.PlayerID
-
-			}
-
-			levelModel.LevelID = reqLevel.LevelID
-
-			if !levelModel.IsValid() {
-				// NOTE: no Chan Timeout used
-				ch <- errors.New("levelModel Validation failed")
-				return
-			}
-
-			c.Logger().Debug("rotationModel is valid passing it to the Poisition handler")
-			handlers.Level(*levelModel, c)
 		}
 	}
 }
