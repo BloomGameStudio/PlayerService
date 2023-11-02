@@ -16,7 +16,7 @@ func UpdatePlayer(c echo.Context) error {
 
 	db := database.GetDB()
 
-	identifier := c.Param("identifier")
+	identifier := c.Param("id")
 
 	if identifier == "" {
 		return c.JSON(http.StatusBadRequest, "Invalid identifier parameter")
