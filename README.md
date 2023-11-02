@@ -389,11 +389,9 @@ http://127.0.0.1:1323/player?active=true
 
 ##### DeletePlayer
 
-`DELETE /player{identifier}`
+`DELETE /player/:id`
 
-Soft Deletes a Player. Clients can use multiple values in the URL structure by utilizing a colon :
-
-This distinguishes separate multiple values within a single path parameter.
+Soft Deletes a Player from the database
 
 **Headers:** None
 
@@ -406,8 +404,9 @@ This distinguishes separate multiple values within a single path parameter.
 **Request URL Example With all Accepted Query Params:**
 
 ```html
-http://localhost:1323/player/37:User1
-http://localhost:1323/player/0b22df53-aba7-425f-bfea-84bf6f6e19c5:23
+http://localhost:1323/player/37
+http://localhost:1323/player/0b22df53-aba7-425f-bfea-84bf6f6e19c5
+http://localhost:1323/player/bobthecat
 ```
 
 **Response:**
@@ -421,18 +420,13 @@ Body: "Player deleted successfully"
 
 ```html
 Status: 500 Internal Server Error
-Body: "Failed to delete player from the database"
+Body: "Failed to delete player"
 ```
 
 ```html
 Status: 404 Not Found
-Body: "No player found to delete"
+Body: "Player not found"
 
-```
-
-```html
-Status: 400 Bad Request
-Body: "Invalid identifier format"
 ```
 
 ---

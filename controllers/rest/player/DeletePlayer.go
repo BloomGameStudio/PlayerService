@@ -14,7 +14,7 @@ import (
 func DeletePlayer(c echo.Context) error {
 	db := database.GetDB()
 
-	identifier := c.Param("identifier")
+	identifier := c.Param("id")
 	var queryPlayer models.Player
 
 	if uid, err := uuid.FromString(identifier); err == nil {
