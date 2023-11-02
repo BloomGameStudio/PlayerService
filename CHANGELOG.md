@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 02-11-2023
+
+### Added
+
+- New `UpdatePlayer` endpoint (`PUT /player/:id`) allowing updates to a player in the database by various identifiers like UUID, ID, and Name. Also added associated error handling and response formats.
+
 ### Changed 
 
 - Documentation in the README.md
@@ -62,5 +68,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 [unreleased]: https://github.com/BloomGameStudio/PlayerService/compare/staging...dev
+[0.3.0]: https://github.com/BloomGameStudio/PlayerService/releases/tag/0.3.0
 [0.2.0]: https://github.com/BloomGameStudio/PlayerService/releases/tag/0.2.0
 [0.1.0]: https://github.com/BloomGameStudio/PlayerService/releases/tag/0.1.0
