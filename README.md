@@ -434,28 +434,44 @@ Body: ""Failed to update player in the database""
 
 ##### DeletePlayer
 
-`DELETE /player`
+`DELETE /player/:id`
 
-Soft Deletes a Player.
+Soft Deletes a Player from the database
 
 **Headers:** None
 
 **Path Parameters:**
 
-| Name | Type | Mandatory |
-| ---- | ---- | --------- |
-| ID   | INT  | YES       |
+| Name       |  Type   | Mandatory |
+| ---------- |  -----  | --------- |
+| Identifier | String  | Yes
 
-**Request URL Example With all Accepted Path Params:**
+**Request URL Example With all Accepted Query Params:**
 
 ```html
-http://127.0.0.1:1323/player/:ID
+http://localhost:1323/player/37
+http://localhost:1323/player/0b22df53-aba7-425f-bfea-84bf6f6e19c5
+http://localhost:1323/player/bobthecat
 ```
 
 **Response:**
 
 ```html
 Status: 200 OK
+Body: "Player deleted successfully"
+```
+
+**Errors:**
+
+```html
+Status: 500 Internal Server Error
+Body: "Failed to delete player"
+```
+
+```html
+Status: 404 Not Found
+Body: "Player not found"
+
 ```
 
 ---
