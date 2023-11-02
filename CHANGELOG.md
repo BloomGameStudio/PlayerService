@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `DeletePlayer` endpoint:
   - Implemented functionality to soft delete players using the `DELETE /player` route.
-  - Supports deletion using one or more query parameters: `ID`, `Name`, and `UserID`.
+  - Supports deletion using a path parameter, acceptable identifiers: `ID`, `Name`, and `UserID`.
   - Documentation for the added endpoint.
   
 ### Changed
