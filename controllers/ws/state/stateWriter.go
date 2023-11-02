@@ -5,62 +5,119 @@ import (
 	"errors"
 	"time"
 
+	"github.com/BloomGameStudio/PlayerService/controllers/ws"
 	"github.com/BloomGameStudio/PlayerService/database"
 	"github.com/BloomGameStudio/PlayerService/models"
 	"github.com/gorilla/websocket"
 	"github.com/labstack/echo/v4"
 	"github.com/spf13/viper"
-	"gorm.io/gorm/clause"
 )
 
-// NOTE: We may need to adjust default configuration and values
-// examples:
-// https://github.com/gorilla/websocket/blob/master/examples/command/main.go
+func stateWriter(c echo.Context, socket *websocket.Conn, ch chan error, timeoutCTX context.Context) {
 
-func stateWriter(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX context.Context) {
-
-	// TODO: Retrivement of data needs to be defined
-	// In Memory storage of the states has been agreed on
 	// Open DB outside of the loop
 	db := database.GetDB()
-forloop:
+	lastUpdateAt := time.Date(1900, 1, 1, 0, 0, 0, 0, time.UTC) // Use some very old date for the first update
+	lastPingCheck := time.Now()
+	wsTimeout := time.Second * time.Duration(viper.GetInt("WS_TIMEOUT_SECONDS"))
+
 	for {
+		select {
 
-		c.Logger().Debug("Writing to the WebSocket")
-		c.Logger().Debug("Getting all States from the database")
-		// Get all the states from the database
-		states := &models.State{} // COMBAK: Data structure TBD
-		db.Preload(clause.Associations).Find(states)
+		case <-timeoutCTX.Done():
+			c.Logger().Debug("stateWriter Timeout Context Done")
+			return
 
-		// Find/Filter the Changes that occured in the states and send them
+		default:
 
-		c.Logger().Debug("Pushing the states to the WebSocket")
-		err := ws.WriteJSON(states)
-		if err != nil {
+			c.Logger().Debug("Getting states from the database")
 
-			switch {
+			states := &[]models.State{}
 
-			case errors.Is(err, websocket.ErrCloseSent):
-				c.Logger().Debug("WEbsocket ErrCloseSent")
-				ch <- nil
-				close(ch)
-				break forloop
+			db.Where("updated_at > ?", lastUpdateAt).Find(states)
+			lastUpdateAt = time.Now() // update the last update time
 
-			default:
-				c.Logger().Error(err)
-				ch <- err
-				close(ch)
-				break forloop
+			if len(*states) > 0 {
+
+				c.Logger().Debug("Pushing the states to the WebSocket")
+				err := socket.WriteJSON(states)
+
+				if err != nil {
+					switch {
+					case errors.Is(err, websocket.ErrCloseSent):
+
+						select {
+						case ch <- nil:
+							c.Logger().Debug("Sent nil to Writer channel")
+							return
+
+						case <-time.After(wsTimeout):
+							c.Logger().Debug("Timed out sending nil to Writer channel")
+							return
+						}
+
+					default:
+						c.Logger().Error(err)
+
+						select {
+						case ch <- err:
+							c.Logger().Debug("Sent error to Writer channel")
+							return
+
+						case <-time.After(wsTimeout):
+							c.Logger().Debug("Timed out sending error to Writer channel")
+							return
+						}
+					}
+				}
+
+			} else if lastPingCheck.Add(time.Second * 1).Before(time.Now()) {
+				c.Logger().Debug("Running Ping Check")
+
+				err := socket.WriteControl(websocket.PingMessage, []byte{}, time.Now().Add(time.Second*2))
+
+				if err != nil {
+					switch {
+
+					case errors.Is(err, websocket.ErrCloseSent):
+						c.Logger().Debug("WebSocket ErrCloseSent")
+
+						select {
+						case ch <- nil:
+							c.Logger().Debug("Sent nil to Writer channel")
+							return
+
+						case <-time.After(wsTimeout):
+							c.Logger().Debug("Timed out sending nil to Writer channel")
+							return
+						}
+
+					default:
+						c.Logger().Error(err)
+
+						select {
+						case ch <- err:
+							c.Logger().Debug("Sent error to Writer channel")
+							return
+
+						case <-time.After(wsTimeout):
+							c.Logger().Debug("Timed out sending error to Writer channel")
+							return
+						}
+					}
+				}
 			}
-		}
-		c.Logger().Debug("Finished writing to the WebSocket Sleeping now")
 
-		// Update Interval NOTE: setting depending on the server and its performance either increase or decrease it.
-		time.Sleep(time.Millisecond * 1)
+			c.Logger().Debug("Finished writing to the WebSocket. Sleeping now.")
 
-		if viper.GetBool("DEBUG") {
-			// Sleep for 1 second in DEBUG mode to not get fludded with data
-			time.Sleep(time.Second * 1)
+			// Update Interval
+			rate := ws.GetRate(c)
+			time.Sleep(time.Millisecond * time.Duration(rate))
+
+			if viper.GetBool("DEBUG") {
+				// Sleep for a fraction of a second in DEBUG mode
+				time.Sleep(time.Second / 20)
+			}
 		}
 	}
 }

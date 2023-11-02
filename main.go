@@ -7,7 +7,6 @@ import (
 	"github.com/BloomGameStudio/PlayerService/controllers/ws/hello"
 	"github.com/BloomGameStudio/PlayerService/controllers/ws/level"
 	wsPlayer "github.com/BloomGameStudio/PlayerService/controllers/ws/player"
-	"github.com/BloomGameStudio/PlayerService/controllers/ws/state"
 	"github.com/BloomGameStudio/PlayerService/controllers/ws/position"
 	"github.com/BloomGameStudio/PlayerService/controllers/ws/rotation"
 	"github.com/BloomGameStudio/PlayerService/controllers/ws/scale"
