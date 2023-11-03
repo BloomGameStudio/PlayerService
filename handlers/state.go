@@ -39,8 +39,8 @@ func State(state models.State, c echo.Context) error {
 	// log.Print(helpers.PrettyStructNoError(databasePlayerModel))
 	logger.Debug("Updating the databaseStateModel")
 
-	databaseStateModel.State = state.State
-
+	databaseStateModel.StateID = state.StateID
+	databaseStateModel.Value = state.Value
 	logger.Debugf("Updated databaseStateModel: %v", databaseStateModel)
 	logger.Debug("Saving database State")
 
