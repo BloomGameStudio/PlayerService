@@ -45,6 +45,7 @@ func main() {
 	e.GET("player", player.GetPlayer)
 	e.POST("player", player.CreatePlayer)
 	e.PUT("player/:id", player.UpdatePlayer)
+	e.DELETE("/player/:id", player.DeletePlayer)
 	// End Player routes
 
 	// End of HTTP routes

@@ -13,7 +13,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - New `UpdatePlayer` endpoint (`PUT /player/:id`) allowing updates to a player in the database by various identifiers like UUID, ID, and Name. Also added associated error handling and response formats.
 
-### Changed 
+### Added
+
+- `DeletePlayer` endpoint:
+  - Implemented functionality to soft delete players using the `DELETE /player` route.
+  - Supports deletion using a single path parameter, acceptable identifiers: `ID`, `Name`, and `UserID`.
+  - Documentation for the added endpoint.
+  
+### Changed
 
 - Documentation in the README.md
 
@@ -26,19 +33,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed setting the first DB record`s "active" field to false after disconnect
 - Added forgotten return in playerReader.go fixing read error handling
 
-## [0.2.0] - 26-09-2032 
+## [0.2.0] - 26-09-2023
 
-### Added 
+### Added
 
 - Write Error Handler
 - Error Close Error Handler
 
 - Level Model & Websocket
-  - https://github.com/BloomGameStudio/PlayerService/issues/33 
+
+  - https://github.com/BloomGameStudio/PlayerService/issues/33
   - This implements the `/level` websocket endpoint with full CRUD functionality for "Level".
     and adds "Level" read functionality to the `/player` websocket endpoint.
-   
+
   - Implemented & Added:
+
     - Level Websocket Controller
     - Level Read Functionality in the `/player` Socket Endpoint
     - Level Reader
@@ -48,7 +57,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - Level Public Model
     - Level Model in Player Model
     - Level Model in Public Player Model
-  
+
   - Note: This does not Implement "Level" Write Functionality in the `/player` Websocket Endpoint.
 
 - Scale Websocket
@@ -57,15 +66,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
--   playerWriter Error Handling
--   Websocket timeout duration moved to the `WS_TIMEOUT_SECONDS` environment variable
+- playerWriter Error Handling
+- Websocket timeout duration moved to the `WS_TIMEOUT_SECONDS` environment variable
 
-## [0.1.0] - 16-09-2032 
+## [0.1.0] - 16-09-2032
 
 ### Added
 
 - This CHANGELOG file.
-
 
 [unreleased]: https://github.com/BloomGameStudio/PlayerService/compare/staging...dev
 [0.3.0]: https://github.com/BloomGameStudio/PlayerService/releases/tag/0.3.0
