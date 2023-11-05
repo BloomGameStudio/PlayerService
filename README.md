@@ -398,9 +398,9 @@ that can be used include: UUID, ID, and Name.
 
 **Path Parameters:**
 
-| Name | Type | Mandatory |
-| ---- | ---- | --------- |
-| ID   | INT  | YES       |
+| Name | Type    | Mandatory |
+| ---- | ----    | --------- |
+| ID   | String  | YES       |
 
 **Request URL Example with Accepted Path Params:**
 
@@ -444,7 +444,7 @@ Soft Deletes a Player from the database
 
 | Name       |  Type   | Mandatory |
 | ---------- |  -----  | --------- |
-| Identifier | String  | Yes
+| ID         | String  | Yes
 
 **Request URL Example With all Accepted Query Params:**
 
