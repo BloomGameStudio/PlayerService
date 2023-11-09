@@ -1,5 +1,10 @@
 // Package publicModels provides public data models for the player service.
 // It includes various models representing different entities such as players, positions, levels, states, etc.
+// The package depends on the `gorm.io/gorm` package for database operations.
+//
+// Dependencies:
+//  - gorm.io/gorm
+//
 // The package consists of the following files:
 //   - generic.go: Contains the Vector3 struct, which serves as a generic model for representing three-dimensional vectors.
 //   - level.go: Defines the Level struct, which holds the public fields for the Level model. It includes the LevelID field

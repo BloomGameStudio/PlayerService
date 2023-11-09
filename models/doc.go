@@ -1,5 +1,10 @@
 // Package models provides data models for the player service.
-// It includes various models representing different entities such as players, positions, levels, states etc.
+// It includes various models representing different entities such as players, positions, levels, states, etc.
+// The package depends on the `gorm.io/gorm` package for database operations.
+//
+// Dependencies:
+//  - gorm.io/gorm
+//
 // The package consists of the following files:
 //   - coordinate.go: Defines the Coordinate struct for representing three-dimensional coordinates.
 //   - generic.go: Contains the Vector3 struct, which serves as a generic model that includes a gorm.Model and
