@@ -8,6 +8,7 @@ import (
 )
 
 func State(states []models.State, c echo.Context) error {
+	// c echo.Context is only used to obtain the logger to provide unified logging
 	logger := c.Logger()
 
 	logger.Debug("We are in State Handler")
@@ -22,6 +23,7 @@ func State(states []models.State, c echo.Context) error {
 		var result *gorm.DB
 
 		logger.Debug("Querying state from the database by ID")
+		// Query db with the ID from the passed in state model to find correct player
 		queryState := &models.State{}
 		queryState.ID = state.ID
 

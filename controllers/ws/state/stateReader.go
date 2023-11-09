@@ -14,6 +14,8 @@ import (
 )
 
 func stateReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX context.Context) {
+	// TODO: NO VALIDATION OF INPUT DATA IS PERFORMED!!!
+
 	for {
 		select {
 		case <-timeoutCTX.Done():
@@ -68,6 +70,9 @@ func stateReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX c
 				stateModel.StateID = reqState.StateID
 				stateModel.Value = reqState.Value
 
+				// stateModel.Airborn = reqState.Airborn
+				// stateModel.Grounded = reqState.Grounded
+				// stateModel.Waterborn = reqState.Waterborn
 				c.Logger().Debugf("stateModel: %+v", stateModel)
 
 				c.Logger().Debug("Validating stateModel")

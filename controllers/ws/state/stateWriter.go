@@ -14,8 +14,9 @@ import (
 )
 
 func stateWriter(c echo.Context, socket *websocket.Conn, ch chan error, timeoutCTX context.Context) {
-
+	// Open DB outside of the loop
 	db := database.GetDB()
+	//Use some very old date for the first update
 	lastUpdateAt := time.Date(1900, 1, 1, 0, 0, 0, 0, time.UTC)
 	lastPingCheck := time.Now()
 	wsTimeout := time.Second * time.Duration(viper.GetInt("WS_TIMEOUT_SECONDS"))
