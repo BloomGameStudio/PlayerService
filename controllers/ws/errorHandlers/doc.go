@@ -8,8 +8,6 @@
 // - github.com/labstack/echo/v4
 // - github.com/spf13/viper
 //
-// To use the error handling functions, import this package like so:
-//     import "path/to/errorHandlers"
 //
 // For more information on each function, please refer to their individual documentation.
 package errorHandlers
