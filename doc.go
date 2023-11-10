@@ -1,4 +1,4 @@
-// Package playerservice 
+// Package main
 // This package is responsible for handling players, including
 // creating, retrieving, updating, and deleting player information.
 // The player service provides a RESTful API to interact with player data
@@ -14,11 +14,11 @@
 // - models:      Data structures for database entities
 // - publicModels: Data structures for publicly exposed entities
 //
-// Usage
+// # Usage
 //
-// The service can be started by running command ```go run .``` 
+// The service can be started by running command ```go run .```
 // this will setup the necessary routes and start listening
 // for HTTP requests. Alternatively you can run ```docker-compose up```
 //
 // The API is then accessible through localhost on port 1323
-package playerservice
+package main
