@@ -17,7 +17,7 @@ type Player struct {
 
 	publicModels.Player
 	Transform   `json:"transform"`
-  Level     Level   `json:"level"`
+  	Level     Level   `json:"level"`
 	States      []State `json:"states"`
 	ModelDataID uint    `json:"-"`
 	ModelData   Model   `json:"model"`
