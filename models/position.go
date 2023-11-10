@@ -17,3 +17,7 @@ func (p Position) IsValid() bool {
 
 	return true
 }
+
+func (p Position) GetPosition() Position {
+	return p
+}

@@ -17,9 +17,12 @@ type Player struct {
 
 	publicModels.Player
 	Transform   `json:"transform"`
+  Level     Level   `json:"level"`
 	States      []State `json:"states"`
 	ModelDataID uint    `json:"-"`
 	ModelData   Model   `json:"model"`
+
+	
 }
 
 func (p Player) IsValid() bool {
@@ -41,4 +44,8 @@ func (p Player) IsValid() bool {
 	}
 
 	return true
+}
+
+func (p Player) GetPosition() Position {
+	return p.Transform.Position
 }
