@@ -83,7 +83,13 @@ func stateReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX c
 				}
 
 				c.Logger().Debug("stateModel is valid, passing it to the State handler")
-				handlers.State([]models.State{*stateModel}, c)
+
+				// Pass each reqState individually to handlers.State
+				err := handlers.State(reqState, c)
+				if err != nil {
+					ch <- err
+					return
+				}
 			}
 		}
 	}
