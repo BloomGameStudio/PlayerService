@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added go documentation to playerService detailing various packages.
+
+### Added
+
 - `DeletePlayer` endpoint:
   - Implemented functionality to soft delete players using the `DELETE /player` route.
   - Supports deletion using a single path parameter, acceptable identifiers: `ID`, `Name`, and `UserID`.
