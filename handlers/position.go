@@ -12,9 +12,6 @@ func Position(position models.Position, c echo.Context) error {
 	// c echo.Context is only used to obtain the logger to provide unified logging
 	logger := c.Logger()
 
-	logger.Debug("We are in Position Handler")
-	logger.Debug("position Arg: %v", position)
-
 	db := database.GetDB()
 
 	// Initialize empty database position model to bind into from db query
@@ -35,14 +32,7 @@ func Position(position models.Position, c echo.Context) error {
 		return result.Error
 	}
 
-	logger.Debugf("Query result for databasePositionModel %v", databasePositionModel)
-	// log.Print(helpers.PrettyStructNoError(databasePlayerModel))
-	logger.Debug("Updating the databasePositionModel")
-
 	databasePositionModel.Position = position.Position
-
-	logger.Debugf("Updated databasePositionModel: %v", databasePositionModel)
-	logger.Debug("Saving database Position")
 
 	db.Updates(&databasePositionModel)
 
