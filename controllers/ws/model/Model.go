@@ -2,8 +2,6 @@ package model
 
 import (
 	"context"
-	"net/http"
-	"time"
 
 	"github.com/BloomGameStudio/PlayerService/controllers/ws"
 	"github.com/labstack/echo/v4"
@@ -22,9 +20,7 @@ func Model(c echo.Context) error {
 	writerChan := make(chan error)
 	readerChan := make(chan error)
 
-	// Context to handle the timeout. Adjust accordingly to fit your needs.
-	timeoutDuration := 60 * time.Minute
-	timeoutCTX, timeoutCTXCancel := context.WithTimeout(context.Background(), timeoutDuration)
+	timeoutCTX, timeoutCTXCancel := context.WithCancel(context.Background())
 	defer timeoutCTXCancel()
 
 	// Start the reader/writer goroutines
@@ -32,18 +28,14 @@ func Model(c echo.Context) error {
 	go modelReader(c, ws, readerChan, timeoutCTX)
 
 	select {
-	case err := <-writerChan:
-		if err != nil {
-			c.Logger().Error("Model WebSocket Writer Error:", err)
-		}
-		return err
-	case err := <-readerChan:
-		if err != nil {
-			c.Logger().Error("Model WebSocket Reader Error:", err)
-		}
-		return err
-	case <-timeoutCTX.Done():
-		c.Logger().Info("Model WebSocket connection closed due to timeout")
-		return c.NoContent(http.StatusOK)
+
+	case w := <-writerChan:
+		c.Logger().Debugf("Recieved writerChan error: %v", w)
+		return nil
+
+	case r := <-readerChan:
+		c.Logger().Debugf("Recieved readerChan error: %v", r)
+		return nil
+
 	}
 }
