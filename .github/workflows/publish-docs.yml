@@ -1,0 +1,30 @@
+name: Publish Docs to pkg.go.dev
+
+on:
+  push:
+    branches:
+      - main
+      - staging
+      - dev
+      
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.19
+
+    - name: Build documentation
+      run: go doc
+
+    - name: Publish to pkg.go.dev
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./pkg
