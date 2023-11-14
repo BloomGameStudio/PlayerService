@@ -6,6 +6,7 @@ import (
 	"gorm.io/gorm"
 )
 
+
 // For some reason that is beyond me the Gorm "Has one" relationship does not work
 // Therefore we have to use the "Belongs To" relationship
 type Player struct {
@@ -19,9 +20,7 @@ type Player struct {
 	Transform   `json:"transform"`
   	Level     Level   `json:"level"`
 	States      []State `json:"states"`
-	ModelDataID uint    `json:"-"`
-	ModelData   Model   `json:"model"`
-
+	ModelData  Model           `gorm:"foreignKey:ModelID" json:"model"`
 	
 }
 

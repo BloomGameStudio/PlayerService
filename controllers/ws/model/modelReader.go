@@ -25,7 +25,7 @@ func modelReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX c
 			reqModel := &models.Model{}
 			err := ws.ReadJSON(reqModel)
 			if err != nil {
-				c.Logger().Debug("We get an error from Reading the JSON reqModel")
+				c.Logger().Debug("We got an error from Reading the JSON reqModel")
 				switch {
 				case websocket.IsCloseError(err, websocket.CloseNoStatusReceived):
 					select {
@@ -53,8 +53,8 @@ func modelReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX c
 			c.Logger().Debugf("reqModel from the WebSocket: %+v", reqModel)
 
 			if !reqModel.IsValid() {
-				c.Logger().Debug("reqModel is NOT valid returning")
-				ch <- errors.New("reqModel Validation failed")
+				c.Logger().Debug("reqModel is NOT valid, returning")
+				ch <- errors.New("reqModel validation failed")
 				return
 			}
 
@@ -64,17 +64,19 @@ func modelReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX c
 			if viper.GetBool("DEBUG") {
 				model.ID = reqModel.ID
 			}
-			model.ModelData = reqModel.ModelData
+			
+			model.ModelID = reqModel.ModelID
+			model.MaterialID = reqModel.MaterialID
 
 			c.Logger().Debugf("model: %+v", model)
 
 			if !model.IsValid() {
-				c.Logger().Debug("model is NOT valid returning")
-				ch <- errors.New("model Validation failed")
+				c.Logger().Debug("model is NOT valid, returning")
+				ch <- errors.New("model validation failed")
 				return
 			}
 
-			c.Logger().Debug("model is valid passing it to the Model handler")
+			c.Logger().Debug("model is valid, passing it to the Model handler")
 			handlers.ModelHandler(*model, c)
 		}
 	}
