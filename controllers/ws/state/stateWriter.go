@@ -42,7 +42,6 @@ func stateWriter(c echo.Context, socket *websocket.Conn, ch chan error, timeoutC
 					return
 				}
 			} else if lastPingCheck.Add(time.Second * 1).Before(time.Now()) {
-				c.Logger().Debug("Running Ping Check")
 				err := socket.WriteControl(websocket.PingMessage, []byte{}, time.Now().Add(time.Second*2))
 				if err != nil {
 					errorHandlers.HandleReadError(c, ch, err)
@@ -50,7 +49,6 @@ func stateWriter(c echo.Context, socket *websocket.Conn, ch chan error, timeoutC
 				}
 			}
 
-			c.Logger().Debug("Finished writing to the WebSocket Sleeping now")
 			// Update Interval
 			rate := ws.GetRate(c)
 			time.Sleep(time.Millisecond * time.Duration(rate))

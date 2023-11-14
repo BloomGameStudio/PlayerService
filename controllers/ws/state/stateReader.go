@@ -42,18 +42,12 @@ func stateReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX c
 			for _, reqState := range reqStates {
 				stateModel := &models.State{}
 
-				c.Logger().Debugf("reqState from the WebSocket: %+v", reqState)
-
-				c.Logger().Debug("Validating reqState")
 				if !reqState.IsValid() {
-					c.Logger().Debug("reqState is NOT valid returning")
 					ch <- errors.New("reqState validation failed")
 					return
 				}
 
-				c.Logger().Debug("reqState is valid")
 
-				c.Logger().Debug("Initializing and populating state model!")
 				// Use dot annotation for promoted aka embedded fields.
 				// TODO: Handle ID and production mode
 
@@ -73,16 +67,12 @@ func stateReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX c
 				// stateModel.Airborn = reqState.Airborn
 				// stateModel.Grounded = reqState.Grounded
 				// stateModel.Waterborn = reqState.Waterborn
-				c.Logger().Debugf("stateModel: %+v", stateModel)
 
-				c.Logger().Debug("Validating stateModel")
 				if !stateModel.IsValid() {
-					c.Logger().Debug("stateModel is NOT valid returning")
 					ch <- errors.New("stateModel validation failed")
 					return
 				}
 
-				c.Logger().Debug("stateModel is valid, passing it to the State handler")
 
 				// Pass each reqState individually to handlers.State
 				err := handlers.State(reqState, c)
