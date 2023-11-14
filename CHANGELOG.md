@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - State Handler
   - State handler deals with individual models.State objects received from the Websocket. The stateReader passes each reqState individually for processing
 
+### Added
+-  go documentation to playerService detailing various packages.
 
 ### Added
 
