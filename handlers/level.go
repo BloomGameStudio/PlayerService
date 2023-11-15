@@ -36,7 +36,7 @@ func Level(level models.Level, c echo.Context) error {
 
 	// NOTE: This is for debug mode reevaluate PlayerID
 	if viper.GetBool("DEBUG") {
-		// Accept client provided ID and PlayerID in DEBUG mode
+		// Accept client provided PlayerID in DEBUG mode
 		databaseLevelModel.PlayerID = level.PlayerID
 
 	}

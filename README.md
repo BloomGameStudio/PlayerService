@@ -17,6 +17,7 @@ The Bloom & LostLight Playerservice.
     - [Rest Endpoints](#rest-endpoints)
         - [CreatePlayer](#createplayer)
         - [GetPlayer](#getplayer)
+        - [UpdatePlayer](#updateplayer)
         - [DeletePlayer](#deleteplayer)
     - [Websocket Endpoints](#websocket-endpoints)
         - [Player](#player)
@@ -31,6 +32,7 @@ The Bloom & LostLight Playerservice.
   - [Examples](#examples)
   - [Postman | OpenAPI](#postman--openapi)
   - [Rotation ressources](#rotation-ressources)
+  - [How to setup and use godoc](#how-to-setup-and-use-godoc)
 
 This project keeps a [Changelog](CHANGELOG.md) in which all versions and notable changes are documented.
 
@@ -386,6 +388,50 @@ http://127.0.0.1:1323/player?active=true
   }
 ]
 ```
+##### UpdatePlayer
+
+`PUT /player/:id ` 
+
+Updates a player in the database. Takes a single parameter, identifiers
+that can be used include: UUID, ID, and Name.
+
+**Headers:** None
+
+**Path Parameters:**
+
+| Name | Type    | Mandatory |
+| ---- | ----    | --------- |
+| ID   | String  | YES       |
+
+**Request URL Example with Accepted Path Params:**
+
+http://localhost:1323/player/37
+http://localhost:1323/player/0b22df53-aba7-425f-bfea-84bf6f6e19c5
+http://localhost:1323/player/bobthecat
+
+**Response:**
+
+```html
+Status: 200 OK
+```
+
+```html
+Status: 404 Not Found
+Body: "Failed to retrieve player from the database"
+```
+
+```html
+Status: 400 Bad Request
+Body:  "Invalid update data"
+OR
+Body: "Invalid identifier parameter"
+```
+
+```html
+Status: 500 Internal Server Error
+Body: ""Failed to update player in the database""
+```
+
 
 ##### DeletePlayer
 
@@ -399,7 +445,7 @@ Soft Deletes a Player from the database
 
 | Name       |  Type   | Mandatory |
 | ---------- |  -----  | --------- |
-| Identifier | String  | Yes
+| ID         | String  | Yes
 
 **Request URL Example With all Accepted Query Params:**
 
@@ -1476,3 +1522,11 @@ https://joolfe.github.io/postman-to-openapi/
 - https://www.youtube.com/watch?v=2Cwa6hfn2K0
 - https://docs.unity3d.com/ScriptReference/Transform-eulerAngles.html
 - https://docs.unity3d.com/ScriptReference/Quaternion.html
+
+## How to setup and use godoc
+
+1. From the root directory of the player service in your terminal, run command: ```godoc -http=localhost:<portnumber>```
+2. Navigate to http://localhost:<portnumber> to view documentation
+3. Minimize "Standard Library", or scroll down to view Third Party documentation related to the playerService.
+
+Note: You can use an arbitrary port number. 8080 or 6060 are common ports to use.
