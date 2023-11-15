@@ -65,7 +65,6 @@ func modelReader(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX c
 				model.ID = reqModel.ID
 			}
 			
-			model.ModelID = reqModel.ModelID
 			model.MaterialID = reqModel.MaterialID
 
 			c.Logger().Debugf("model: %+v", model)

@@ -29,7 +29,6 @@ func ModelHandler(modelData models.Model, c echo.Context) error {
 	logger.Debug("Updating the databaseModelData")
 
 	// Update the values of databaseModelData
-	databaseModelData.ModelID = modelData.ModelID
 	databaseModelData.MaterialID = modelData.MaterialID
 
 	logger.Debugf("Updated databaseModelData: %v", databaseModelData)
