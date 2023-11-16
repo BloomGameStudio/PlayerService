@@ -16,7 +16,7 @@ func Init() {
 
 	db.AutoMigrate(&models.Player{})
 	db.AutoMigrate(&models.State{})
-	db.AutoMigrate(&models.Model{})
+	db.AutoMigrate(&models.PlayerModel{})
 	db.AutoMigrate(&models.Level{})
 
 }

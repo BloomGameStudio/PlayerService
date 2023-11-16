@@ -57,7 +57,7 @@ func UpdatePlayer(c echo.Context) error {
 		})
 	}
 
-	queryPlayer.ModelData.MaterialID = updateData.ModelData.MaterialID
+	queryPlayer.PlayerModel.MaterialID = updateData.PlayerModel.MaterialID
 
 	// Save the updated player
 	if err := db.Save(&queryPlayer).Error; err != nil {

@@ -5,7 +5,7 @@ import (
 	"github.com/BloomGameStudio/PlayerService/controllers/rest/player"
 	"github.com/BloomGameStudio/PlayerService/controllers/rest/version"
 	"github.com/BloomGameStudio/PlayerService/controllers/ws/hello"
-	"github.com/BloomGameStudio/PlayerService/controllers/ws/model"
+	"github.com/BloomGameStudio/PlayerService/controllers/ws/playerModel"
 	"github.com/BloomGameStudio/PlayerService/controllers/ws/level"
 	wsPlayer "github.com/BloomGameStudio/PlayerService/controllers/ws/player"
 	"github.com/BloomGameStudio/PlayerService/controllers/ws/position"
@@ -64,7 +64,7 @@ func main() {
 	ws.GET("state", state.State)
 	ws.GET("position", position.Position)
 	ws.GET("rotation", rotation.Rotation)
-	ws.GET("model", model.Model)
+	ws.GET("model", playerModel.PlayerModel)
 	ws.GET("scale", scale.Scale)
 	ws.GET("level", level.Level)
 

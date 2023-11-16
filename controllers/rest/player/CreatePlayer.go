@@ -55,7 +55,7 @@ func CreatePlayer(c echo.Context) error {
 		playerModel.States = append(playerModel.States, models.State{State: state})
 	}
 	//playerModel.ModelData.ModelID = reqPlayer.ModelData.ModelID
-	playerModel.ModelData.MaterialID = reqPlayer.ModelData.MaterialID
+	playerModel.PlayerModel.MaterialID = reqPlayer.PlayerModel.MaterialID
 	if !playerModel.IsValid() {
 		c.Logger().Debug("playerModel is NOT valid")
 		return c.JSON(http.StatusBadRequest, "bad request")
