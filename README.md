@@ -1498,6 +1498,43 @@ Assuming standard config and hosting locally.
       2. Push a list of one or more Player objects to the [ws://staging.player.bloomstudio.gg/ws/player](ws://staging.player.bloomstudio.gg/ws/player) websocket.
       3. Optional: Confirm that the changes took place by looking at the next data push from the websocket.
 
+## How to Interact with the playerModel WebSocket
+
+1. Connect to ws://staging.player.bloomstudio.gg/ws/model.
+2. You will now receive an array of playerModels.
+3. To update any playerModel you can send one of the playerModel objects.
+   This websocket is very similar to the Player websocket
+
+## Example output from websocket upon connecting
+
+```json
+[
+	{
+		"ID": 1,
+		"CreatedAt": "2023-11-15T01:41:45.428539903Z",
+		"UpdatedAt": "2023-11-15T01:41:45.428539903Z",
+		"DeletedAt": null,
+		"material_id": 69
+	},
+	{
+		"ID": 2,
+		"CreatedAt": "2023-11-15T01:42:00.609485618Z",
+		"UpdatedAt": "2023-11-16T03:40:58.055690531Z",
+		"DeletedAt": null,
+		"material_id": 88
+	},
+]
+  ```
+
+## Example to update a playerModel
+
+```json
+{
+  "ID": 2,
+  "material_id": 12
+}
+```
+
 ## Examples
 
 Examples can be found in the docs dir.
