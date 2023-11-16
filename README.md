@@ -32,6 +32,7 @@ The Bloom & LostLight Playerservice.
   - [Examples](#examples)
   - [Postman | OpenAPI](#postman--openapi)
   - [Rotation ressources](#rotation-ressources)
+  - [How to setup and use godoc](#how-to-setup-and-use-godoc)
 
 This project keeps a [Changelog](CHANGELOG.md) in which all versions and notable changes are documented.
 
@@ -1521,3 +1522,11 @@ https://joolfe.github.io/postman-to-openapi/
 - https://www.youtube.com/watch?v=2Cwa6hfn2K0
 - https://docs.unity3d.com/ScriptReference/Transform-eulerAngles.html
 - https://docs.unity3d.com/ScriptReference/Quaternion.html
+
+## How to setup and use godoc
+
+1. From the root directory of the player service in your terminal, run command: ```godoc -http=localhost:<portnumber>```
+2. Navigate to http://localhost:<portnumber> to view documentation
+3. Minimize "Standard Library", or scroll down to view Third Party documentation related to the playerService.
+
+Note: You can use an arbitrary port number. 8080 or 6060 are common ports to use.
