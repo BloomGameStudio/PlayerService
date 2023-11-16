@@ -20,8 +20,7 @@ type Player struct {
 	Transform   `json:"transform"`
   	Level     Level   `json:"level"`
 	States      []State `json:"states"`
-	//FK Added as we cannot declare Model twice.
-	PlayerModel  PlayerModel `gorm:"foreignKey:ID" json:"model"`
+	PlayerModel  PlayerModel `json:"model"`
 	
 }
 

@@ -7,7 +7,8 @@ import (
 
 type PlayerModel struct {
 	gorm.Model
-    publicModels.PlayerModel
+  	PlayerID uint
+	publicModels.PlayerModel
 }
 
 func (m PlayerModel) IsValid() bool {
