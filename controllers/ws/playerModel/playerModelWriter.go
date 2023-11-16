@@ -2,7 +2,6 @@ package playerModel
 
 import (
 	"context"
-	"errors"
 	"time"
 
 	"github.com/BloomGameStudio/PlayerService/database"
@@ -10,6 +9,7 @@ import (
 	"github.com/gorilla/websocket"
 	"github.com/labstack/echo/v4"
 	"github.com/spf13/viper"
+	"github.com/BloomGameStudio/PlayerService/controllers/ws/errorHandlers"
 )
 
 func playerModelWriter(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX context.Context) {
@@ -20,97 +20,41 @@ func playerModelWriter(c echo.Context, ws *websocket.Conn, ch chan error, timeou
     for {
         select {
         case <-timeoutCTX.Done():
-            c.Logger().Debug("ModelWriter Timeout Context Done")
+            errorHandlers.SendNilOrTimeout(c, ch)
             return
 
         default:
-            c.Logger().Debug("Getting models from the database")
-
             modelsList := &[]models.PlayerModel{}
-            result := db.Where("updated_at > ?", lastUpdateAt).Find(modelsList) // Use result to capture DB operation details
+            result := db.Where("updated_at > ?", lastUpdateAt).Find(modelsList)
             lastUpdateAt = time.Now()
 
             if result.Error != nil {
-                c.Logger().Errorf("Database query error: %v", result.Error)
-                ch <- result.Error
+                errorHandlers.SendErrOrTimeout(c, ch, result.Error)
                 return
             }
 
-            c.Logger().Debugf("Number of models fetched: %d", len(*modelsList))
             if len(*modelsList) > 0 {
-                for _, model := range *modelsList {
-                    c.Logger().Debugf("Fetched model: %+v", model)
-                }
-
-                c.Logger().Debug("Pushing the models to the WebSocket")
                 err := ws.WriteJSON(modelsList)
                 if err != nil {
-                    switch {
-                    case errors.Is(err, websocket.ErrCloseSent):
-                        select {
-                        case ch <- nil:
-                            c.Logger().Debug("Sent nil to Writer channel")
-                            return
-                        case <-time.After(time.Second * 10):
-                            c.Logger().Debug("Timed out sending nil to Writer channel")
-                            return
-                        }
-
-                    default:
-                        c.Logger().Error(err)
-                        select {
-                        case ch <- err:
-                            c.Logger().Debug("Sent error to Writer channel")
-                            return
-                        case <-time.After(time.Second * 10):
-                            c.Logger().Debug("Timed out sending error to Writer channel")
-                            return
-                        }
-                    }
+                    errorHandlers.HandleWriteError(c, ch, err)
+                    return
                 }
             }
 
             if lastPingCheck.Add(time.Second * 1).Before(time.Now()) {
-                c.Logger().Debug("Running Ping Check")
-
                 err := ws.WriteControl(websocket.PingMessage, []byte{}, time.Now().Add(time.Second*2))
                 if err != nil {
-                    switch {
-                    case errors.Is(err, websocket.ErrCloseSent):
-                        c.Logger().Debug("WebSocket ErrCloseSent")
-
-                        select {
-                        case ch <- nil:
-                            c.Logger().Debug("Sent nil to Writer channel")
-                            return
-                        case <-time.After(time.Second * 10):
-                            c.Logger().Debug("Timed out sending nil to Writer channel")
-                            return
-                        }
-
-                    default:
-                        c.Logger().Error(err)
-
-                        select {
-                        case ch <- err:
-                            c.Logger().Debug("Sent error to Writer channel")
-                            return
-                        case <-time.After(time.Second * 10):
-                            c.Logger().Debug("Timed out sending error to Writer channel")
-                            return
-                        }
-                    }
+                    errorHandlers.HandleWriteError(c, ch, err)
+                    return
                 }
-
                 lastPingCheck = time.Now()
             }
 
-            c.Logger().Debug("Finished accessing the database. Sleeping")
-            time.Sleep(time.Millisecond * 1)
-
+            sleepDuration := time.Millisecond * 1
             if viper.GetBool("DEBUG") {
-                time.Sleep(time.Second / 20)
+                sleepDuration = time.Second / 20
             }
+            time.Sleep(sleepDuration)
         }
     }
 }
