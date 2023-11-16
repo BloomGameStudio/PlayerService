@@ -1,4 +1,4 @@
-package model
+package playerModel
 
 import (
 	"context"
