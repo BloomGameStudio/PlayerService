@@ -20,7 +20,8 @@
 //   - rotation.go: Contains the Rotation function that handles the rotation operation.
 //   - scale.go: Contains the Scale function that handles the scale operation.
 //	 - playerModel.go: Contains the playerModel function that handles the model operation.
-// Dependencies
+//
+// Dependencies:
 //
 // The handlers package relies on the following packages:
 //
