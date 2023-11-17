@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- State Handler
+  - State handler deals with individual models.State objects received from the Websocket. The stateReader passes each reqState individually for processing
+
+### Added
 -  go documentation to playerService detailing various packages.
 
 - New `UpdatePlayer` endpoint (`PUT /player/:id`) allowing updates to a player in the database by various identifiers like UUID, ID, and Name. Also added associated error handling and response formats.

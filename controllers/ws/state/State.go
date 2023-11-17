@@ -30,14 +30,12 @@ func State(c echo.Context) error {
 
 	// QUESTION: Do we want to wait on both routines to error out?
 	// Return the error if either the reader or the writer encounters a error
-	for {
-		select {
-		case r := <-readerChan:
-			c.Logger().Debugf("Recieved readerChan error: %v", r)
-			return r
-		case w := <-writerChan:
-			c.Logger().Debugf("Recieved writerChan error: %v", w)
-			return w
-		}
+	select {
+	case w := <-writerChan:
+		c.Logger().Debugf("Received writerChan error: %v", w)
+		return nil
+	case r := <-readerChan:
+		c.Logger().Debugf("Received readerChan error: %v", r)
+		return nil
 	}
 }

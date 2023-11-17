@@ -1523,6 +1523,80 @@ https://joolfe.github.io/postman-to-openapi/
 - https://docs.unity3d.com/ScriptReference/Transform-eulerAngles.html
 - https://docs.unity3d.com/ScriptReference/Quaternion.html
 
+## How To Interact With The State Websocket
+
+1. Connect to ws://staging.player.bloomstudio.gg/ws/state
+2. You will now receive an array of States
+3. To update any State you can send an array of one or more State objects back in its entirety
+   This websocket is very similar to the Player websocket
+4. If you want to modify your State or any other States you can modify the list of state objects that you received
+and send that list back within the same websocket you received it from to the service you received it from.
+
+#### **How to Update The State object/s.**
+
+      1. Modify and make the desired changes to the list of of State objects that you have received in the previous step.
+      2. Push a list of one or more State objects to the [ws://staging.player.bloomstudio.gg/ws/state](ws://staging.player.bloomstudio.gg/ws/state) websocket.
+      3. Optional: Confirm that the changes took place by looking at the next data push from the websocket.
+
+## **Example output on ws connection**
+  ```json
+  [
+	  {
+		  "ID": 1,
+		  "CreatedAt": "2023-11-06T03:22:58.133746644Z",
+		  "UpdatedAt": "2023-11-09T01:27:56.584377851Z",
+		  "DeletedAt": null,
+		  "PlayerID": 5,
+		  "stateID": 79,
+		  "value": 0.69
+	  },
+	  {
+		  "ID": 2,
+		  "CreatedAt": "2023-11-06T03:22:58.133746644Z",
+		  "UpdatedAt": "2023-11-06T03:22:58.133746644Z",
+		  "DeletedAt": null,
+		  "PlayerID": 6,
+		  "stateID": 0,
+		  "value": 0.1
+	  },
+	  {
+		  "ID": 3,
+		  "CreatedAt": "2023-11-06T03:34:11.945427475Z",
+		  "UpdatedAt": "2023-11-06T03:34:11.945427475Z",
+		  "DeletedAt": null,
+	  	"PlayerID": 6,
+		  "stateID": 0,
+		  "value": 0.1
+	  },
+	  {
+	  	"ID": 4,
+		  "CreatedAt": "2023-11-06T03:35:24.467926031Z",
+		  "UpdatedAt": "2023-11-09T01:59:02.564457619Z",
+		  "DeletedAt": null,
+		  "PlayerID": 9,
+		  "stateID": 65,
+		  "value": 0.7
+	  }
+  ]
+  ```
+
+## **Example JSON Body to write to service**
+
+  ```json
+  [
+	  {
+		  "ID": 8,
+		  "stateID": 21,
+		  "value": 0.64
+	  },
+	  {
+		  "ID": 9,
+		  "stateID": 15,
+		  "value": 0.41
+	  }
+  ]
+```
+
 ## How to setup and use godoc
 
 1. From the root directory of the player service in your terminal, run command: ```godoc -http=localhost:<portnumber>```
@@ -1530,3 +1604,4 @@ https://joolfe.github.io/postman-to-openapi/
 3. Minimize "Standard Library", or scroll down to view Third Party documentation related to the playerService.
 
 Note: You can use an arbitrary port number. 8080 or 6060 are common ports to use.
+
