@@ -25,6 +25,7 @@ The Bloom & LostLight Playerservice.
         - [Rotation](#rotation)
         - [Scale](#scale)
         - [States](#states)
+        - [Model](#playerModel)
         - [Level](#level)
   - [Guides](#guides)
   - [How to Interact with the Player WebSocket](#how-to-interact-with-the-player-websocket)
@@ -1220,6 +1221,48 @@ Expects a JSON serialized array of one or more State [publicModel](./publicModel
     "value": 123456.991123123
   }
 ]
+```
+
+##### PlayerModel
+
+`/model`
+
+Handles PlayerModel Data. Send and Receive PlayerModel data.
+
+**Headers:** None
+
+**Request Body:**
+
+Expects a JSON serialzed of one [PlayerModel](./publicModels/playerModel.go) pr [model](./models/playerModel.go) object in the body.
+
+| Name | Type | Mandatory | Info              |
+| ---- | ---- | --------- | ----------------- |
+| ID   | INT  | YES       | Has to be unique. |
+
+**Request Body Example With All Accepted Fields:**
+
+```json
+
+{
+  "ID": 7,
+  "material_id": 6
+}
+```
+
+**Response:**
+
+```json
+[
+	{
+		"ID": 7,
+		"CreatedAt": "2023-11-16T21:13:38.035035186Z",
+		"UpdatedAt": "2023-11-20T00:05:38.118627357Z",
+		"DeletedAt": null,
+		"PlayerID": 7,
+		"material_id": 6
+	}
+]
+
 ```
 
 ##### Level
