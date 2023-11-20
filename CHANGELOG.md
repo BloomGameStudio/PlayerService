@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- playerModel. Allows reading and updating a players Model over websocket using an ID identifier. Added associated handler and updated Create / Update HTTP endpoint implementations to include the playerModel.
+
 -  go documentation to playerService detailing various packages.
 
 - New `UpdatePlayer` endpoint (`PUT /player/:id`) allowing updates to a player in the database by various identifiers like UUID, ID, and Name. Also added associated error handling and response formats.
