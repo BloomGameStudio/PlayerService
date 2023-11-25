@@ -71,7 +71,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - playerWriter Error Handling
 - Websocket timeout duration moved to the `WS_TIMEOUT_SECONDS` environment variable
 
-## [0.1.0] - 16-09-2032
+## [0.1.0] - 16-09-2023
 
 ### Added
 
