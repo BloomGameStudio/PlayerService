@@ -12,7 +12,7 @@ type Player struct {
 	Level     Level `json:"level" gorm:"-:all"`
 	Transform `json:"transform" gorm:"-:all"`
 	States    []State `json:"states" gorm:"-:all"`
-	PlayerModel PlayerModel  `json:"model" gorm:"-:all"`
+	PlayerModel  `json:"model"`
 }
 
 func (p Player) IsValid() bool {
