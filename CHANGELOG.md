@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- playerModel. Allows reading and updating a players Model over websocket using an ID identifier. Added associated handler and updated Create / Update HTTP endpoint implementations to include the playerModel.
+- playerModel. Allows reading and updating a players Model over websocket using an ID identifier. Added associated handler.
 
 -  go documentation to playerService detailing various packages.
 
