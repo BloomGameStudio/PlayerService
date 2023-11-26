@@ -8,7 +8,7 @@ type State struct {
 	gorm.Model         // NOTE: COMEBACK: Accepting ID from Client Should only be for debug mode
 	StateID    uint    `json:"stateID"`
 	Value      float64 `json:"value"`
-	// Grounded, Airborn, Waterborn bool
+	//Grounded, Airborn, Waterborn bool
 }
 
 func (p State) IsValid() bool {
