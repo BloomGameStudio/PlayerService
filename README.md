@@ -1227,7 +1227,7 @@ Expects a JSON serialized array of one or more State [publicModel](./publicModel
 
 `/model`
 
-Handles PlayerModel Data. Send and Receive PlayerModel data.
+Handles PlayerModel Data. Send and Receive PlayerModel data. If a resource does not exist, one will be created.
 
 **Headers:** None
 
