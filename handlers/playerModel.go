@@ -18,7 +18,7 @@ func PlayerModel(playerModel models.PlayerModel, c echo.Context) error {
 	var result *gorm.DB
 
 	logger.Debugf("Querying database model by ID: %d", playerModel.ID)
-	result = db.Model(&models.PlayerModel{}).Where(playerModel.ID).First(&databaseModelData)
+	result = db.Model(&models.PlayerModel{}).Where(models.PlayerModel{PlayerID: playerModel.ID}).First(&databaseModelData)
 
 	if result.Error != nil {
 		logger.Error(result.Error)
