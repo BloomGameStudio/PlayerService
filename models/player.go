@@ -20,7 +20,7 @@ type Player struct {
 	Transform   `json:"transform"`
   	Level     Level   `json:"level"`
 	States      []State `json:"states"`
-	PlayerModel  PlayerModel `json:"model"`
+	PlayerModel  PlayerModel `json:"playerModel"`
 	
 }
 
