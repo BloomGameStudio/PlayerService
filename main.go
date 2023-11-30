@@ -64,7 +64,7 @@ func main() {
 	ws.GET("state", state.State)
 	ws.GET("position", position.Position)
 	ws.GET("rotation", rotation.Rotation)
-	ws.GET("model", playerModel.PlayerModel)
+	ws.GET("playermodel", playerModel.PlayerModel)
 	ws.GET("scale", scale.Scale)
 	ws.GET("level", level.Level)
 
