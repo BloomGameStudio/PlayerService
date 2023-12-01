@@ -21,6 +21,8 @@
 //               Value fields, as well as a IsValid() method for validating the state.
 //   - transform.go: Defines the Transform struct, which includes the Position, Rotation, and Scale structs. It also
 //                   includes a IsValid() method for validating the transform.
+//   - playerModel.go: Defines the playerModel struct, which includes the materialID. It also
+//					   includes a IsValid() method for validating the playerModel.
 //
 // For more information on each model and its associated methods, please refer to their individual documentation.
 package publicModels

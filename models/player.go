@@ -6,6 +6,7 @@ import (
 	"gorm.io/gorm"
 )
 
+
 // For some reason that is beyond me the Gorm "Has one" relationship does not work
 // Therefore we have to use the "Belongs To" relationship
 type Player struct {
@@ -16,10 +17,11 @@ type Player struct {
 	UserID uuid.UUID `gorm:"type:uuid;uniqueIndex"`
 
 	publicModels.Player
-
-	Transform `json:"transform"`
-	States    []State `json:"states"`
-	Level     Level   `json:"level"`
+	Transform   `json:"transform"`
+  	Level     Level   `json:"level"`
+	States      []State `json:"states"`
+	PlayerModel  PlayerModel `json:"playerModel"`
+	
 }
 
 func (p Player) IsValid() bool {

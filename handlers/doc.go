@@ -8,6 +8,7 @@
 //   - Position: Handles the position operation and updates the database with the provided position information.
 //   - Rotation: Handles the rotation operation and updates the database with the provided rotation information.
 //   - Scale: Handles the scale operation and updates the database with the provided scale information.
+//   - playerModel: Handles the playerModel operation and updates the database with the provided playerModel information.   
 //
 // Files
 //
@@ -18,8 +19,9 @@
 //   - position.go: Contains the Position function that handles the position operation.
 //   - rotation.go: Contains the Rotation function that handles the rotation operation.
 //   - scale.go: Contains the Scale function that handles the scale operation.
+//	 - playerModel.go: Contains the playerModel function that handles the model operation.
 //
-// Dependencies
+// Dependencies:
 //
 // The handlers package relies on the following packages:
 //

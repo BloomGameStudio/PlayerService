@@ -27,6 +27,8 @@
 //               a IsValid() method for validating the state.
 //   - transform.go: Defines the Transform struct, which includes RotationID, ScaleID, PositionID, Position, Rotation, and
 //                   Scale. Currently, validation methods are commented out in the file.
+//   - playerModel.go: Defines the playerModel struct, which includes materialID, It also includes
+//                      a IsValid() method for validating the state.
 //
 // For more information on each model and its associated methods, please refer to their individual documentation.
 package models

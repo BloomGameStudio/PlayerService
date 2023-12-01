@@ -49,7 +49,6 @@ func UpdatePlayer(c echo.Context) error {
 	queryPlayer.Transform.Position = updateData.Transform.Position
 	queryPlayer.Transform.Rotation = updateData.Transform.Rotation
 	queryPlayer.Transform.Scale = updateData.Transform.Scale
-
 	queryPlayer.States = []models.State{}
 
 	for _, state := range updateData.States {
@@ -57,6 +56,8 @@ func UpdatePlayer(c echo.Context) error {
 			State: state.State,
 		})
 	}
+
+	queryPlayer.PlayerModel.MaterialID = updateData.PlayerModel.MaterialID
 
 	// Save the updated player
 	if err := db.Save(&queryPlayer).Error; err != nil {

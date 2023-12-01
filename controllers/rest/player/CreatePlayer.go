@@ -54,17 +54,18 @@ func CreatePlayer(c echo.Context) error {
 	for _, state := range reqPlayer.States {
 		playerModel.States = append(playerModel.States, models.State{State: state})
 	}
-
-
+	playerModel.PlayerModel.MaterialID = reqPlayer.PlayerModel.MaterialID
 	if !playerModel.IsValid() {
 		c.Logger().Debug("playerModel is NOT valid")
 		return c.JSON(http.StatusBadRequest, "bad request")
 	}
 	c.Logger().Debug("playerModel is valid")
-
-	// Save to db
 	db := database.GetDB()
-	db.Create(playerModel)
+	//Save the Player model
+	if result := db.Create(&playerModel); result.Error != nil {
+		c.Logger().Errorf("Failed to save playerModel: %v", result.Error)
+		return c.JSON(http.StatusInternalServerError, "Failed to save player")
+	}
 
 	c.Logger().Debug("playerModel is saved. Returning")
 

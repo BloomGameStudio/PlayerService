@@ -25,6 +25,7 @@ The Bloom & LostLight Playerservice.
         - [Rotation](#rotation)
         - [Scale](#scale)
         - [States](#states)
+        - [Model](#playerModel)
         - [Level](#level)
   - [Guides](#guides)
   - [How to Interact with the Player WebSocket](#how-to-interact-with-the-player-websocket)
@@ -1222,6 +1223,48 @@ Expects a JSON serialized array of one or more State [publicModel](./publicModel
 ]
 ```
 
+##### PlayerModel
+
+`/model`
+
+Handles PlayerModel Data. Send and Receive PlayerModel data. If a resource does not exist, one will be created.
+
+**Headers:** None
+
+**Request Body:**
+
+Expects a JSON serialzed of one [PlayerModel](./publicModels/playerModel.go) pr [model](./models/playerModel.go) object in the body.
+
+| Name | Type | Mandatory | Info              |
+| ---- | ---- | --------- | ----------------- |
+| ID   | INT  | YES       | Has to be unique. |
+
+**Request Body Example With All Accepted Fields:**
+
+```json
+
+{
+  "ID": 7,
+  "material_id": 6
+}
+```
+
+**Response:**
+
+```json
+[
+	{
+		"ID": 7,
+		"CreatedAt": "2023-11-16T21:13:38.035035186Z",
+		"UpdatedAt": "2023-11-20T00:05:38.118627357Z",
+		"DeletedAt": null,
+		"PlayerID": 7,
+		"material_id": 6
+	}
+]
+
+```
+
 ##### Level
 
 `/level`
@@ -1497,6 +1540,43 @@ Assuming standard config and hosting locally.
       1. Modify and make the desired changes to the list of of Player objects that you have received in the previous step.
       2. Push a list of one or more Player objects to the [ws://staging.player.bloomstudio.gg/ws/player](ws://staging.player.bloomstudio.gg/ws/player) websocket.
       3. Optional: Confirm that the changes took place by looking at the next data push from the websocket.
+
+## How to Interact with the playerModel WebSocket
+
+1. Connect to ws://staging.player.bloomstudio.gg/ws/model.
+2. You will now receive an array of playerModels.
+3. To update any playerModel you can send one of the playerModel objects.
+   This websocket is very similar to the Player websocket
+
+## Example output from websocket upon connecting
+
+```json
+[
+	{
+		"ID": 1,
+		"CreatedAt": "2023-11-15T01:41:45.428539903Z",
+		"UpdatedAt": "2023-11-15T01:41:45.428539903Z",
+		"DeletedAt": null,
+		"material_id": 69
+	},
+	{
+		"ID": 2,
+		"CreatedAt": "2023-11-15T01:42:00.609485618Z",
+		"UpdatedAt": "2023-11-16T03:40:58.055690531Z",
+		"DeletedAt": null,
+		"material_id": 88
+	},
+]
+  ```
+
+## Example to update a playerModel
+
+```json
+{
+  "ID": 2,
+  "material_id": 12
+}
+```
 
 ## Examples
 
