@@ -1,0 +1,19 @@
+project_name: PlayerService
+project_url: https://github.com/BloomGameStudio/PlayerService
+
+builds:
+  - binary: PlayerService
+    goos:
+      - linux
+      - darwin
+      - windows
+
+checksum:
+  name_template: '{{ .ProjectName }}_{{ .Version }}_checksums.txt'
+
+release:
+  github:
+    owner: Sarahtonein
+    name: PlayerSerivce
+    token:
+      secret: GITHUB_TOKEN
