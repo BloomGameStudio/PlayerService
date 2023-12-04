@@ -14,6 +14,6 @@ checksum:
 release:
   github:
     owner: Balugrizzly
-    name: PlayerSerivce
+    name: PlayerService
     token:
       secret: GITHUB_TOKEN
