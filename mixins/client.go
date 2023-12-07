@@ -14,9 +14,10 @@ func NewClientMixin(sendData bool) *ClientMixin {
 	return &ClientMixin{SendData: sendData}
 }
 
-func (c *ClientMixin) ConditionalWriter(socket *websocket.Conn, writeFunc func() error) {
+// Conditional execution of WriteFunc depending on SendData flag.
+func (c *ClientMixin) ConditionalWriter(socket *websocket.Conn, WriteFunc func() error) {
 	if c.SendData {
-		err := writeFunc()
+		err := WriteFunc()
 		if err != nil {
 			//Handle error
 		}
