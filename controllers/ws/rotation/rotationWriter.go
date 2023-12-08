@@ -11,13 +11,13 @@ import (
 	"github.com/gorilla/websocket"
 	"github.com/labstack/echo/v4"
 	"github.com/spf13/viper"
+	"github.com/BloomGameStudio/PlayerService/mixins/client"
 )
 
-func rotationWriter(c echo.Context, socket *websocket.Conn, ch chan error, timeoutCTX context.Context) {
-
+func rotationWriter(c echo.Context, socket *websocket.Conn, ch chan error, timeoutCTX context.Context, sendData bool) {
 	// Open DB outside of the loop
 	db := database.GetDB()
-	lastUpdateAt := time.Date(1900, 1, 1, 0, 0, 0, 0, time.UTC) // Use some ver old date for first update to get all players in the initial push
+	lastUpdateAt := time.Date(1900, 1, 1, 0, 0, 0, 0, time.UTC) // Use some very old date for the first update to get all players in the initial push
 	lastPingCheck := time.Now()
 	wsTimeout := time.Second * time.Duration(viper.GetInt("WS_TIMEOUT_SECONDS"))
 
@@ -36,12 +36,19 @@ func rotationWriter(c echo.Context, socket *websocket.Conn, ch chan error, timeo
 			rotations := &[]models.Rotation{}
 
 			db.Where("updated_at > ?", lastUpdateAt).Find(rotations)
-			lastUpdateAt = time.Now() // update last update time to now only included rotations that have been updated
+			lastUpdateAt = time.Now() // update last update time to now only include rotations that have been updated
 
 			if len(*rotations) > 0 {
 
 				c.Logger().Debug("Pushing the rotations to the WebSocket")
-				err := socket.WriteJSON(rotations)
+
+				err := client.ConditionalWriter(socket, sendData, func() error {
+					if sendData {
+						return socket.WriteJSON(rotations)
+					}
+					// Optionally handle case when sendData is false
+					return nil
+				})
 
 				if err != nil {
 					switch {
@@ -73,7 +80,7 @@ func rotationWriter(c echo.Context, socket *websocket.Conn, ch chan error, timeo
 					}
 				}
 
-				// Run Ping Check if there are no results to send and last ping check was older than 1 second ago
+				// Run Ping Check if there are no results to send and the last ping check was older than 1 second ago
 			} else if lastPingCheck.Add(time.Second * 1).Before(time.Now()) {
 				c.Logger().Debug("Running Ping Check")
 
@@ -83,7 +90,7 @@ func rotationWriter(c echo.Context, socket *websocket.Conn, ch chan error, timeo
 					switch {
 
 					case errors.Is(err, websocket.ErrCloseSent):
-						c.Logger().Debug("WEbsocket ErrCloseSent")
+						c.Logger().Debug("WebSocket ErrCloseSent")
 
 						select {
 
@@ -111,19 +118,18 @@ func rotationWriter(c echo.Context, socket *websocket.Conn, ch chan error, timeo
 				}
 			}
 
-			c.Logger().Debug("Finished writing to the WebSocket Sleeping now")
-
-			// Update Interval NOTE: setting depending on the server and its performance either increase or decrease it.
-			// rate query param passed in by client, set to 1 by default
+			c.Logger().Debug("Finished writing to the WebSocket. Sleeping now")
+			
+			// Update Interval NOTE: setting depends on the server and its performance either increase or decrease it.
+			// rate query param passed in by the client, set to 1 by default
 
 			rate := ws.GetRate(c)
 			time.Sleep(time.Millisecond * time.Duration(rate))
 
 			if viper.GetBool("DEBUG") {
-				// Sleep for x second in DEBUG mode to not get fludded with data
+				// Sleep for x seconds in DEBUG mode to not get flooded with data
 				time.Sleep(time.Second / 20)
 			}
 		}
 	}
-
 }
