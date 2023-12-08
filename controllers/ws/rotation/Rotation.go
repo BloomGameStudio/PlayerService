@@ -2,9 +2,10 @@ package rotation
 
 import (
 	"context"
-
+	"fmt"
 	"github.com/BloomGameStudio/PlayerService/controllers/ws"
 	"github.com/labstack/echo/v4"
+	"strconv" // Import strconv for string to boolean conversion
 )
 
 // NOTE: We may need to adjust default configuration and values
@@ -12,12 +13,14 @@ import (
 // https://github.com/gorilla/websocket/blob/master/examples/command/main.go
 
 func Rotation(c echo.Context) error {
+	// Extract the sendData value from the query parameters
+	sendDataStr := c.QueryParam("sendData")
 
-	// QUESTION: Is this needed?
-	// Only changes will be sent the only exception to this is the opening/first request where the full state will be sent
-	// Partial player data can be received or full
-	// TODO: Partial Reads
-	// TODO: Partial Writes
+	// Convert the string to a boolean
+	sendData, err := strconv.ParseBool(sendDataStr)
+	if err != nil {
+		return fmt.Errorf("failed to parse sendData: %v", err)
+	}
 
 	ws, err := ws.Upgrader.Upgrade(c.Response(), c.Request(), nil)
 	if err != nil {
@@ -31,7 +34,7 @@ func Rotation(c echo.Context) error {
 	timeoutCTX, timeoutCTXCancel := context.WithCancel(context.Background())
 	defer timeoutCTXCancel()
 
-	go rotationWriter(c, ws, writerChan, timeoutCTX)
+	go rotationWriter(c, ws, writerChan, timeoutCTX, sendData)
 	go rotationReader(c, ws, readerChan, timeoutCTX)
 
 	// QUESTION: Do we want to wait on both routines to error out?
@@ -41,11 +44,11 @@ func Rotation(c echo.Context) error {
 	select {
 
 	case w := <-writerChan:
-		c.Logger().Debugf("Recieved writerChan error: %v", w)
+		c.Logger().Debugf("Received writerChan error: %v", w)
 		return nil
 
 	case r := <-readerChan:
-		c.Logger().Debugf("Recieved readerChan error: %v", r)
+		c.Logger().Debugf("Received readerChan error: %v", r)
 		return nil
 
 	}
