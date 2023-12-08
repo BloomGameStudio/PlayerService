@@ -4,24 +4,18 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-type ClientMixin struct {
-	SendData bool
-}
-
-// Create an instance of ClientMixin and accept a boolean as the parameter
-func NewClientMixin(sendData bool) *ClientMixin {
-	//Return the derefenced value of the ClientMixin boolean
-	return &ClientMixin{SendData: sendData}
-}
-
-// Conditional execution of WriteFunc depending on SendData flag.
-func (c *ClientMixin) ConditionalWriter(socket *websocket.Conn, WriteFunc func() error) {
-	if c.SendData {
-		err := WriteFunc()
+// ConditionalWriter executes WriteFunc depending on the SendData flag.
+func ConditionalWriter(socket *websocket.Conn, sendData bool, writeFunc func() error) error {
+	if sendData {
+		err := writeFunc()
 		if err != nil {
-			//Handle error
+			// Handle error
+			return err
 		}
+		// Optionally handle success or return nil
+		return nil
 	} else {
-		//Handle when sendData is false
+		// Handle when sendData is false
+		return nil
 	}
 }
