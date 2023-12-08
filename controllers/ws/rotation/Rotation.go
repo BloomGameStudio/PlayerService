@@ -2,7 +2,6 @@ package rotation
 
 import (
 	"context"
-	"fmt"
 	"github.com/BloomGameStudio/PlayerService/controllers/ws"
 	"github.com/labstack/echo/v4"
 	"strconv" // Import strconv for string to boolean conversion
@@ -19,7 +18,7 @@ func Rotation(c echo.Context) error {
 	// Convert the string to a boolean
 	sendData, err := strconv.ParseBool(sendDataStr)
 	if err != nil {
-		return fmt.Errorf("failed to parse sendData: %v", err)
+		return err
 	}
 
 	ws, err := ws.Upgrader.Upgrade(c.Response(), c.Request(), nil)
