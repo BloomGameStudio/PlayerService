@@ -6,6 +6,7 @@ import (
 
 	"github.com/BloomGameStudio/PlayerService/controllers/ws"
 	"github.com/BloomGameStudio/PlayerService/controllers/ws/errorHandlers"
+	"github.com/BloomGameStudio/PlayerService/mixins/client"
 	"github.com/BloomGameStudio/PlayerService/database"
 	"github.com/BloomGameStudio/PlayerService/models"
 	"github.com/gorilla/websocket"
@@ -13,7 +14,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-func stateWriter(c echo.Context, socket *websocket.Conn, ch chan error, timeoutCTX context.Context) {
+func stateWriter(c echo.Context, socket *websocket.Conn, ch chan error, timeoutCTX context.Context, sendData bool) {
 	// Open DB outside of the loop
 	db := database.GetDB()
 	//Use some very old date for the first update
@@ -35,7 +36,14 @@ func stateWriter(c echo.Context, socket *websocket.Conn, ch chan error, timeoutC
 
 			if len(*states) > 0 {
 				c.Logger().Debug("Pushing the states to the WebSocket")
-				err := socket.WriteJSON(states)
+
+				err := client.ConditionalWriter(socket,sendData, func() error {
+					if sendData {
+						return socket.WriteJSON(states)
+					}
+					// Optionally handle case when sendData is false
+					return nil
+				})
 
 				if err != nil {
 					errorHandlers.HandleWriteError(c, ch, err)

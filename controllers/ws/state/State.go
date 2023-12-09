@@ -5,6 +5,7 @@ import (
 
 	"github.com/BloomGameStudio/PlayerService/controllers/ws"
 	"github.com/labstack/echo/v4"
+	"strconv"
 )
 
 // NOTE: We may need to adjust default configuration and values
@@ -12,6 +13,14 @@ import (
 // https://github.com/gorilla/websocket/blob/master/examples/command/main.go
 
 func State(c echo.Context) error {
+
+	sendDataStr := c.QueryParam("sendData")
+	
+	sendData, err := strconv.ParseBool(sendDataStr)
+
+	if err != nil {
+		return err
+	}
 
 	ws, err := ws.Upgrader.Upgrade(c.Response(), c.Request(), nil)
 	if err != nil {
@@ -25,7 +34,7 @@ func State(c echo.Context) error {
 	timeoutCTX, timeoutCTXCancel := context.WithCancel(context.Background())
 	defer timeoutCTXCancel()
 
-	go stateWriter(c, ws, writerChan, timeoutCTX)
+	go stateWriter(c, ws, writerChan, timeoutCTX, sendData)
 	go stateReader(c, ws, readerChan, timeoutCTX)
 
 	// QUESTION: Do we want to wait on both routines to error out?
