@@ -8,12 +8,13 @@ import (
 	"github.com/BloomGameStudio/PlayerService/controllers/ws"
 	"github.com/BloomGameStudio/PlayerService/database"
 	"github.com/BloomGameStudio/PlayerService/models"
+	"github.com/BloomGameStudio/PlayerService/mixins/client"
 	"github.com/gorilla/websocket"
 	"github.com/labstack/echo/v4"
 	"github.com/spf13/viper"
 )
 
-func positionWriter(c echo.Context, socket *websocket.Conn, ch chan error, timeoutCTX context.Context) {
+func positionWriter(c echo.Context, socket *websocket.Conn, ch chan error, timeoutCTX context.Context, sendData bool) {
 
 	// Open DB outside of the loop
 	db := database.GetDB()
@@ -43,7 +44,14 @@ func positionWriter(c echo.Context, socket *websocket.Conn, ch chan error, timeo
 			if len(*positions) > 0 {
 
 				c.Logger().Debug("Pushing the positions to the WebSocket")
-				err := socket.WriteJSON(positions)
+
+				err := client.ConditionalWriter(socket, sendData, func() error {
+					if sendData {
+						return socket.WriteJSON(positions)
+					}
+					//Optionally handle case when sendData is false
+					return nil
+				})
 
 				if err != nil {
 					switch {

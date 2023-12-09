@@ -5,6 +5,7 @@ import (
 
 	"github.com/BloomGameStudio/PlayerService/controllers/ws"
 	"github.com/labstack/echo/v4"
+	"strconv"
 )
 
 // NOTE: We may need to adjust default configuration and values
@@ -12,6 +13,15 @@ import (
 // https://github.com/gorilla/websocket/blob/master/examples/command/main.go
 
 func Position(c echo.Context) error {
+
+
+	sendDataStr := c.QueryParam("sendData")
+
+	// Convert the string to a boolean
+	sendData, err := strconv.ParseBool(sendDataStr)
+	if err != nil {
+		return err
+	}
 
 	// QUESTION: Is this needed?
 	// Only changes will be sent the only exception to this is the opening/first request where the full state will be sent
@@ -31,7 +41,7 @@ func Position(c echo.Context) error {
 	timeoutCTX, timeoutCTXCancel := context.WithCancel(context.Background())
 	defer timeoutCTXCancel()
 
-	go positionWriter(c, ws, writerChan, timeoutCTX)
+	go positionWriter(c, ws, writerChan, timeoutCTX, sendData)
 	go positionReader(c, ws, readerChan, timeoutCTX)
 
 	// QUESTION: Do we want to wait on both routines to error out?
