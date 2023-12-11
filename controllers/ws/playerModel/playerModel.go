@@ -5,9 +5,19 @@ import (
 
 	"github.com/BloomGameStudio/PlayerService/controllers/ws"
 	"github.com/labstack/echo/v4"
+	"strconv"
 )
 
 func PlayerModel(c echo.Context) error {
+
+	// Extract the sendData value from the query parameters
+	sendDataStr := c.QueryParam("sendData")
+
+	// Convert the string to a boolean
+	sendData, err := strconv.ParseBool(sendDataStr)
+	if err != nil {
+		return err
+	}
 
 	ws, err := ws.Upgrader.Upgrade(c.Response(), c.Request(), nil)
 	if err != nil {
@@ -21,7 +31,7 @@ func PlayerModel(c echo.Context) error {
 	timeoutCTX, timeoutCTXCancel := context.WithCancel(context.Background())
 	defer timeoutCTXCancel()
 
-	go playerModelWriter(c, ws, writerChan, timeoutCTX)
+	go playerModelWriter(c, ws, writerChan, timeoutCTX, sendData)
 	go playerModelReader(c, ws, readerChan, timeoutCTX)
 
 	for {

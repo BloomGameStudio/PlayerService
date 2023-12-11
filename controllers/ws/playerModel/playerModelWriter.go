@@ -10,9 +10,10 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/spf13/viper"
 	"github.com/BloomGameStudio/PlayerService/controllers/ws/errorHandlers"
+    "github.com/BloomGameStudio/PlayerService/mixins/client"
 )
 
-func playerModelWriter(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX context.Context) {
+func playerModelWriter(c echo.Context, ws *websocket.Conn, ch chan error, timeoutCTX context.Context, sendData bool) {
     db := database.GetDB()
     lastUpdateAt := time.Date(1900, 1, 1, 0, 0, 0, 0, time.UTC)
     lastPingCheck := time.Now()
@@ -34,7 +35,17 @@ func playerModelWriter(c echo.Context, ws *websocket.Conn, ch chan error, timeou
             }
 
             if len(*modelsList) > 0 {
-                err := ws.WriteJSON(modelsList)
+
+                c.Logger().Debug("Pushing the PlayerModels to the WebSocket")
+
+                err := client.ConditionalWriter(ws, sendData, func() error {
+                    if sendData {
+                        return ws.WriteJSON(modelsList)
+                    }
+                    // Optionally handle case when sendData is false
+                    return nil
+                })
+
                 if err != nil {
                     errorHandlers.HandleWriteError(c, ch, err)
                     return
