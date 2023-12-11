@@ -14,7 +14,7 @@ import (
 
 func Level(c echo.Context) error {
 	// Extract the sendData value from the query parameters
-	sendDataStr := c.QueryParam("sendData")
+	sendDataStr := c.QueryParam("senddata")
 
 	// Convert the string to a boolean
 	sendData, err := strconv.ParseBool(sendDataStr)

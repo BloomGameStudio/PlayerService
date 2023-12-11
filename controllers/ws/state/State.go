@@ -14,7 +14,7 @@ import (
 
 func State(c echo.Context) error {
 
-	sendDataStr := c.QueryParam("sendData")
+	sendDataStr := c.QueryParam("senddata")
 	
 	sendData, err := strconv.ParseBool(sendDataStr)
 

@@ -15,7 +15,7 @@ import (
 func Position(c echo.Context) error {
 
 
-	sendDataStr := c.QueryParam("sendData")
+	sendDataStr := c.QueryParam("senddata")
 
 	// Convert the string to a boolean
 	sendData, err := strconv.ParseBool(sendDataStr)
