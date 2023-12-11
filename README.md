@@ -482,8 +482,8 @@ Body: "Player not found"
 
 ---
 
-Websocket Endpoints on first connect will send all relevant data\*¹.
-After the first transmission it will only send objects that have changed since the last transmission.
+Websocket Endpoints on first connect will send all relevant data if the senddata queryparam is set to true.\*¹.
+If it is used After the first transmission it will only send objects that have changed since the last transmission.
 
 \*¹Except Data that has to be actively included and would not be included normally by default.
 
