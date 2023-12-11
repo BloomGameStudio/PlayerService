@@ -11,9 +11,10 @@ import (
 	"github.com/gorilla/websocket"
 	"github.com/labstack/echo/v4"
 	"github.com/spf13/viper"
+	"github.com/BloomGameStudio/PlayerService/mixins/client"
 )
 
-func levelWriter(c echo.Context, socket *websocket.Conn, ch chan error, timeoutCTX context.Context) {
+func levelWriter(c echo.Context, socket *websocket.Conn, ch chan error, timeoutCTX context.Context, sendData bool) {
 
 	// Open DB outside of the loop
 	db := database.GetDB()
@@ -38,7 +39,15 @@ func levelWriter(c echo.Context, socket *websocket.Conn, ch chan error, timeoutC
 
 			if len(*levels) > 0 {
 
-				err := socket.WriteJSON(levels)
+				c.Logger().Debug("Pushing the levels to the WebSocket")
+
+				err := client.ConditionalWriter(socket, sendData, func() error {
+					if sendData {
+						return socket.WriteJSON(levels)
+					}
+					// Optionally handle case when sendData is false
+					return nil
+				})
 
 				if err != nil {
 					switch {
