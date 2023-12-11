@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Client Mixin. Allows optional receiving of data when interacting with the playerservice over a websocket connection.
+  - A queryParam senddata is used to control if data is sent or not 
+
 - playerModel. Allows reading and updating a players Model over websocket using an ID identifier. Added associated handler.
 
 - State Handler
