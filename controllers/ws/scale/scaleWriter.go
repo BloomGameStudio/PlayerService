@@ -10,6 +10,7 @@ import (
 	"github.com/gorilla/websocket"
 	"github.com/labstack/echo/v4"
 	"github.com/spf13/viper"
+	"github.com/BloomGameStudio/PlayerService/mixins/client"
 )
 
 func scaleWriter(
@@ -17,7 +18,7 @@ func scaleWriter(
 	ws *websocket.Conn,
 	ch chan error,
 	timeoutContext context.Context,
-) {
+	sendData bool) {
 	db := database.GetDB()
 	lastUpdatedAt := time.Date(1900, 1, 1, 0, 0, 0, 0, time.UTC)
 	lastPingCheck := time.Now()
@@ -33,7 +34,14 @@ func scaleWriter(
 			lastUpdatedAt = time.Now()
 
 			if len(*scales) > 0 {
-				err := ws.WriteJSON(scales)
+
+				err := client.ConditionalWriter(ws, sendData, func() error {
+					if sendData {
+						return ws.WriteJSON(scales)
+					}
+					// Optionally handle case when sendData is false
+					return nil
+				})
 
 				if err != nil {
 					switch {

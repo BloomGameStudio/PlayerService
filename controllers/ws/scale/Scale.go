@@ -5,9 +5,18 @@ import (
 
 	"github.com/BloomGameStudio/PlayerService/controllers/ws"
 	"github.com/labstack/echo/v4"
+	"strconv"
 )
 
 func Scale(c echo.Context) error {
+
+	sendDataStr := c.QueryParam("sendData")
+
+	sendData, err := strconv.ParseBool(sendDataStr)
+	if err != nil {
+		return err
+	}
+	
 	ws, err := ws.Upgrader.Upgrade(c.Response(), c.Request(), nil)
 
 	if err != nil {
@@ -22,7 +31,7 @@ func Scale(c echo.Context) error {
 	timeoutContext, timeoutContextCancel := context.WithCancel(context.Background())
 	defer timeoutContextCancel()
 
-	go scaleWriter(c, ws, writerChan, timeoutContext)
+	go scaleWriter(c, ws, writerChan, timeoutContext, sendData)
 	go scaleReader(c, ws, readerChan, timeoutContext)
 
 	select {
