@@ -5,6 +5,7 @@ import (
 
 	"github.com/BloomGameStudio/PlayerService/controllers/ws"
 	"github.com/labstack/echo/v4"
+	"strconv"
 )
 
 // NOTE: We may need to adjust default configuration and values
@@ -12,6 +13,14 @@ import (
 // https://github.com/gorilla/websocket/blob/master/examples/command/main.go
 
 func Player(c echo.Context) error {
+	// Extract the sendData value from the query parameters
+	sendDataStr := c.QueryParam("sendData")
+	
+	// Convert the string to a boolean
+	sendData, err := strconv.ParseBool(sendDataStr)
+	if err != nil {
+		return err
+	}
 
 	ws, err := ws.Upgrader.Upgrade(c.Response(), c.Request(), nil)
 	if err != nil {
@@ -25,7 +34,7 @@ func Player(c echo.Context) error {
 	timeoutCTX, timeoutCTXCancel := context.WithCancel(context.Background())
 	defer timeoutCTXCancel()
 
-	go playerWriter(c, ws, writerChan, timeoutCTX)
+	go playerWriter(c, ws, writerChan, timeoutCTX, sendData)
 	go playerReader(c, ws, readerChan, timeoutCTX)
 
 	// Return nil if either the reader or the writer encounters a error

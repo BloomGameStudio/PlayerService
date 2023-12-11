@@ -13,9 +13,10 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/spf13/viper"
 	"gorm.io/gorm/clause"
+	"github.com/BloomGameStudio/PlayerService/mixins/client"
 )
 
-func playerWriter(c echo.Context, socket *websocket.Conn, ch chan error, timeoutCTX context.Context) {
+func playerWriter(c echo.Context, socket *websocket.Conn, ch chan error, timeoutCTX context.Context, sendData bool) {
 
 	db := database.GetDB()
 	lastUpdateAt := time.Date(1900, 1, 1, 0, 0, 0, 0, time.UTC) // Use some ver old date for first update to get all players in the initial push
@@ -52,7 +53,14 @@ func playerWriter(c echo.Context, socket *websocket.Conn, ch chan error, timeout
 				// PlayerChanges(players,players)
 
 				c.Logger().Debug("Pushing the player to the WebSocket")
-				err := socket.WriteJSON(players)
+
+				err := client.ConditionalWriter(socket, sendData, func() error {
+					if sendData{
+						return socket.WriteJSON(players)
+					}
+					// Optionally handle case when sendData is false
+					return nil
+				})
 
 				if err != nil {
 					errorHandlers.HandleWriteError(c, ch, err)
