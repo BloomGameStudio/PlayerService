@@ -7,6 +7,7 @@ import (
 
 type Scale struct {
 	gorm.Model
+	PlayerID uint
 	publicModels.Scale
 }
 

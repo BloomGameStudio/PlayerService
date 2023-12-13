@@ -9,6 +9,7 @@ type Rotation struct {
 	gorm.Model
 	// Euler Rotation Annotation
 	// Yaw,Pitch,Roll
+	PlayerID uint
 	publicModels.Rotation
 
 	// EulerAngles *Vector3 `json:"eulerAngles"`
